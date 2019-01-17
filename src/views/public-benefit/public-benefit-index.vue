@@ -4,10 +4,10 @@
         <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
           <el-form :inline="true" :model="filters">
             <el-form-item>
-              <el-input v-model="filters.name" placeholder="姓名"></el-input>
+              <el-input v-model="filters.id" placeholder="姓名"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" v-on:click="getProjects">查询</el-button>
+              <el-button type="primary" v-on:click="queryGetProjects">查询</el-button>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -42,7 +42,7 @@
         <!--工具条-->
         <el-col :span="24" class="toolbar">
           <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
-          <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
+          <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total" style="float:right;">
           </el-pagination>
         </el-col>
 
@@ -50,7 +50,7 @@
         <!--新增界面-->
       <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
         <el-form size='mini' :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-          <el-form-item label="标题"><el-input v-model="addForm.title"></el-input></el-form-item>
+          <el-form-item label="标题" prop="title"><el-input v-model="addForm.title"></el-input></el-form-item>
           <el-form-item label="简介描述"><el-input v-model="addForm.description"></el-input></el-form-item>
           <el-form-item label="公益透明度提示"><el-input v-model="addForm.tips"></el-input></el-form-item>
           <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
@@ -58,7 +58,7 @@
           <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
           <el-form-item label="项目负责人ID"><el-input v-model="addForm.mgrId"></el-input></el-form-item>
           <el-form-item label="标签"><el-input v-model="addForm.tags"></el-input></el-form-item>
-          <el-form-item label="图文详情"><el-input v-model="addForm.h5Id"></el-input></el-form-item>
+          <el-form-item label="图文详情" prop="imgs"><el-input v-model="addForm.h5Id"></el-input></el-form-item>
           <el-form-item label="公益项目分类id"><el-input v-model="addForm.cateIds"></el-input></el-form-item>
           <el-form-item label="目标善款金额"><el-input v-model="addForm.targetMoney"></el-input></el-form-item>
           <el-form-item label="详情页轮播图"><el-input v-model="addForm.imgs"></el-input></el-form-item>
@@ -70,17 +70,43 @@
           <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
         </div>
       </el-dialog>
+
+
+      <!--编辑界面-->
+        <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+          <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+            <el-form-item label="标题" prop="title"><el-input v-model="editForm.title"></el-input></el-form-item>
+            <el-form-item label="简介描述"><el-input v-model="editForm.description"></el-input></el-form-item>
+            <el-form-item label="公益透明度提示"><el-input v-model="editForm.tips"></el-input></el-form-item>
+            <el-form-item label="发起机构ID"><el-input v-model="editForm.orgId"></el-input></el-form-item>
+            <el-form-item label="发起人ID"><el-input v-model="editForm.initiatorId"></el-input></el-form-item>
+            <el-form-item label="善款接受方ID"><el-input v-model="editForm.recipientId"></el-input></el-form-item>
+            <el-form-item label="项目负责人ID"><el-input v-model="editForm.mgrId"></el-input></el-form-item>
+            <el-form-item label="标签"><el-input v-model="editForm.tags"></el-input></el-form-item>
+            <el-form-item label="图文详情" prop="imgs"><el-input v-model="editForm.h5Id"></el-input></el-form-item>
+            <el-form-item label="公益项目分类id"><el-input v-model="editForm.cateIds"></el-input></el-form-item>
+            <el-form-item label="目标善款金额"><el-input v-model="editForm.targetMoney"></el-input></el-form-item>
+            <el-form-item label="详情页轮播图"><el-input v-model="editForm.imgs"></el-input></el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click.native="editFormVisible = false">取消</el-button>
+            <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+          </div>
+        </el-dialog>
+
+
     </section>
     
 </template>
 
 <script>
-  import {getProjects,delProject} from '../../api/api'
+  import {getProjects,delProject,getProject,addProject,updateProject} from '../../api/api'
   export default {
     data() {
       return {
+        page:1,
         filters: {
-					name: ''
+					id: ''
         },
         total:0,
         tableData: [],
@@ -88,8 +114,23 @@
         //新增界面数据  
 				addForm: {
 					initiatorId: '',
-					recipientId: -1,
-					mgrId: 0,
+					recipientId: '',
+					mgrId: '',
+					tags: '',
+					h5Id: '',
+					cateIds:'',
+					orgId:'',
+					tips:'',
+					description:'',
+					title:'',
+          targetMoney:'',
+          imgs:'',
+        },
+        //编辑界面数据
+				editForm: {
+					initiatorId: '',
+					recipientId: '',
+					mgrId: '',
 					tags: '',
 					h5Id: '',
 					cateIds:'',
@@ -101,22 +142,52 @@
           imgs:'',
 				},
         addFormVisible: false,//新增界面是否显示
-				addLoading: false,
+        addLoading: false,
+        editFormVisible: false,//编辑界面是否显示
+				editLoading: false,
 				addFormRules: {
-					name: [
-						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					]
+					title: [
+						{ required: true, message: '请输入标题', trigger: 'blur' }
+          ],
+          imgs: [
+						{ required: true, message: '请输入图片地址', trigger: 'blur' }
+					],
         },
+        editFormRules: {
+					title: [
+						{ required: true, message: '请输入标题', trigger: 'blur' }
+          ],
+          imgs: [
+						{ required: true, message: '请输入图片地址', trigger: 'blur' }
+					],
+				},
         
       };
     },
     methods: {
-      
+      queryGetProjects(){
+        let _this = this;
+        getProject({
+          token:sessionStorage.getItem('token'),
+          id:_this.filters.id
+        }).then((res)=>{
+          console.log(res)
+          if(res.code ===1){
+            _this.tableData = res.data.data
+            _this.total= res.data.total
+          }else{
+            this.$message({
+              message: res.message,
+              type: 'error'
+            });
+          }
+        })
+      },
       getProjects(){
         let _this = this;
         getProjects({
           token:sessionStorage.getItem('token'),
-          pageNum:1,
+          pageNum:this.page,
           pageSize:10,
           title:'',
           description:''
@@ -178,28 +249,116 @@
       },
       //分页
       handleCurrentChange(val) {
-				this.page = val;
-				// this.getUsers();
-
-				// GetListInitiator({
-				// 	token:"fcb34084-6230-4ae4-9c68-ed9b6362e279",
-				// 	displayName:'',
-				// 	pageNum:1,
-				// 	pageSize:10
-				// }).then((res)=>{
-				// 	console.log(res)
-				// })
+        this.page = val;
+        this.getProjects()
       },
       //显示新增界面
 			handleAdd: function () {
 				this.addFormVisible = true;
 				this.addForm = {
-					name: '',
-					sex: -1,
-					age: 0,
-					birth: '',
-					addr: ''
+					initiatorId: '',
+					recipientId: '',
+					mgrId: '',
+					tags: '',
+					h5Id: '',
+					cateIds:'',
+					orgId:'',
+					tips:'',
+					description:'',
+					title:'',
+          targetMoney:'',
+          imgs:'',
 				};
+      },
+      //新增
+			addSubmit: function () {
+				this.$refs.addForm.validate((valid) => {
+          
+					if (valid) {
+						this.$confirm('确认提交吗？', '提示', {}).then(() => {
+							this.addLoading = true;
+							//NProgress.start();
+              let para = Object.assign({}, this.addForm);
+              console.log(para)
+							para.token = sessionStorage.getItem('token')
+							addProject(para).then((res) => {
+                console.log(res)
+                if(res.code == 1){
+                  //NProgress.done();
+                  this.$message({
+                    message: '提交成功',
+                    type: 'success'
+                  });
+                  this.$refs['addForm'].resetFields();
+                  this.addFormVisible = false;
+                  this.getProjects();
+                }else{
+                  this.$message({
+                    message: res.message,
+                    type: 'error'
+                  });
+                }
+								this.addLoading = false;
+								
+								
+								// this.getUsers();
+							});
+						});
+					}
+				});
+      },
+      //显示编辑界面
+			handleEdit: function (index, row) {
+                console.log(row)
+				this.editFormVisible = true;
+				this.editForm = Object.assign({}, row);
+			},
+			//编辑
+			editSubmit: function () {
+				this.$refs.editForm.validate((valid) => {
+                    
+					if (valid) {
+						this.$confirm('确认提交吗？', '提示', {}).then(() => {
+							this.editLoading = true;
+                            //NProgress.start();
+                            console.log(valid)
+                            console.dir(this.editForm)
+              let para = Object.assign({}, this.editForm);
+              console.log(para)
+							para.token = sessionStorage.getItem('token')
+							updateProject(para).then((res) => {
+                console.log(res)
+                if(res.code == 1){
+                  //NProgress.done();
+                  this.$message({
+                    message: '提交成功',
+                    type: 'success'
+                  });
+                  this.$refs['editForm'].resetFields();
+                  this.editFormVisible = false;
+                  this.getProjects();
+                }else{
+                  this.$message({
+                    message: res.message,
+                    type: 'error'
+                  });
+                }
+								// this.editLoading = false;
+								// //NProgress.done();
+								// this.$message({
+								// 	message: '提交成功',
+								// 	type: 'success'
+								// });
+								// this.$refs['editForm'].resetFields();
+								// this.editFormVisible = false;
+								// this.getUsers();
+							}).catch((res)=>{
+                this.editFormVisible = false;
+                console.log(res)
+              });
+						});
+					}
+				});
 			},
     },
     mounted() {

@@ -3,8 +3,12 @@ import { get, post } from './http'
 let base = '';
 let baseUrl = 'http://api.50wlkj.com'
 export const requestLogin = p => post(`${baseUrl}/api/user_login`, p);
-export const getProjects = p => post(`${baseUrl}/api/get_projects`, p);
 export const delProject = p => post(`${baseUrl}/api/del_project`, p);
+export const getProjects = p => post(`${baseUrl}/api/get_projects`, p);
+export const getProject = p => post(`${baseUrl}/api/get_project`, p);
+
+export const addProject = p => post(`${baseUrl}/api/add_project`, p);
+export const updateProject = p => post(`${baseUrl}/api/update_project`, p);
 //export const requestLogin = params => { return axios.post(`${baseUrl}/api/user_login`, params).then(res => res.data); };
 
 //export const PostAddInitiator = params => { return axios.post(`${baseUrl}/api/add_initiator`, params).then(res => res.data); };
