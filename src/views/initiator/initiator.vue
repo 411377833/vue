@@ -100,14 +100,15 @@
 				</el-form-item>
 
 				<el-upload
-					class="avatar-uploader"
 					action="https://jsonplaceholder.typicode.com/posts/"
-					:show-file-list="false"
-					:on-success="handleAvatarSuccess"
-					:before-upload="beforeAvatarUpload">
-					<img v-if="imageUrl" :src="imageUrl" class="avatar">
-					<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+					list-type="picture-card"
+					:on-preview="handlePictureCardPreview"
+					:on-remove="handleRemove">
+					<i class="el-icon-plus"></i>
 				</el-upload>
+					<el-dialog :visible.sync="dialogVisible">
+					<img width="100%" :src="dialogImageUrl" alt="">
+				</el-dialog>
 
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -120,8 +121,10 @@
 
 <script>
 	import util from '../../common/js/util'
+	import {getProjects} from '../../api/api'
 	//import NProgress from 'nprogress'
-	import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser,PostAddInitiator,GetListInitiator } from '../../api/api';
+	// import { getUserListPage, removeUser, batchRemoveUser, editUser, addUser,PostAddInitiator,GetListInitiator } from '../../api/api';
+// import { constants } from 'http2';
 
 	export default {
 		data() {
@@ -167,11 +170,21 @@
 					birth: '',
 					addr: '',
 					signature:''
-				}
+				},
+				dialogImageUrl: '',
+        		dialogVisible: false
 
 			}
 		},
 		methods: {
+			//上传
+			handleRemove(file, fileList) {
+				console.log(file, fileList);
+			},
+			handlePictureCardPreview(file) {
+				this.dialogImageUrl = file.url;
+				this.dialogVisible = true;
+			},
 			//性别显示转换
 			formatSex: function (row, column) {
 				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
@@ -330,6 +343,7 @@
 			// 	}).then((res)=>{
 			// 		console.log(res)
 			// 	})
+			
 		}
 	}
 
