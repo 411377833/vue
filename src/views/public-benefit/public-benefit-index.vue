@@ -4,7 +4,7 @@
         <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
           <el-form :inline="true" :model="filters">
             <el-form-item>
-              <el-input v-model="filters.id" placeholder="姓名"></el-input>
+              <el-input v-model="filters.id" placeholder="请输入项目id"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" v-on:click="queryGetProjects">查询</el-button>
@@ -18,8 +18,8 @@
         <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
           <!-- <el-table-column type="selection" width="55">
           </el-table-column> -->
-          <el-table-column type="index" label="顺序" width="100" >
-          </el-table-column>
+          <!-- <el-table-column type="index" label="顺序" width="100" >
+          </el-table-column> -->
           <el-table-column prop="id" label="编号" width="120" >
           </el-table-column>
           <el-table-column prop="creatorId" label="创建人编号" width="100">

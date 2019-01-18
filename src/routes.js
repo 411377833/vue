@@ -10,6 +10,9 @@ import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 import PublicBenefitIndex from './views/public-benefit/public-benefit-index'
+import displayName from './views/public-benefit/displayName'
+import originator from './views/public-benefit/originator'
+import receivor from './views/public-benefit/receivor'
 import Initiator from './views/initiator/initiator.vue'
 
 let routes = [
@@ -34,6 +37,9 @@ let routes = [
         // leaf: true,//只有一个节点
         children: [
             { path: '/public-benefit-index', component: PublicBenefitIndex, name: '公益项目' },
+            { path: '/displayName', component: displayName, name: '公益机构' },
+            { path: '/originator', component: originator, name: '发起人' },
+            { path: '/receivor', component: receivor, name: '善款接收方' },
         ]
     },
     {
