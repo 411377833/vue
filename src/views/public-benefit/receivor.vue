@@ -92,13 +92,16 @@
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="发起人姓名" prop="displayName">
+        <el-form-item label="善款接收方" prop="displayName">
           <el-input v-model="editForm.displayName"></el-input>
+        </el-form-item>
+        <el-form-item label="id" >
+          <el-input v-model="editForm.id"></el-input>
         </el-form-item>
         <el-form-item label="说明" prop="signature">
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" >
+        <el-form-item label="联系电话" >
           <el-input v-model="editForm.phone"></el-input>
         </el-form-item>
       </el-form>
@@ -113,10 +116,10 @@
 <script>
 import {
   listRecipients,
-  deleteInitiator,
+  deleteRecipients,
   getInitiator,
-  addInitiator,
-  updateInitiator
+  addRecipients,
+  updateRecipients
 } from "../../api/api";
 export default {
   data() {
@@ -149,7 +152,7 @@ export default {
       addFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
         displayName: [
-          { required: true, message: "请输入发起人姓名", trigger: "blur" }
+          { required: true, message: "请填写善款接受方", trigger: "blur" }
         ],
         signature: [
           { required: true, message: "请填写说明", trigger: "blur" }
@@ -161,12 +164,12 @@ export default {
       },
       editFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        displayName: [
-          { required: true, message: "请输入发起人姓名", trigger: "blur" }
+        id: [
+          { required: true, message: "请输入id", trigger: "blur" }
         ],
-        signature: [
-          { required: true, message: "填写说明", trigger: "blur" }
-        ]
+        // signature: [
+        //   { required: true, message: "填写说明", trigger: "blur" }
+        // ]
       }
     };
   },
@@ -238,7 +241,7 @@ export default {
           });
           // 	this.getUsers();
           // });
-          deleteInitiator({
+          deleteRecipients({
             token: sessionStorage.getItem("token"),
             id: row.id
           }).then(res => {
@@ -280,7 +283,7 @@ export default {
             let para = Object.assign({}, this.addForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            addInitiator(para).then(res => {
+            addRecipients(para).then(res => {
               console.log(res);
               if (res.code == 1) {
                 //NProgress.done();
@@ -323,7 +326,7 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateInitiator(para).then(res => {
+            updateRecipients(para).then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();

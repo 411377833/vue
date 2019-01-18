@@ -37,7 +37,7 @@
       </el-table-column>
     </el-table>
     <!--工具条-->
-    <el-col :span="24" class="toolbar">
+    <el-col :span="24" class="toolbar" v-if="!filters.id">
       <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
       <el-pagination
         layout="prev, pager, next"
@@ -258,7 +258,10 @@ export default {
     //分页
     handleCurrentChange(val) {
       this.page = val;
+      if(!this.filters.id){
       this.listInitiator();
+
+      }
     },
     //显示新增界面
     handleAdd: function() {

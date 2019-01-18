@@ -36,7 +36,7 @@
       </el-table-column>
     </el-table>
     <!--工具条-->
-    <el-col :span="24" class="toolbar">
+    <el-col :span="24" class="toolbar" v-if="!filters.id">
       <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
       <el-pagination
         layout="prev, pager, next"
@@ -170,21 +170,27 @@ export default {
   methods: {
     queryGetOrg() {
       let _this = this;
+      if(_this.filters.id){
       getOrg({
         token: sessionStorage.getItem("token"),
         id: _this.filters.id
       }).then(res => {
         console.log(res);
         if (res.code === 1) {
-          _this.tableData = res.data.data;
+          let arr = []
+              arr.push(res.data)
+           _this.tableData = arr
           _this.total = res.data.total;
         } else {
+
           this.$message({
             message: res.message,
             type: "error"
           });
         }
-      });
+      });}else{
+        _this.getOrg()
+      }
     },
 // 列表
     listOrg() {
@@ -254,7 +260,10 @@ export default {
     //分页
     handleCurrentChange(val) {
       this.page = val;
+      if(!this.filters.id){
       this.listOrg();
+
+      }
     },
     //显示新增界面
     handleAdd: function() {
