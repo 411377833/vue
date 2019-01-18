@@ -40,7 +40,7 @@
           </el-table-column>
         </el-table>
         <!--工具条-->
-        <el-col :span="24" class="toolbar">
+        <el-col :span="24" class="toolbar" v-if="!filters.id">
           <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
           <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total" style="float:right;">
           </el-pagination>
@@ -167,21 +167,27 @@
     methods: {
       queryGetProjects(){
         let _this = this;
-        getProject({
-          token:sessionStorage.getItem('token'),
-          id:_this.filters.id
-        }).then((res)=>{
-          console.log(res)
-          if(res.code ===1){
-            _this.tableData = res.data.data
-            _this.total= res.data.total
-          }else{
-            this.$message({
-              message: res.message,
-              type: 'error'
-            });
-          }
-        })
+        if(_this.filters.id){
+          getProject({
+            token:sessionStorage.getItem('token'),
+            id:_this.filters.id
+          }).then((res)=>{
+            console.log(res)
+            if(res.code ===1){
+              let arr = []
+              arr.push(res.data)
+              _this.tableData = arr
+              _this.total= res.data.total
+            }else{
+              this.$message({
+                message: res.message,
+                type: 'error'
+              });
+            }
+          })
+        }else{
+          _this.getProjects()
+        }
       },
       getProjects(){
         let _this = this;
@@ -203,12 +209,6 @@
             });
           }
         })
-      },
-      //显示编辑界面
-			handleEdit: function (index, row) {
-                console.log(row)
-				// this.editFormVisible = true;
-				// this.editForm = Object.assign({}, row);
       },
       
       //删除
@@ -249,8 +249,12 @@
       },
       //分页
       handleCurrentChange(val) {
+        console.log(val)
         this.page = val;
-        this.getProjects()
+        if(!this.filters.id){
+          this.getProjects()
+        }
+        // this.getProjects()
       },
       //显示新增界面
 			handleAdd: function () {
