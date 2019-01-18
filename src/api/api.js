@@ -5,9 +5,9 @@ let baseUrl = 'http://api.50wlkj.com'
 // 登录
 export const requestLogin = p => post(`${baseUrl}/api/user_login`, p); //通
 // 公益项目
-export const delProject = p => post(`${baseUrl}/api/del_project`, p);  //接口通，底层未删除
+export const delProject = p => post(`${baseUrl}/api/del_project`, p);  //通
 export const getProjects = p => post(`${baseUrl}/api/get_projects`, p);  //通
-export const getProject = p => post(`${baseUrl}/api/get_project`, p);  //接口通，两次刷新，页面不显示
+export const getProject = p => post(`${baseUrl}/api/get_project`, p);  //通
 export const addProject = p => post(`${baseUrl}/api/add_project`, p);  //接口通，未加验证
 export const updateProject = p => post(`${baseUrl}/api/update_project`, p);  // 报400，少公益项目id字段
 // 公益机构
