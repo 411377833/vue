@@ -24,7 +24,7 @@ export const updateInitiator = p => post(`${baseUrl}/api/update_initiator`, p);/
 export const getInitiator = p => post(`${baseUrl}/api/get_initiator`, p);//接口通，两次刷新，页面不显示
 //善款接收方
 export const listRecipients = p => post(`${baseUrl}/api/list_recipients`, p);  //通
-export const addRecipients = p => post(`${baseUrl}/api/add_recipients`, p);  //上传图片未添加
+// export const addRecipients = p => post(`${baseUrl}/api/add_recipients`, p);  //上传图片未添加
 // export const deleteInitiator = p => post(`${baseUrl}/api/delete_initiator`, p);  //通
 // export const updateInitiator = p => post(`${baseUrl}/api/update_initiator`, p);//报400
 // export const getInitiator = p => post(`${baseUrl}/api/get_initiator`, p);//接口通，两次刷新，页面不显示

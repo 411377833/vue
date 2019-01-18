@@ -53,14 +53,14 @@
       <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
         <!-- <el-form-item label="机构代码" prop="idCard">
           <el-input v-model="addForm.idCard"></el-input>
-        </el-form-item> -->
+        </el-form-item>-->
         <el-form-item label="发起人姓名" prop="displayName">
           <el-input v-model="addForm.displayName"></el-input>
         </el-form-item>
         <el-form-item label="说明" prop="signature">
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" >
+        <el-form-item label="手机号">
           <el-input v-model="addForm.phone"></el-input>
         </el-form-item>
         <!-- <el-upload
@@ -72,7 +72,7 @@
          >
           <img v-if="imageUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload> -->
+        </el-upload>-->
         <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
           <el-form-item label="发起人ID"><el-input v-model="addForm.initiatorId"></el-input></el-form-item>
           <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
@@ -98,7 +98,7 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" >
+        <el-form-item label="手机号">
           <el-input v-model="editForm.phone"></el-input>
         </el-form-item>
       </el-form>
@@ -125,13 +125,12 @@ export default {
       filters: {
         id: ""
       },
-    //   imageUrl: '',
+      //   imageUrl: '',
       total: 0,
       tableData: [],
       listLoading: false,
       //新增界面数据
       addForm: {
-        
         // idCard: "",
         displayName: "",
         signature: ""
@@ -151,46 +150,47 @@ export default {
         displayName: [
           { required: true, message: "请输入发起人姓名", trigger: "blur" }
         ],
-        signature: [
-          { required: true, message: "请填写说明", trigger: "blur" }
-        ],
+        signature: [{ required: true, message: "请填写说明", trigger: "blur" }]
         // headImg:[
         //     {required: true, message: "请上传机构头像", trigger: "blur"}
         // ]
-
       },
       editFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
         displayName: [
           { required: true, message: "请输入发起人姓名", trigger: "blur" }
         ],
-        signature: [
-          { required: true, message: "填写说明", trigger: "blur" }
-        ]
+        signature: [{ required: true, message: "填写说明", trigger: "blur" }]
       }
     };
   },
   methods: {
     queryGetInitiator() {
       let _this = this;
-      getInitiator({
-        token: sessionStorage.getItem("token"),
-        id: _this.filters.id
-      }).then(res => {
-        console.log(res);
-        if (res.code === 1) {
-          _this.tableData = res.data.data;
-          console.log(_this.tableData );
-          _this.total = res.data.total;
-        } else {
-          this.$message({
-            message: res.message,
-            type: "error"
-          });
-        }
-      });
+      if (_this.filters.id) {
+        getInitiator({
+          token: sessionStorage.getItem("token"),
+          id: _this.filters.id
+        }).then(res => {
+          console.log(res);
+          if (res.code === 1) {
+            let arr = [];
+            arr.push(res.data);
+            _this.tableData = arr;
+            console.log(_this.tableData);
+            _this.total = res.data.total;
+          } else {
+            this.$message({
+              message: res.message,
+              type: "error"
+            });
+          }
+        });
+      }else{
+          _this.getInitiator()
+      }
     },
-// 列表
+    // 列表
     listInitiator() {
       let _this = this;
       listInitiator({
@@ -267,7 +267,7 @@ export default {
         // idCard: "",
         displayName: "",
         signature: "",
-        phone:"",
+        phone: ""
       };
     },
     //新增
@@ -323,7 +323,8 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateInitiator(para).then(res => {
+            updateInitiator(para)
+              .then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();
@@ -357,12 +358,7 @@ export default {
           });
         }
       });
-    },
-
-
-
-   
-    
+    }
   },
   mounted() {
     this.listInitiator();
@@ -377,6 +373,4 @@ export default {
     margin-bottom: 20px;
   }
 }
-
-
 </style>
