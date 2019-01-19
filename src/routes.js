@@ -13,6 +13,8 @@ import PublicBenefitIndex from './views/public-benefit/public-benefit-index'
 import displayName from './views/public-benefit/displayName'
 import originator from './views/public-benefit/originator'
 import receivor from './views/public-benefit/receivor'
+import leader from './views/public-benefit/leader'
+import category from './views/public-benefit/category'
 import Initiator from './views/initiator/initiator.vue'
 
 let routes = [
@@ -40,6 +42,8 @@ let routes = [
             { path: '/displayName', component: displayName, name: '公益机构' },
             { path: '/originator', component: originator, name: '发起人' },
             { path: '/receivor', component: receivor, name: '善款接收方' },
+            { path: '/leader', component: leader, name: '项目负责人' },
+            { path: '/category', component: category, name: '分类' },
         ]
     },
     {

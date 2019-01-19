@@ -8,26 +8,39 @@ export const requestLogin = p => post(`${baseUrl}/api/user_login`, p); //通
 export const delProject = p => post(`${baseUrl}/api/del_project`, p);  //通
 export const getProjects = p => post(`${baseUrl}/api/get_projects`, p);  //通
 export const getProject = p => post(`${baseUrl}/api/get_project`, p);  //通
-export const addProject = p => post(`${baseUrl}/api/add_project`, p);  //接口通，未加验证
+export const addProject = p => post(`${baseUrl}/api/add_project`, p);  //通，未加验证
 export const updateProject = p => post(`${baseUrl}/api/update_project`, p);  // 报400，少公益项目id字段
 // 公益机构
 export const listOrg = p => post(`${baseUrl}/api/list_org`, p);  //通
 export const addOrg = p => post(`${baseUrl}/api/add_org`, p);   //接口通，上传图片未添加
 export const updateOrg = p => post(`${baseUrl}/api/update_org`, p); //  报400
 export const deletOrg = p => post(`${baseUrl}/api/delete_org`, p);  //通
-export const getOrg = p => post(`${baseUrl}/api/get_org`, p);  //接口通，两次刷新，页面不显示
+export const getOrg = p => post(`${baseUrl}/api/get_org`, p);  //通
 // 发起人
 export const listInitiator = p => post(`${baseUrl}/api/list_initiator`, p);  //通
 export const addInitiator = p => post(`${baseUrl}/api/add_initiator`, p);  //上传图片未添加
 export const deleteInitiator = p => post(`${baseUrl}/api/delete_initiator`, p);  //通
 export const updateInitiator = p => post(`${baseUrl}/api/update_initiator`, p);//报400
-export const getInitiator = p => post(`${baseUrl}/api/get_initiator`, p);//接口通，两次刷新，页面不显示
+export const getInitiator = p => post(`${baseUrl}/api/get_initiator`, p);//通
 //善款接收方
-export const listRecipients = p => post(`${baseUrl}/api/list_recipients`, p);  //
-export const addRecipients = p => post(`${baseUrl}/api/add_recipients`, p);  //
+export const listRecipients = p => post(`${baseUrl}/api/list_recipients`, p);  //通
+export const addRecipients = p => post(`${baseUrl}/api/add_recipients`, p);  // 接口通，上传图片未添加
 export const deleteRecipients = p => post(`${baseUrl}/api/delete_recipients`, p);  //
-export const updateRecipients = p => post(`${baseUrl}/api/update_recipients`, p);//
-// export const getInitiator = p => post(`${baseUrl}/api/get_initiator`, p);//接口通，两次刷新，页面不显示
+export const updateRecipients = p => post(`${baseUrl}/api/update_recipients`, p);// 报400
+export const getRecipients = p => post(`${baseUrl}/api/get_recipients`, p);//通
+//项目负责人
+export const listLeader = p => post(`${baseUrl}/api/list_leader`, p);  //通
+export const addLeader = p => post(`${baseUrl}/api/add_leader`, p);  // 接口通，上传图片未添加
+export const deleteLeader = p => post(`${baseUrl}/api/delete_leader`, p);  //通
+export const updateLeader = p => post(`${baseUrl}/api/update_leader`, p);// 报400
+export const getLeader = p => post(`${baseUrl}/api/get_leader`, p);//通
+//分类
+export const listCategory= p => post(`${baseUrl}/api/list_category`, p);  //通
+// export const addLeader = p => post(`${baseUrl}/api/add_leader`, p);  // 接口通，上传图片未添加
+export const deleteCategory = p => post(`${baseUrl}/api/delete_category`, p);  //通
+// export const updateLeader = p => post(`${baseUrl}/api/update_leader`, p);// 报400
+// export const getLeader = p => post(`${baseUrl}/api/get_leader`, p);//通
+
 
 
 //export const requestLogin = params => { return axios.post(`${baseUrl}/api/user_login`, params).then(res => res.data); };

@@ -7,7 +7,7 @@
           <el-input v-model="filters.id" placeholder="请输入id"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="queryGetInitiator">查询</el-button>
+          <el-button type="primary" v-on:click="queryGetRecipients">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -37,7 +37,7 @@
       </el-table-column>
     </el-table>
     <!--工具条-->
-    <el-col :span="24" class="toolbar">
+    <el-col :span="24" class="toolbar" v-if="!filters.id">
       <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
       <el-pagination
         layout="prev, pager, next"
@@ -117,7 +117,7 @@
 import {
   listRecipients,
   deleteRecipients,
-  getInitiator,
+  getRecipients,
   addRecipients,
   updateRecipients
 } from "../../api/api";
@@ -174,15 +174,18 @@ export default {
     };
   },
   methods: {
-    queryGetInitiator() {
+    queryGetRecipients() {
       let _this = this;
-      getInitiator({
+      if(_this.filters.id){
+      getRecipients({
         token: sessionStorage.getItem("token"),
         id: _this.filters.id
       }).then(res => {
         console.log(res);
         if (res.code === 1) {
-          _this.tableData = res.data.data;
+          let arr = [];
+            arr.push(res.data);
+          _this.tableData = arr;
           console.log(_this.tableData );
           _this.total = res.data.total;
         } else {
@@ -191,7 +194,9 @@ export default {
             type: "error"
           });
         }
-      });
+      });}else{
+        _this.listRecipients();
+      }
     },
 // 列表
     listRecipients() {
@@ -261,7 +266,8 @@ export default {
     //分页
     handleCurrentChange(val) {
       this.page = val;
-      this.listRecipients();
+      if(!this.filters.id){
+      this.listRecipients();}
     },
     //显示新增界面
     handleAdd: function() {

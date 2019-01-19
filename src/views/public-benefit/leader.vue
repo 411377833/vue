@@ -4,10 +4,10 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="请输入发起人id"></el-input>
+          <el-input v-model="filters.id" placeholder="请输入id"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="queryGetInitiator">查询</el-button>
+          <el-button type="primary" v-on:click="queryGetLeader">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -21,11 +21,11 @@
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
       <el-table-column prop="id" label="ID" width="200"></el-table-column>
-      <el-table-column prop="displayName" label="姓名" width="300"></el-table-column>
+      <el-table-column prop="displayName" label="项目负责人" width="300"></el-table-column>
       <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
       <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
       <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
-      <el-table-column prop="userType" label="用户类型" min-width="150"></el-table-column>
+      <el-table-column prop="userType" label="类型" min-width="150"></el-table-column>
 
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
@@ -53,14 +53,14 @@
       <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
         <!-- <el-form-item label="机构代码" prop="idCard">
           <el-input v-model="addForm.idCard"></el-input>
-        </el-form-item>-->
-        <el-form-item label="发起人姓名" prop="displayName">
+        </el-form-item> -->
+        <el-form-item label="项目负责人" prop="displayName">
           <el-input v-model="addForm.displayName"></el-input>
         </el-form-item>
         <el-form-item label="说明" prop="signature">
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
+        <el-form-item label="联系电话" >
           <el-input v-model="addForm.phone"></el-input>
         </el-form-item>
         <!-- <el-upload
@@ -72,7 +72,7 @@
          >
           <img v-if="imageUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>-->
+        </el-upload> -->
         <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
           <el-form-item label="发起人ID"><el-input v-model="addForm.initiatorId"></el-input></el-form-item>
           <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
@@ -92,13 +92,16 @@
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="发起人姓名" prop="displayName">
+        <el-form-item label="项目负责人" prop="displayName">
           <el-input v-model="editForm.displayName"></el-input>
+        </el-form-item>
+        <el-form-item label="id" >
+          <el-input v-model="editForm.id"></el-input>
         </el-form-item>
         <el-form-item label="说明" prop="signature">
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
+        <el-form-item label="联系电话" >
           <el-input v-model="editForm.phone"></el-input>
         </el-form-item>
       </el-form>
@@ -112,11 +115,11 @@
 
 <script>
 import {
-  listInitiator,
-  deleteInitiator,
-  getInitiator,
-  addInitiator,
-  updateInitiator
+  listLeader,
+  deleteLeader,
+  getLeader,
+  addLeader,
+  updateLeader
 } from "../../api/api";
 export default {
   data() {
@@ -125,12 +128,13 @@ export default {
       filters: {
         id: ""
       },
-      //   imageUrl: '',
+    //   imageUrl: '',
       total: 0,
       tableData: [],
       listLoading: false,
       //新增界面数据
       addForm: {
+        
         // idCard: "",
         displayName: "",
         signature: ""
@@ -148,52 +152,56 @@ export default {
       addFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
         displayName: [
-          { required: true, message: "请输入发起人姓名", trigger: "blur" }
+          { required: true, message: "请填写项目负责人", trigger: "blur" }
         ],
-        signature: [{ required: true, message: "请填写说明", trigger: "blur" }]
+        signature: [
+          { required: true, message: "请填写说明", trigger: "blur" }
+        ],
         // headImg:[
         //     {required: true, message: "请上传机构头像", trigger: "blur"}
         // ]
+
       },
       editFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        displayName: [
-          { required: true, message: "请输入发起人姓名", trigger: "blur" }
+        id: [
+          { required: true, message: "请输入id", trigger: "blur" }
         ],
-        signature: [{ required: true, message: "填写说明", trigger: "blur" }]
+        // signature: [
+        //   { required: true, message: "填写说明", trigger: "blur" }
+        // ]
       }
     };
   },
   methods: {
-    queryGetInitiator() {
+    queryGetLeader() {
       let _this = this;
-      if (_this.filters.id) {
-        getInitiator({
-          token: sessionStorage.getItem("token"),
-          id: _this.filters.id
-        }).then(res => {
-          console.log(res);
-          if (res.code === 1) {
-            let arr = [];
+      if(_this.filters.id){
+      getLeader({
+        token: sessionStorage.getItem("token"),
+        id: _this.filters.id
+      }).then(res => {
+        console.log(res);
+        if (res.code === 1) {
+          let arr = [];
             arr.push(res.data);
-            _this.tableData = arr;
-            console.log(_this.tableData);
-            _this.total = res.data.total;
-          } else {
-            this.$message({
-              message: res.message,
-              type: "error"
-            });
-          }
-        });
-      }else{
-          _this.listInitiator()
+          _this.tableData = arr;
+          console.log(_this.tableData );
+          _this.total = res.data.total;
+        } else {
+          this.$message({
+            message: res.message,
+            type: "error"
+          });
+        }
+      });}else{
+        _this.listLeader();
       }
     },
-    // 列表
-    listInitiator() {
+// 列表
+    listLeader() {
       let _this = this;
-      listInitiator({
+      listLeader({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
         pageSize: 10,
@@ -238,7 +246,7 @@ export default {
           });
           // 	this.getUsers();
           // });
-          deleteInitiator({
+          deleteLeader({
             token: sessionStorage.getItem("token"),
             id: row.id
           }).then(res => {
@@ -249,7 +257,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              _this.listInitiator();
+              _this.listLeader();
             }
           });
         })
@@ -259,9 +267,7 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       if(!this.filters.id){
-      this.listInitiator();
-
-      }
+      this.listLeader();}
     },
     //显示新增界面
     handleAdd: function() {
@@ -270,7 +276,7 @@ export default {
         // idCard: "",
         displayName: "",
         signature: "",
-        phone: ""
+        phone:"",
       };
     },
     //新增
@@ -283,7 +289,7 @@ export default {
             let para = Object.assign({}, this.addForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            addInitiator(para).then(res => {
+            addLeader(para).then(res => {
               console.log(res);
               if (res.code == 1) {
                 //NProgress.done();
@@ -293,7 +299,7 @@ export default {
                 });
                 this.$refs["addForm"].resetFields();
                 this.addFormVisible = false;
-                this.listInitiator();
+                this.listLeader();
               } else {
                 this.$message({
                   message: res.message,
@@ -326,8 +332,7 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateInitiator(para)
-              .then(res => {
+            updateLeader(para).then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();
@@ -337,7 +342,7 @@ export default {
                   });
                   this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
-                  this.listInitiator();
+                  this.listLeader();
                 } else {
                   this.$message({
                     message: res.message,
@@ -361,10 +366,15 @@ export default {
           });
         }
       });
-    }
+    },
+
+
+
+   
+    
   },
   mounted() {
-    this.listInitiator();
+    this.listLeader();
   }
 };
 </script>
@@ -376,4 +386,6 @@ export default {
     margin-bottom: 20px;
   }
 }
+
+
 </style>

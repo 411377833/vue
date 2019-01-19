@@ -189,7 +189,7 @@ export default {
           });
         }
       });}else{
-        _this.getOrg()
+        _this.listOrg()
       }
     },
 // 列表
