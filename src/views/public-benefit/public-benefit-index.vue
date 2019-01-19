@@ -169,7 +169,7 @@
         let _this = this;
         if(_this.filters.id){
           getProject({
-            token:sessionStorage.getItem('token'),
+            // token:sessionStorage.getItem('token'),
             id:_this.filters.id
           }).then((res)=>{
             console.log(res)

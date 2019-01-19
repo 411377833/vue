@@ -17,7 +17,10 @@ import leader from './views/public-benefit/leader'
 import category from './views/public-benefit/category'
 import Initiator from './views/initiator/initiator.vue'
 
-let routes = [
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+const routes = [
     {
         path: '/login',
         component: Login,
@@ -78,16 +81,16 @@ let routes = [
     //         { path: '/page5', component: Page5, name: '页面5' }
     //     ]
     // },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '',
-    //     iconCls: 'fa fa-address-card',
-    //     leaf: true,//只有一个节点
-    //     children: [
-    //         { path: '/page6', component: Page6, name: '导航三' }
-    //     ]
-    // },
+    {
+        path: '/',
+        component: Home,
+        name: '',
+        iconCls: 'fa fa-address-card',
+        leaf: true,//只有一个节点
+        children: [
+            { path: '/page6', component: Page6, name: '导航三' }
+        ]
+    },
     // {
     //     path: '/',
     //     component: Home,
@@ -103,5 +106,29 @@ let routes = [
     //     redirect: { path: '/404' }
     // }
 ];
+// 页面刷新时，重新赋值token
+if (window.localStorage.getItem('token')) {
+    store.commit(types.LOGIN, window.localStorage.getItem('token'))
+}
 
+const router = new VueRouter({
+    routes
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(r => r.meta.requireAuth)) {
+        if (store.state.token) {
+            next();
+        }
+        else {
+            next({
+                path: '/login',
+                query: {redirect: to.fullPath}
+            })
+        }
+    }
+    else {
+        next();
+    }
+})
 export default routes;
