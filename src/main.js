@@ -28,12 +28,12 @@ const router = new VueRouter({
   routes
 })
 
+//路由拦截，判断是否存在token
 router.beforeEach((to, from, next) => {
   //NProgress.start();
   if (to.path == '/login') {
     sessionStorage.removeItem('token');
   }
-  console.log(sessionStorage.getItem('token'))
   let token = sessionStorage.getItem('token');
   if (!token && to.path != '/login') {
     next({ path: '/login' })
@@ -55,3 +55,4 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
+export default router

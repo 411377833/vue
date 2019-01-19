@@ -4,8 +4,14 @@
  import axios from 'axios';import QS from 'qs';
 //  import { Toast } from 'vant';
  import store from '../vuex/store'
- import routes from '../routes'
- 
+ import routes from '../main'
+ import {
+    Promise
+    } from 'es6-promise' //引入Promise
+//  import {
+//     Loading,
+//     Message
+//   } from 'element-ui'
  // 环境的切换
  if (process.env.NODE_ENV == 'development') {
      axios.defaults.baseURL = '/api';
@@ -39,12 +45,10 @@
      response => {
          if (response.status === 200) {
              if(response.data.code === 666){
-                console.log(routes)
                 return routes.replace({
                     path: '/login',
                     // query: { redirect: routes.currentRoute.path },
-                })
-                ;
+                });
              }
              return Promise.resolve(response);
          } else {

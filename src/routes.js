@@ -5,9 +5,9 @@ import Main from './views/Main.vue'
 import Table from './views/nav1/Table.vue'
 import Form from './views/nav1/Form.vue'
 import user from './views/nav1/user.vue'
-import Page4 from './views/nav2/Page4.vue'
-import Page5 from './views/nav2/Page5.vue'
-import Page6 from './views/nav3/Page6.vue'
+// import Page4 from './views/nav2/Page4.vue'
+// import Page5 from './views/nav2/Page5.vue'
+// import Page6 from './views/nav3/Page6.vue'
 import echarts from './views/charts/echarts.vue'
 import PublicBenefitIndex from './views/public-benefit/public-benefit-index'
 import displayName from './views/public-benefit/displayName'
@@ -17,10 +17,7 @@ import leader from './views/public-benefit/leader'
 import category from './views/public-benefit/category'
 import Initiator from './views/initiator/initiator.vue'
 
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-Vue.use(VueRouter)
-const routes = [
+let routes = [
     {
         path: '/login',
         component: Login,
@@ -81,16 +78,16 @@ const routes = [
     //         { path: '/page5', component: Page5, name: '页面5' }
     //     ]
     // },
-    {
-        path: '/',
-        component: Home,
-        name: '',
-        iconCls: 'fa fa-address-card',
-        leaf: true,//只有一个节点
-        children: [
-            { path: '/page6', component: Page6, name: '导航三' }
-        ]
-    },
+    // {
+    //     path: '/',
+    //     component: Home,
+    //     name: '',
+    //     iconCls: 'fa fa-address-card',
+    //     leaf: true,//只有一个节点
+    //     children: [
+    //         { path: '/page6', component: Page6, name: '导航三' }
+    //     ]
+    // },
     // {
     //     path: '/',
     //     component: Home,
@@ -106,29 +103,5 @@ const routes = [
     //     redirect: { path: '/404' }
     // }
 ];
-// 页面刷新时，重新赋值token
-if (window.localStorage.getItem('token')) {
-    store.commit(types.LOGIN, window.localStorage.getItem('token'))
-}
 
-const router = new VueRouter({
-    routes
-});
-
-router.beforeEach((to, from, next) => {
-    if (to.matched.some(r => r.meta.requireAuth)) {
-        if (store.state.token) {
-            next();
-        }
-        else {
-            next({
-                path: '/login',
-                query: {redirect: to.fullPath}
-            })
-        }
-    }
-    else {
-        next();
-    }
-})
 export default routes;
