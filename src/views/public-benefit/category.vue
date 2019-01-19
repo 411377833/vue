@@ -4,10 +4,10 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="请输入发起人id"></el-input>
+          <el-input v-model="filters.id" placeholder="请输入分类名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="queryGetInitiator">查询</el-button>
+          <el-button type="primary" v-on:click="queryCateName">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -20,13 +20,13 @@
       </el-table-column>-->
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
-      <el-table-column prop="id" label="ID" width="200"></el-table-column>
-      <el-table-column prop="displayName" label="姓名" width="300"></el-table-column>
-      <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
+      <el-table-column prop="id" label="id" width="200"></el-table-column>
+      <el-table-column prop="cateName" label="分类名称" width="300"></el-table-column>
+      <el-table-column prop="creatorId" label="创建人编号" width="200"></el-table-column>
+      <!-- <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column> -->
       <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
       <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
-      <el-table-column prop="userType" label="用户类型" min-width="150"></el-table-column>
-
+      <!-- <el-table-column prop="userType" label="类型" min-width="150"></el-table-column> -->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
       <el-table-column label="操作" width="150">
@@ -53,16 +53,19 @@
       <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
         <!-- <el-form-item label="机构代码" prop="idCard">
           <el-input v-model="addForm.idCard"></el-input>
-        </el-form-item>-->
-        <el-form-item label="发起人姓名" prop="displayName">
-          <el-input v-model="addForm.displayName"></el-input>
+        </el-form-item> -->
+        <el-form-item label="分类名称" prop="cateName">
+          <el-input v-model="addForm.cateName"></el-input>
         </el-form-item>
-        <el-form-item label="说明" prop="signature">
-          <el-input v-model="addForm.signature"></el-input>
+        <el-form-item label="排序号" prop="priority">
+          <el-input v-model="addForm.priority"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
+        <el-form-item label="分类图路径" prop="cateImg">
+          <el-input v-model="addForm.cateImg"></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="联系电话" >
           <el-input v-model="addForm.phone"></el-input>
-        </el-form-item>
+        </el-form-item>-->
         <!-- <el-upload
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -92,14 +95,14 @@
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="发起人姓名" prop="displayName">
-          <el-input v-model="editForm.displayName"></el-input>
+         <el-form-item label="分类名称" prop="cateName">
+          <el-input v-model="editForm.cateName"></el-input>
         </el-form-item>
-        <el-form-item label="说明" prop="signature">
-          <el-input v-model="editForm.signature"></el-input>
+        <el-form-item label="排序号" prop="priority">
+          <el-input v-model="editForm.priority"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="editForm.phone"></el-input>
+        <el-form-item label="分类图路径" prop="cateImg">
+          <el-input v-model="editForm.cateImg"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -112,18 +115,18 @@
 
 <script>
 import {
-  listInitiator,
-  deleteInitiator,
-  getInitiator,
-  addInitiator,
-  updateInitiator
+  listCategory,
+  deleteCategory,
+  getLeader,
+  addCategory,
+  updateCategory
 } from "../../api/api";
 export default {
   data() {
     return {
       page: 1,
       filters: {
-        id: ""
+        cateName: ""
       },
       //   imageUrl: '',
       total: 0,
@@ -132,14 +135,17 @@ export default {
       //新增界面数据
       addForm: {
         // idCard: "",
-        displayName: "",
-        signature: ""
+        cateName: "",
+        priority: "",
+        cateImg:""
       },
       //编辑界面数据
       editForm: {
         // idCard: "",
         displayName: "",
-        signature: ""
+        priority: "",
+        cateImg:""
+
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
@@ -147,37 +153,35 @@ export default {
       editLoading: false,
       addFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        displayName: [
-          { required: true, message: "请输入发起人姓名", trigger: "blur" }
+        cateName: [
+          { required: true, message: "请填写分类名称", trigger: "blur" }
         ],
-        signature: [{ required: true, message: "请填写说明", trigger: "blur" }]
-        // headImg:[
-        //     {required: true, message: "请上传机构头像", trigger: "blur"}
-        // ]
+        priority: [{ required: true, message: "请输入排序号", trigger: "blur" }],
+        cateImg:[
+            {required: true, message: "请上传图片", trigger: "blur"}
+        ]
       },
       editFormRules: {
-        // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        displayName: [
-          { required: true, message: "请输入发起人姓名", trigger: "blur" }
-        ],
-        signature: [{ required: true, message: "填写说明", trigger: "blur" }]
+        
       }
     };
   },
   methods: {
-    queryGetInitiator() {
+    queryCateName() {
       let _this = this;
       if (_this.filters.id) {
-        getInitiator({
+        listCategory({
           token: sessionStorage.getItem("token"),
-          id: _this.filters.id
+          cateName: _this.filters.id,
+          pageNum: this.page,
+          pageSize: 10
         }).then(res => {
           console.log(res);
           if (res.code === 1) {
-            let arr = [];
-            arr.push(res.data);
-            _this.tableData = arr;
-            console.log(_this.tableData);
+            // let arr = [];
+            //   arr.push(res.data);
+            _this.tableData = res.data.data;
+            // console.log(_this.tableData );
             _this.total = res.data.total;
           } else {
             this.$message({
@@ -186,19 +190,17 @@ export default {
             });
           }
         });
-      }else{
-          _this.listInitiator()
+      } else {
+        _this.listCategory();
       }
     },
     // 列表
-    listInitiator() {
+    listCategory() {
       let _this = this;
-      listInitiator({
+      listCategory({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
-        pageSize: 10,
-        title: "",
-        description: ""
+        pageSize: 10
       }).then(res => {
         console.log(res);
         if (res.code === 1) {
@@ -238,7 +240,7 @@ export default {
           });
           // 	this.getUsers();
           // });
-          deleteInitiator({
+          deleteCategory({
             token: sessionStorage.getItem("token"),
             id: row.id
           }).then(res => {
@@ -249,7 +251,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              _this.listInitiator();
+              _this.listCategory();
             }
           });
         })
@@ -258,19 +260,17 @@ export default {
     //分页
     handleCurrentChange(val) {
       this.page = val;
-      if(!this.filters.id){
-      this.listInitiator();
-
+      if (!this.filters.id) {
+        this.listCategory();
       }
     },
     //显示新增界面
     handleAdd: function() {
       this.addFormVisible = true;
       this.addForm = {
-        // idCard: "",
-        displayName: "",
-        signature: "",
-        phone: ""
+         cateName: "",
+        priority: "",
+        cateImg:""
       };
     },
     //新增
@@ -283,7 +283,7 @@ export default {
             let para = Object.assign({}, this.addForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            addInitiator(para).then(res => {
+            addCategory(para).then(res => {
               console.log(res);
               if (res.code == 1) {
                 //NProgress.done();
@@ -293,7 +293,7 @@ export default {
                 });
                 this.$refs["addForm"].resetFields();
                 this.addFormVisible = false;
-                this.listInitiator();
+                this.listCategory();
               } else {
                 this.$message({
                   message: res.message,
@@ -326,7 +326,7 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateInitiator(para)
+            updateCategory(para)
               .then(res => {
                 console.log(res);
                 if (res.code == 1) {
@@ -337,7 +337,7 @@ export default {
                   });
                   this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
-                  this.listInitiator();
+                  this.listCategory();
                 } else {
                   this.$message({
                     message: res.message,
@@ -364,7 +364,7 @@ export default {
     }
   },
   mounted() {
-    this.listInitiator();
+    this.listCategory();
   }
 };
 </script>

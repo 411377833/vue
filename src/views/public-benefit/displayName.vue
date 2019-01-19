@@ -59,16 +59,16 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
-        <!-- <el-upload
+        <el-upload
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
-         >
+        >
           <img v-if="imageUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload> -->
+        </el-upload>
         <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
           <el-form-item label="发起人ID"><el-input v-model="addForm.initiatorId"></el-input></el-form-item>
           <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
@@ -97,7 +97,6 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
-        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -108,13 +107,7 @@
 </template>
 
 <script>
-import {
-  listOrg,
-  deletOrg,
-  getOrg,
-  addOrg,
-  updateOrg
-} from "../../api/api";
+import { listOrg, deletOrg, getOrg, addOrg, updateOrg } from "../../api/api";
 export default {
   data() {
     return {
@@ -122,13 +115,12 @@ export default {
       filters: {
         id: ""
       },
-    //   imageUrl: '',
+      //   imageUrl: '',
       total: 0,
       tableData: [],
       listLoading: false,
       //新增界面数据
       addForm: {
-        
         idCard: "",
         displayName: "",
         signature: ""
@@ -144,20 +136,23 @@ export default {
       editFormVisible: false, //编辑界面是否显示
       editLoading: false,
       addFormRules: {
-        idCard: [{ required: true, message: "请输入机构代码", trigger: "blur" }],
+        idCard: [
+          { required: true, message: "请输入机构代码", trigger: "blur" }
+        ],
         displayName: [
           { required: true, message: "请输入机构名称", trigger: "blur" }
         ],
         signature: [
           { required: true, message: "请填写机构说明", trigger: "blur" }
-        ],
+        ]
         // headImg:[
         //     {required: true, message: "请上传机构头像", trigger: "blur"}
         // ]
-
       },
       editFormRules: {
-        idCard: [{ required: true, message: "请输入机构代码", trigger: "blur" }],
+        idCard: [
+          { required: true, message: "请输入机构代码", trigger: "blur" }
+        ],
         displayName: [
           { required: true, message: "请输入机构名称", trigger: "blur" }
         ],
@@ -170,29 +165,29 @@ export default {
   methods: {
     queryGetOrg() {
       let _this = this;
-      if(_this.filters.id){
-      getOrg({
-        token: sessionStorage.getItem("token"),
-        id: _this.filters.id
-      }).then(res => {
-        console.log(res);
-        if (res.code === 1) {
-          let arr = []
-              arr.push(res.data)
-           _this.tableData = arr
-          _this.total = res.data.total;
-        } else {
-
-          this.$message({
-            message: res.message,
-            type: "error"
-          });
-        }
-      });}else{
-        _this.getOrg()
+      if (_this.filters.id) {
+        getOrg({
+          token: sessionStorage.getItem("token"),
+          id: _this.filters.id
+        }).then(res => {
+          console.log(res);
+          if (res.code === 1) {
+            let arr = [];
+            arr.push(res.data);
+            _this.tableData = arr;
+            _this.total = res.data.total;
+          } else {
+            this.$message({
+              message: res.message,
+              type: "error"
+            });
+          }
+        });
+      } else {
+        _this.listOrg();
       }
     },
-// 列表
+    // 列表
     listOrg() {
       let _this = this;
       listOrg({
@@ -260,9 +255,8 @@ export default {
     //分页
     handleCurrentChange(val) {
       this.page = val;
-      if(!this.filters.id){
-      this.listOrg();
-
+      if (!this.filters.id) {
+        this.listOrg();
       }
     },
     //显示新增界面
@@ -327,7 +321,8 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateOrg(para).then(res => {
+            updateOrg(para)
+              .then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();
@@ -361,12 +356,7 @@ export default {
           });
         }
       });
-    },
-
-
-
-   
-    
+    }
   },
   mounted() {
     this.listOrg();
@@ -381,6 +371,4 @@ export default {
     margin-bottom: 20px;
   }
 }
-
-
 </style>

@@ -112,7 +112,7 @@
 
 <script>
 import {
-  listInitiator,
+  getBanners,
   deleteInitiator,
   getInitiator,
   addInitiator,
@@ -187,13 +187,13 @@ export default {
           }
         });
       }else{
-          _this.listInitiator()
+          _this.getBanners()
       }
     },
     // 列表
-    listInitiator() {
+    getBanners() {
       let _this = this;
-      listInitiator({
+      getBanners({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
         pageSize: 10,
@@ -249,7 +249,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              _this.listInitiator();
+              _this.getBanners();
             }
           });
         })
@@ -259,7 +259,7 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       if(!this.filters.id){
-      this.listInitiator();
+      this.getBanners();
 
       }
     },
@@ -293,7 +293,7 @@ export default {
                 });
                 this.$refs["addForm"].resetFields();
                 this.addFormVisible = false;
-                this.listInitiator();
+                this.getBanners();
               } else {
                 this.$message({
                   message: res.message,
@@ -337,7 +337,7 @@ export default {
                   });
                   this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
-                  this.listInitiator();
+                  this.getBanners();
                 } else {
                   this.$message({
                     message: res.message,
@@ -364,7 +364,7 @@ export default {
     }
   },
   mounted() {
-    this.listInitiator();
+    this.getBanners();
   }
 };
 </script>
