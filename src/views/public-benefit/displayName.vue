@@ -60,14 +60,14 @@
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
         <el-upload
-          :data="abc"
+        :data='abc'
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload" 
         >
-          <img v-if="addForm.headImg" :src="addForm.headImg" class="avatar">
+          <img  v-if="addHeadImg" :src="addHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
@@ -106,7 +106,7 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload" 
         >
-          <img v-if="editForm.headImg" :src="editForm.headImg" class="avatar">
+          <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form>
@@ -178,6 +178,8 @@ export default {//editForm.headImg
           { required: true, message: "请填写机构说明", trigger: "blur" }
         ]
       },
+      addHeadImg:"",
+      editHeadImg:''
       
     };
   },
@@ -277,6 +279,8 @@ export default {//editForm.headImg
         // this.imageUrl = URL.createObjectURL(file.raw);
         if(res.code === 1 ){
           this.addForm.headImg = res.data;
+          this.addHeadImg = res.data
+          this.editHeadImg = res.data
           console.log(this.addForm.headImg)
         }else{
           this.$message({
@@ -302,6 +306,7 @@ export default {//editForm.headImg
     //显示新增界面
     handleAdd: function() {
       this.addFormVisible = true;
+      this.addHeadImg = ''
       this.addForm = {
         idCard: "",
         displayName: "",
@@ -317,7 +322,8 @@ export default {//editForm.headImg
             this.addLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            para.headImg=this.addForm.headImg
+            console.log(para)
+            // para.headImg=this.addForm.headImg
             para.token = sessionStorage.getItem("token");
             addOrg(para).then(res => {
               console.log(res);
@@ -348,6 +354,7 @@ export default {//editForm.headImg
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
+      this.editHeadImg = row.headImg
       this.editForm = Object.assign({}, row);
       console.log(this.editForm)
     },
