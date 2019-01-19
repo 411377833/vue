@@ -4,16 +4,16 @@
  import axios from 'axios';import QS from 'qs';
 //  import { Toast } from 'vant';
  import store from '../vuex/store'
- import routes from '../routes'
+ import router from '../routes'
  
  // 环境的切换
- if (process.env.NODE_ENV == 'development') {
-     axios.defaults.baseURL = '/api';
- } else if (process.env.NODE_ENV == 'debug') {
-     axios.defaults.baseURL = '';
- } else if (process.env.NODE_ENV == 'production') {
-     axios.defaults.baseURL = 'http://api.123dailu.com/';
- }
+//  if (process.env.NODE_ENV == 'development') {
+//      axios.defaults.baseURL = '/api';
+//  } else if (process.env.NODE_ENV == 'debug') {
+//      axios.defaults.baseURL = '';
+//  } else if (process.env.NODE_ENV == 'production') {
+//      axios.defaults.baseURL = 'http://api.123dailu.com/';
+//  }
  
  // 请求超时时间
  axios.defaults.timeout = 10000;
@@ -24,10 +24,20 @@
  // 请求拦截器
  axios.interceptors.request.use(
      config => {
+
+        // if(config.method  === 'post'){
+        //     // JSON 转换为 FormData
+        //     const formData = new FormData();
+        //     Object.keys(config.data).forEach(key => formData.append(key, config.data[key]))
+        //     config.data = formData
+        // }
          // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
          // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
          const token = store.state.token;
          token && (config.headers.Authorization = token);
+         console.log(config)
+         
+
          return config;
      },
      error => {
@@ -39,12 +49,12 @@
      response => {
          if (response.status === 200) {
              if(response.data.code === 666){
-                console.log(routes)
-                return routes.replace({
-                    path: '/login',
-                    // query: { redirect: routes.currentRoute.path },
-                })
-                ;
+                console.log(response)
+                console.log(router)
+                // return routes.replace({
+                //     path: '/login',
+                //     // query: { redirect: routes.currentRoute.path },
+                // });
              }
              return Promise.resolve(response);
          } else {
@@ -53,15 +63,19 @@
      },
      // 服务器状态码不是200的情况
      error => {
+        console.log(error.response.status)
+        console.log(routes)
          if (error.response.status) {
+             
              switch (error.response.status) {
                  // 401: 未登录
                  // 未登录则跳转登录页面，并携带当前页面的路径
                  // 在登录成功后返回当前页面，这一步需要在登录页操作。
-                 case 401:
+                 case 400:
+                 
                     routes.replace({
                          path: '/login',
-                         query: { redirect: router.currentRoute.fullPath }
+                        //  query: { redirect: router.currentRoute.fullPath }
                      });
                      break;
                  // 403 token过期
