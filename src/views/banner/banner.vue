@@ -21,11 +21,11 @@
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
       <el-table-column prop="id" label="ID" width="200"></el-table-column>
-      <el-table-column prop="displayName" label="姓名" width="300"></el-table-column>
-      <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
+      <el-table-column prop="bannerDesc" label="banner" width="300"></el-table-column>
+      <el-table-column prop="bannerType" label="类型	" min-width="180"></el-table-column>
       <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
       <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
-      <el-table-column prop="userType" label="用户类型" min-width="150"></el-table-column>
+      <el-table-column prop="projectId" label="项目id" min-width="150"></el-table-column>
 
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
