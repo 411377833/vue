@@ -72,3 +72,5 @@ export const getBanners = p => post(`${baseUrl}/api/get_banners`, p);  //通
 // export const addUser = params => { return axios.get(`${base}/user/add`, { params: params }); };
 
 // export const requestLogin=(paramObj)=>{return $server.post('/api.php?ac=v2_djList',paramObj)}
+
+export const upload_img = p => post(`${baseUrl}/api/upload_img`, p);//上传图片

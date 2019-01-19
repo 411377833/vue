@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
 //NProgress.done();
 //});
 
-new Vue({
+window.wVue = new Vue({
   //el: '#app',
   //template: '<App/>',
   router,

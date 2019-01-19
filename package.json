@@ -13,8 +13,10 @@
     "axios": "^0.15.3",
     "echarts": "^3.3.2",
     "element-ui": "^1.2.8",
+    "es6-promise": "^4.2.5",
     "font-awesome": "^4.7.0",
     "nprogress": "^0.2.0",
+    "vant": "^1.5.2",
     "vue": "^2.2.2",
     "vue-router": "^2.3.0",
     "vuex": "^2.0.0-rc.6"
