@@ -60,13 +60,14 @@
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
         <el-upload
+          :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
+          :before-upload="beforeAvatarUpload" 
         >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <img v-if="addForm.headImg" :src="addForm.headImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
@@ -97,6 +98,17 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
+        <el-upload
+          :data="abc"
+          class="avatar-uploader"
+          action="http://api.50wlkj.com/api/upload_img"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload" 
+        >
+          <img v-if="editForm.headImg" :src="editForm.headImg" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -108,12 +120,16 @@
 
 <script>
 import { listOrg, deletOrg, getOrg, addOrg, updateOrg } from "../../api/api";
-export default {
+export default {//editForm.headImg
   data() {
     return {
       page: 1,
       filters: {
         id: ""
+      },
+      dialogVisible:false,
+      abc:{
+        token:sessionStorage.getItem("token")
       },
       //   imageUrl: '',
       total: 0,
@@ -123,13 +139,15 @@ export default {
       addForm: {
         idCard: "",
         displayName: "",
-        signature: ""
-      },
+        signature: "",
+        headImg:''
+      },//
       //编辑界面数据
       editForm: {
         idCard: "",
         displayName: "",
-        signature: ""
+        signature: "",
+        headImg:''
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
@@ -159,7 +177,8 @@ export default {
         signature: [
           { required: true, message: "请填写机构说明", trigger: "blur" }
         ]
-      }
+      },
+      
     };
   },
   methods: {
@@ -209,13 +228,6 @@ export default {
         }
       });
     },
-    //显示编辑界面
-    handleEdit: function(index, row) {
-      console.log(row);
-      // this.editFormVisible = true;
-      // this.editForm = Object.assign({}, row);
-    },
-
     //删除
     handleDel: function(index, row) {
       let _this = this;
@@ -259,13 +271,42 @@ export default {
         this.listOrg();
       }
     },
+//上传图片
+    handleAvatarSuccess(res, file) {
+      console.log(URL.createObjectURL(file.raw));
+        // this.imageUrl = URL.createObjectURL(file.raw);
+        if(res.code === 1 ){
+          this.addForm.headImg = res.data;
+          console.log(this.addForm.headImg)
+        }else{
+          this.$message({
+            message: '上传失败！',
+            type: "error"
+          });
+        }
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
+        const isLt2M = file.size / 1024 / 1024 < 4;
+
+        // if (!isJPG) {
+        //   this.$message.error('上传头像图片只能是 JPG 格式!');
+        // }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return  isLt2M;
+      },
+
+
     //显示新增界面
     handleAdd: function() {
       this.addFormVisible = true;
       this.addForm = {
         idCard: "",
         displayName: "",
-        signature: ""
+        signature: "",
+        
       };
     },
     //新增
@@ -276,7 +317,7 @@ export default {
             this.addLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            console.log(para);
+            para.headImg=this.addForm.headImg
             para.token = sessionStorage.getItem("token");
             addOrg(para).then(res => {
               console.log(res);
@@ -308,6 +349,7 @@ export default {
       console.log(row);
       this.editFormVisible = true;
       this.editForm = Object.assign({}, row);
+      console.log(this.editForm)
     },
     //编辑
     editSubmit: function() {
@@ -356,7 +398,12 @@ export default {
           });
         }
       });
-    }
+    },
+    
+
+
+
+
   },
   mounted() {
     this.listOrg();
@@ -371,4 +418,27 @@ export default {
     margin-bottom: 20px;
   }
 }
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>
