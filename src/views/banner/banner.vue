@@ -4,7 +4,7 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="请输入发起人id"></el-input>
+          <el-input v-model="filters.id" placeholder="请输入banner描述或标题"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="queryGetInitiator">查询</el-button>
@@ -20,13 +20,13 @@
       </el-table-column>-->
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
-      <el-table-column prop="id" label="ID" width="200"></el-table-column>
-      <el-table-column prop="bannerDesc" label="banner" width="300"></el-table-column>
+      <!-- <el-table-column prop="id" label="ID" width="200"></el-table-column> -->
       <el-table-column prop="bannerType" label="类型	" min-width="180"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
-      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
-      <el-table-column prop="projectId" label="项目id" min-width="150"></el-table-column>
+      <el-table-column prop="bannerDesc" label="banner" width="300"></el-table-column>
 
+      <el-table-column prop="createTime" label="创建时间" min-width="250"></el-table-column>
+      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="250"></el-table-column>
+      <!-- <el-table-column prop="projectId" label="项目id" min-width="150"></el-table-column> -->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
       <el-table-column label="操作" width="150">
@@ -51,18 +51,29 @@
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <!-- <el-form-item label="机构代码" prop="idCard">
-          <el-input v-model="addForm.idCard"></el-input>
+        <el-form-item label="类型" prop="idCard">
+          <el-input v-model="addForm.bannerType"></el-input>
+        </el-form-item>
+        <el-form-item label="标题或描述" prop="displayName">
+          <el-input v-model="addForm.bannerDesc"></el-input>
+        </el-form-item>
+        <el-form-item label="优先级" prop="signature">
+          <el-input v-model="addForm.priority"></el-input>
+        </el-form-item>
+        <el-upload
+          :data="abc"
+          class="avatar-uploader"
+          action="http://api.50wlkj.com/api/upload_img"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img v-if="addHeadImg" :src="addHeadImg" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <!-- <el-form-item label="banner图">
+          <el-input v-model="addForm.bannerImg"></el-input>
         </el-form-item>-->
-        <el-form-item label="发起人姓名" prop="displayName">
-          <el-input v-model="addForm.displayName"></el-input>
-        </el-form-item>
-        <el-form-item label="说明" prop="signature">
-          <el-input v-model="addForm.signature"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="addForm.phone"></el-input>
-        </el-form-item>
         <!-- <el-upload
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -92,15 +103,26 @@
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="发起人姓名" prop="displayName">
-          <el-input v-model="editForm.displayName"></el-input>
+        <el-form-item label="类型" prop="idCard">
+          <el-input v-model="editForm.bannerType"></el-input>
         </el-form-item>
-        <el-form-item label="说明" prop="signature">
-          <el-input v-model="editForm.signature"></el-input>
+        <el-form-item label="标题或描述" prop="displayName">
+          <el-input v-model="editForm.bannerDesc"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="editForm.phone"></el-input>
+        <el-form-item label="优先级" prop="signature">
+          <el-input v-model="editForm.priority"></el-input>
         </el-form-item>
+        <el-upload
+          :data="abc"
+          class="avatar-uploader"
+          action="http://api.50wlkj.com/api/upload_img"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -115,8 +137,8 @@ import {
   getBanners,
   deleteInitiator,
   getInitiator,
-  addInitiator,
-  updateInitiator
+  addBanner,
+  updateBanner
 } from "../../api/api";
 export default {
   data() {
@@ -125,21 +147,28 @@ export default {
       filters: {
         id: ""
       },
+      dialogVisible: false,
+      abc: {
+        token: sessionStorage.getItem("token")
+      },
+
       //   imageUrl: '',
       total: 0,
       tableData: [],
       listLoading: false,
       //新增界面数据
       addForm: {
-        // idCard: "",
-        displayName: "",
-        signature: ""
+        bannerType: "",
+        bannerDesc: "",
+        priority: "",
+        bannerImg:""
       },
       //编辑界面数据
       editForm: {
-        // idCard: "",
-        displayName: "",
-        signature: ""
+       bannerType: "",
+        bannerDesc: "",
+        priority: "",
+        bannerImg:""
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
@@ -147,21 +176,25 @@ export default {
       editLoading: false,
       addFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        displayName: [
-          { required: true, message: "请输入发起人姓名", trigger: "blur" }
+        bannerType: [
+          { required: true, message: "请填写banner类型", trigger: "blur" }
         ],
-        signature: [{ required: true, message: "请填写说明", trigger: "blur" }]
+        bannerDesc: [{ required: true, message: "请填写标题或描述", trigger: "blur" }],
+        priority: [{ required: true, message: "请填写优先级，最大为100", trigger: "blur" }],
         // headImg:[
         //     {required: true, message: "请上传机构头像", trigger: "blur"}
         // ]
       },
       editFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        displayName: [
-          { required: true, message: "请输入发起人姓名", trigger: "blur" }
+       bannerType: [
+          { required: true, message: "请填写banner类型", trigger: "blur" }
         ],
-        signature: [{ required: true, message: "填写说明", trigger: "blur" }]
-      }
+        bannerDesc: [{ required: true, message: "请填写标题或描述", trigger: "blur" }],
+        priority: [{ required: true, message: "请填写优先级，最大为100", trigger: "blur" }]
+      },
+      addHeadImg:"",
+      editHeadImg:''
     };
   },
   methods: {
@@ -186,8 +219,8 @@ export default {
             });
           }
         });
-      }else{
-          _this.getBanners()
+      } else {
+        _this.getBanners();
       }
     },
     // 列表
@@ -258,19 +291,47 @@ export default {
     //分页
     handleCurrentChange(val) {
       this.page = val;
-      if(!this.filters.id){
-      this.getBanners();
-
+      if (!this.filters.id) {
+        this.getBanners();
       }
     },
+
+    //上传图片
+    handleAvatarSuccess(res, file) {
+      console.log(URL.createObjectURL(file.raw));
+        // this.imageUrl = URL.createObjectURL(file.raw);
+        if(res.code === 1 ){
+          this.addForm.bannerImg = res.data;
+          this.addHeadImg = res.data
+          this.editHeadImg = res.data
+          console.log(this.addForm.bannerImg)
+        }else{
+          this.$message({
+            message: '上传失败！',
+            type: "error"
+          });
+        }
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
+        const isLt2M = file.size / 1024 / 1024 < 4;
+
+        // if (!isJPG) {
+        //   this.$message.error('上传头像图片只能是 JPG 格式!');
+        // }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return  isLt2M;
+      },
+
     //显示新增界面
     handleAdd: function() {
       this.addFormVisible = true;
       this.addForm = {
-        // idCard: "",
-        displayName: "",
-        signature: "",
-        phone: ""
+        bannerType: "",
+        bannerDesc: "",
+        priority: "",
       };
     },
     //新增
@@ -283,7 +344,7 @@ export default {
             let para = Object.assign({}, this.addForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            addInitiator(para).then(res => {
+            addBanner(para).then(res => {
               console.log(res);
               if (res.code == 1) {
                 //NProgress.done();
@@ -312,6 +373,7 @@ export default {
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
+      this.editHeadImg = row.bannerImg
       this.editForm = Object.assign({}, row);
     },
     //编辑
@@ -326,7 +388,7 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateInitiator(para)
+            updateBanner(para)
               .then(res => {
                 console.log(res);
                 if (res.code == 1) {
@@ -376,4 +438,28 @@ export default {
     margin-bottom: 20px;
   }
 }
+
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>

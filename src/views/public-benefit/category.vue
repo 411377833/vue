@@ -206,6 +206,7 @@ export default {
         if (res.code === 1) {
           _this.tableData = res.data.data;
           _this.total = res.data.total;
+          
         } else {
           this.$message({
             message: res.message,

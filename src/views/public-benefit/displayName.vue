@@ -4,7 +4,7 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="请输入机构id"></el-input>
+          <el-input v-model="filters.id" placeholder="请输入机构名称"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="queryGetOrg">查询</el-button>
@@ -20,14 +20,15 @@
       </el-table-column>-->
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
-      <el-table-column prop="id" label="机构id" width="100"></el-table-column>
+      <!-- <el-table-column prop="id" label="机构id" width="100"></el-table-column> -->
       <el-table-column prop="idCard" label="机构代码" width="200"></el-table-column>
       <el-table-column prop="displayName" label="机构名称" width="300"></el-table-column>
+      <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
       <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
       <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
+      
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
