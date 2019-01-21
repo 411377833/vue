@@ -4,10 +4,10 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="请输入分类名称"></el-input>
+          <el-input v-model="filters.id" placeholder="请输入标题"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="queryCateName">查询</el-button>
+          <el-button type="primary" v-on:click="queryListH5">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -21,15 +21,15 @@
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
       <!-- <el-table-column prop="id" label="id" width="200"></el-table-column> -->
-      <el-table-column prop="cateName" label="分类名称" min-width="300"></el-table-column>
-      <!-- <el-table-column prop="creatorId" label="创建人编号" width="200"></el-table-column> -->
+      <el-table-column prop="title" label="标题" width="300"></el-table-column>
+      <el-table-column prop="creatorId" label="创建人编号" width="200"></el-table-column>
       <!-- <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column> -->
-      <!-- <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column> -->
-      <!-- <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column> -->
+      <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
+      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
       <!-- <el-table-column prop="userType" label="类型" min-width="150"></el-table-column> -->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" min-width="150">
+      <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
@@ -60,18 +60,31 @@
         <el-form-item label="排序号" prop="priority">
           <el-input v-model="addForm.priority"></el-input>
         </el-form-item>
-        <el-upload
-          :data="abc"
+        <el-form-item label="分类图路径" prop="cateImg">
+          <el-input v-model="addForm.cateImg"></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="联系电话" >
+          <el-input v-model="addForm.phone"></el-input>
+        </el-form-item>-->
+        <!-- <el-upload
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="addCateImg" :src="addCateImg" class="avatar">
+         >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-        
+        </el-upload>-->
+        <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
+          <el-form-item label="发起人ID"><el-input v-model="addForm.initiatorId"></el-input></el-form-item>
+          <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
+          <el-form-item label="项目负责人ID"><el-input v-model="addForm.mgrId"></el-input></el-form-item>
+          <el-form-item label="标签"><el-input v-model="addForm.tags"></el-input></el-form-item>
+          <el-form-item label="图文详情" prop="imgs"><el-input v-model="addForm.h5Id"></el-input></el-form-item>
+          <el-form-item label="公益项目分类id"><el-input v-model="addForm.cateIds"></el-input></el-form-item>
+          <el-form-item label="目标善款金额"><el-input v-model="addForm.targetMoney"></el-input></el-form-item>
+        <el-form-item label="详情页轮播图"><el-input v-model="addForm.imgs"></el-input></el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -88,17 +101,9 @@
         <el-form-item label="排序号" prop="priority">
           <el-input v-model="editForm.priority"></el-input>
         </el-form-item>
-        <el-upload
-          :data="abc"
-          class="avatar-uploader"
-          action="http://api.50wlkj.com/api/upload_img"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="editCateImg" :src="editCateImg" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+        <el-form-item label="分类图路径" prop="cateImg">
+          <el-input v-model="editForm.cateImg"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -110,7 +115,7 @@
 
 <script>
 import {
-  listCategory,
+  listH5,
   deleteCategory,
   addCategory,
   updateCategory
@@ -123,10 +128,6 @@ export default {
         cateName: ""
       },
       //   imageUrl: '',
-      dialogVisible:false,
-      abc:{
-        token:sessionStorage.getItem("token")
-      },
       total: 0,
       tableData: [],
       listLoading: false,
@@ -155,25 +156,20 @@ export default {
           { required: true, message: "请填写分类名称", trigger: "blur" }
         ],
         priority: [{ required: true, message: "请输入排序号", trigger: "blur" }],
-        // cateImg:[
-        //     {required: true, message: "请上传图片", trigger: "blur"}
-        // ]
+        cateImg:[
+            {required: true, message: "请上传图片", trigger: "blur"}
+        ]
       },
       editFormRules: {
-         cateName: [
-          { required: true, message: "请填写分类名称", trigger: "blur" }
-        ],
-        // priority: [{ required: true, message: "请输入排序号", trigger: "blur" }],
-      },
-      addCateImg:"",
-      editCateImg:""
+        
+      }
     };
   },
   methods: {
-    queryCateName() {
+    queryListH5() {
       let _this = this;
       if (_this.filters.id) {
-        listCategory({
+        listH5({
           token: sessionStorage.getItem("token"),
           cateName: _this.filters.id,
           pageNum: this.page,
@@ -194,13 +190,13 @@ export default {
           }
         });
       } else {
-        _this.listCategory();
+        _this.listH5();
       }
     },
     // 列表
-    listCategory() {
+    listH5() {
       let _this = this;
-      listCategory({
+      listH5({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
         pageSize: 10
@@ -219,11 +215,11 @@ export default {
       });
     },
     //显示编辑界面
-    // handleEdit: function(index, row) {
-    //   console.log(row);
-    //   // this.editFormVisible = true;
-    //   // this.editForm = Object.assign({}, row);
-    // },
+    handleEdit: function(index, row) {
+      console.log(row);
+      // this.editFormVisible = true;
+      // this.editForm = Object.assign({}, row);
+    },
 
     //删除
     handleDel: function(index, row) {
@@ -255,7 +251,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              _this.listCategory();
+              _this.listH5();
             }
           });
         })
@@ -265,49 +261,16 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       if (!this.filters.id) {
-        this.listCategory();
+        this.listH5();
       }
     },
-//上传图片
-    handleAvatarSuccess(res, file) {
-      console.log(URL.createObjectURL(file.raw));
-        // this.imageUrl = URL.createObjectURL(file.raw);
-        if(res.code === 1 ){
-          this.addForm.cateImg = res.data;
-          this.addCateImg = res.data
-          this.editCateImg = res.data
-          console.log(this.addForm.cateImg)
-        }else{
-          this.$message({
-            message: '上传失败！',
-            type: "error"
-          });
-        }
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
-        const isLt2M = file.size / 1024 / 1024 < 4;
-
-        // if (!isJPG) {
-        //   this.$message.error('上传头像图片只能是 JPG 格式!');
-        // }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return  isLt2M;
-      },
-
-
-
-
     //显示新增界面
     handleAdd: function() {
       this.addFormVisible = true;
-      this.addCateImg = ''
       this.addForm = {
          cateName: "",
         priority: "",
-        // cateImg:""
+        cateImg:""
       };
     },
     //新增
@@ -330,7 +293,7 @@ export default {
                 });
                 this.$refs["addForm"].resetFields();
                 this.addFormVisible = false;
-                this.listCategory();
+                this.listH5();
               } else {
                 this.$message({
                   message: res.message,
@@ -349,7 +312,6 @@ export default {
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
-      this.editCateImg = row.cateImg
       this.editForm = Object.assign({}, row);
     },
     //编辑
@@ -364,13 +326,7 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateCategory({
-              token:sessionStorage.getItem("token"),
-              cateImg:para.cateImg,
-              cateName:para.cateName,
-              priority:para.priority,
-              id:para.id
-            })
+            updateCategory(para)
               .then(res => {
                 console.log(res);
                 if (res.code == 1) {
@@ -381,14 +337,14 @@ export default {
                   });
                   this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
-                  this.listCategory();
+                  this.listH5();
                 } else {
                   this.$message({
                     message: res.message,
                     type: "error"
                   });
                 }
-                this.editLoading = false;
+                // this.editLoading = false;
                 // //NProgress.done();
                 // this.$message({
                 // 	message: '提交成功',
@@ -408,7 +364,7 @@ export default {
     }
   },
   mounted() {
-    this.listCategory();
+    this.listH5();
   }
 };
 </script>
@@ -419,28 +375,5 @@ export default {
     justify-content: space-between;
     margin-bottom: 20px;
   }
-}
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
 }
 </style>

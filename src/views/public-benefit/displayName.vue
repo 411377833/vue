@@ -4,10 +4,10 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="请输入机构id"></el-input>
+          <el-input v-model="filters.id" placeholder="请输入机构名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="queryGetOrg">查询</el-button>
+          <el-button type="primary" v-on:click="queryListOrg">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -20,23 +20,24 @@
       </el-table-column>-->
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
-      <el-table-column prop="id" label="机构id" width="100"></el-table-column>
-      <el-table-column prop="idCard" label="机构代码" width="200"></el-table-column>
+      <!-- <el-table-column prop="id" label="机构id" width="100"></el-table-column> -->
+      <!-- <el-table-column prop="idCard" label="机构代码" width="200"></el-table-column> -->
       <el-table-column prop="displayName" label="机构名称" width="300"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
-      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
+      <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
+      <!-- <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
+      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>-->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+          <!-- <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button> -->
         </template>
       </el-table-column>
     </el-table>
     <!--工具条-->
-    <el-col :span="24" class="toolbar" v-if="!filters.id">
+    <el-col :span="24" class="toolbar" v-if="total">
       <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
       <el-pagination
         layout="prev, pager, next"
@@ -60,14 +61,14 @@
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
         <el-upload
-        :data='abc'
+          :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload" 
+          :before-upload="beforeAvatarUpload"
         >
-          <img  v-if="addHeadImg" :src="addHeadImg" class="avatar">
+          <img v-if="addHeadImg" :src="addHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
@@ -104,7 +105,7 @@
           action="http://api.50wlkj.com/api/upload_img"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload" 
+          :before-upload="beforeAvatarUpload"
         >
           <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -125,7 +126,7 @@ export default {//editForm.headImg
     return {
       page: 1,
       filters: {
-        id: ""
+        displayName: ""
       },
       dialogVisible:false,
       abc:{
@@ -141,7 +142,7 @@ export default {//editForm.headImg
         displayName: "",
         signature: "",
         headImg:''
-      },//
+      },
       //编辑界面数据
       editForm: {
         idCard: "",
@@ -184,18 +185,18 @@ export default {//editForm.headImg
     };
   },
   methods: {
-    queryGetOrg() {
+    queryListOrg() {
       let _this = this;
       if (_this.filters.id) {
-        getOrg({
+        listOrg({
           token: sessionStorage.getItem("token"),
-          id: _this.filters.id
+          displayName: _this.filters.id,
+          pageNum: this.page,
+          pageSize: 10
         }).then(res => {
           console.log(res);
           if (res.code === 1) {
-            let arr = [];
-            arr.push(res.data);
-            _this.tableData = arr;
+             _this.tableData = res.data.data;
             _this.total = res.data.total;
           } else {
             this.$message({
@@ -215,8 +216,8 @@ export default {//editForm.headImg
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
         pageSize: 10,
-        title: "",
-        description: ""
+        // title: "",
+        // description: ""
       }).then(res => {
         console.log(res);
         if (res.code === 1) {
@@ -356,7 +357,7 @@ export default {//editForm.headImg
       this.editFormVisible = true;
       this.editHeadImg = row.headImg
       this.editForm = Object.assign({}, row);
-      console.log(this.editForm)
+      console.log(this.editForm);
     },
     //编辑
     editSubmit: function() {
@@ -370,7 +371,14 @@ export default {//editForm.headImg
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateOrg(para)
+            updateOrg({
+              token:sessionStorage.getItem("token"),
+              headImg:para.headImg,
+              displayName:para.displayName,
+              signature:para.signature,
+              idCard:para.idCard,
+              id:para.id,
+            })
               .then(res => {
                 console.log(res);
                 if (res.code == 1) {
@@ -388,7 +396,7 @@ export default {//editForm.headImg
                     type: "error"
                   });
                 }
-                // this.editLoading = false;
+                this.editLoading = false;
                 // //NProgress.done();
                 // this.$message({
                 // 	message: '提交成功',
@@ -426,26 +434,26 @@ export default {//editForm.headImg
   }
 }
 .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>
