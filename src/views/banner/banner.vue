@@ -37,7 +37,7 @@
       </el-table-column>
     </el-table>
     <!--工具条-->
-    <el-col :span="24" class="toolbar" v-if="!filters.id">
+    <el-col :span="24" class="toolbar" v-if="total">
       <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
       <el-pagination
         layout="prev, pager, next"
@@ -68,7 +68,7 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
         >
-          <img v-if="addHeadImg" :src="addHeadImg" class="avatar">
+          <img v-if="addBannerImg" :src="addBannerImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <!-- <el-form-item label="banner图">
@@ -120,7 +120,7 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
         >
-          <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
+          <img v-if="editBannerImg" :src="editBannerImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form>
@@ -203,8 +203,8 @@ export default {
           }
         ]
       },
-      addHeadImg: "",
-      editHeadImg: ""
+      addBannerImg: "",
+      editBannerImg: ""
     };
   },
   methods: {
@@ -257,12 +257,12 @@ export default {
         }
       });
     },
-    //显示编辑界面
-    handleEdit: function(index, row) {
-      console.log(row);
-      // this.editFormVisible = true;
-      // this.editForm = Object.assign({}, row);
-    },
+    // //显示编辑界面
+    // handleEdit: function(index, row) {
+    //   console.log(row);
+    //   // this.editFormVisible = true;
+    //   // this.editForm = Object.assign({}, row);
+    // },
 
     //删除
     handleDel: function(index, row) {
@@ -314,8 +314,8 @@ export default {
       // this.imageUrl = URL.createObjectURL(file.raw);
       if (res.code === 1) {
         this.addForm.bannerImg = res.data;
-        this.addHeadImg = res.data;
-        this.editHeadImg = res.data;
+        this.addBannerImg = res.data;
+        this.editBannerImg= res.data;
         console.log(this.addForm.bannerImg);
       } else {
         this.$message({
@@ -386,7 +386,7 @@ export default {
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
-      this.editHeadImg = row.bannerImg;
+      this.editBannerImg = row.bannerImg;
       this.editForm = Object.assign({}, row);
     },
     //编辑
