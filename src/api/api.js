@@ -49,6 +49,12 @@ export const listH5= p => post(`${baseUrl}/api/list_h5`, p);  //通
 // export const addCategory = p => post(`${baseUrl}/api/add_category`, p);  // 接口通，上传图片未添加
 // export const deleteCategory = p => post(`${baseUrl}/api/delete_category`, p);  //通
 // export const updateCategory = p => post(`${baseUrl}/api/update_category`, p);// 报400
+//关键字
+export const getKeywords= p => post(`${baseUrl}/api/get_keywords`, p);  //通 
+export const delKeyword= p => post(`${baseUrl}/api/del_keyword`, p);  //通 
+export const addKeyword= p => post(`${baseUrl}/api/add_keyword`, p);  //通 
+export const updateKeyword= p => post(`${baseUrl}/api/update_keyword`, p);  //通 
+
 
 // 上传图片
 export const upload_img = p => post(`${baseUrl}/api/upload_img`, p);//通

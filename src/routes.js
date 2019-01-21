@@ -25,8 +25,10 @@ import category from './views/public-benefit/category'
 import banner from './views/banner/banner'
 //h5管理
 import h5 from './views/public-benefit/h5Page'
+//keyword
+import keyWord from './views/keyword/keyWord'
 
-import Initiator from './views/initiator/initiator'
+// import Initiator from './views/initiator/initiator'
 
 let routes = [
     {
@@ -68,6 +70,16 @@ let routes = [
             { path: '/banner', component: banner, name: 'Banner' }
         ]
     },
+    // {
+    //     path: '/',
+    //     component: Home,
+    //     name: '',
+    //     iconCls: 'fa fa-address-card',
+    //     leaf: true,//只有一个节点
+    //     children: [
+    //         { path: '/initiator', component: Initiator, name: '发起人' }
+    //     ]
+    // },
     {
         path: '/',
         component: Home,
@@ -75,7 +87,7 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/initiator', component: Initiator, name: '发起人' }
+            { path: '/keyWord', component: keyWord, name: '关键字' }
         ]
     },
     // {

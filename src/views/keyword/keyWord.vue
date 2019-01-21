@@ -3,12 +3,12 @@
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
-        <el-form-item>
-          <el-input v-model="filters.id" placeholder="请输入项目负责人姓名"></el-input>
+        <!-- <el-form-item>
+          <el-input v-model="filters.id" placeholder="请输入机构名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="queryListLeader">查询</el-button>
-        </el-form-item>
+          <el-button type="primary" v-on:click="queryGetKeywords">查询</el-button>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
@@ -20,20 +20,19 @@
       </el-table-column>-->
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
-      <!-- <el-table-column prop="id" label="ID" width="200"></el-table-column> -->
-      <el-table-column prop="displayName" label="项目负责人" width="300"></el-table-column>
-      <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
+      <!-- <el-table-column prop="id" label="机构id" width="100"></el-table-column> -->
+      <!-- <el-table-column prop="idCard" label="机构代码" width="200"></el-table-column> -->
+      <el-table-column prop="keyWord" label="关键字" min-width="300"></el-table-column>
+      <!-- <el-table-column prop="hotWord" label="说明	" min-width="180"></el-table-column> -->
       <!-- <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
-      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
-      <el-table-column prop="userType" label="类型" min-width="150"></el-table-column> -->
-
+      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>-->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" min-width="50">
+      <el-table-column label="操作" min-width="200">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-          <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button>
+          <!-- <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -52,19 +51,16 @@
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <!-- <el-form-item label="机构代码" prop="idCard">
+        <el-form-item label="关键字" prop="keyWord">
           <el-input v-model="addForm.idCard"></el-input>
-        </el-form-item> -->
-        <el-form-item label="项目负责人" prop="displayName">
+        </el-form-item>
+        <!-- <el-form-item label="机构名称" prop="displayName">
           <el-input v-model="addForm.displayName"></el-input>
         </el-form-item>
         <el-form-item label="说明" prop="signature">
           <el-input v-model="addForm.signature"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话" >
-          <el-input v-model="addForm.phone"></el-input>
-        </el-form-item>
-        <el-upload
+        </el-form-item> -->
+        <!-- <el-upload
           :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -74,7 +70,7 @@
         >
           <img v-if="addHeadImg" :src="addHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+        </el-upload> -->
         <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
           <el-form-item label="发起人ID"><el-input v-model="addForm.initiatorId"></el-input></el-form-item>
           <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
@@ -94,120 +90,85 @@
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="项目负责人" prop="displayName">
-          <el-input v-model="editForm.displayName"></el-input>
+        <el-form-item label="关键字" prop="keyWord">
+          <el-input v-model="editForm.idCard"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="id" >
-          <el-input v-model="editForm.id"></el-input>
-        </el-form-item> -->
-        <el-form-item label="说明" prop="signature">
-          <el-input v-model="editForm.signature"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话" >
-          <el-input v-model="editForm.phone"></el-input>
-        </el-form-item>
-        <el-upload
-          :data="abc"
-          class="avatar-uploader"
-          action="http://api.50wlkj.com/api/upload_img"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
         <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
       </div>
     </el-dialog>
-
-
   </section>
 </template>
 
 <script>
-import {
-  listLeader,
-  deleteLeader,
-  getLeader,
-  addLeader,
-  updateLeader
-} from "../../api/api";
-export default {
+import { getKeywords, delKeyword, addKeyword, updateKeyword } from "../../api/api";
+export default {//editForm.headImg
   data() {
     return {
       page: 1,
       filters: {
-        displayName: ""
+        id: ""
       },
-    //   imageUrl: '',
-     dialogVisible:false,
+      dialogVisible:false,
       abc:{
         token:sessionStorage.getItem("token")
       },
+      //   imageUrl: '',
       total: 0,
       tableData: [],
       listLoading: false,
       //新增界面数据
       addForm: {
+        keyWord: "",
         
-        // idCard: "",
-        displayName: "",
-        signature: "",
-        headImg:""
       },
       //编辑界面数据
       editForm: {
-        // idCard: "",
-        displayName: "",
-        signature: "",
-        headImg:""
+        keyWord: "",
+        
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
       editFormVisible: false, //编辑界面是否显示
       editLoading: false,
       addFormRules: {
-        // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        displayName: [
-          { required: true, message: "请填写项目负责人", trigger: "blur" }
+        keyWord: [
+          { required: true, message: "请输入关键字", trigger: "blur" }
         ],
-        signature: [
-          { required: true, message: "请填写说明", trigger: "blur" }
-        ],
+        // displayName: [
+        //   { required: true, message: "请输入机构名称", trigger: "blur" }
+        // ],
+        // signature: [
+        //   { required: true, message: "请填写机构说明", trigger: "blur" }
+        // ]
         // headImg:[
         //     {required: true, message: "请上传机构头像", trigger: "blur"}
         // ]
-
       },
       editFormRules: {
-        
-        displayName: [
-          { required: true, message: "请填写项目负责人", trigger: "blur" }
+        keyWord: [
+          { required: true, message: "请输入关键字", trigger: "blur" }
         ],
-        signature: [
-          { required: true, message: "请填写说明", trigger: "blur" }
-        ],
+      
       },
-      addHeadImg:"",
-      editHeadImg:''
+     
     };
   },
   methods: {
-    queryListLeader() {
+    queryGetKeywords() {
       let _this = this;
-      if(_this.filters.id){
-      listLeader({
-        token: sessionStorage.getItem("token"),
-        displayName: _this.filters.id,
+      if (_this.filters.id) {
+        getKeywords({
+          token: sessionStorage.getItem("token"),
+          
           pageNum: this.page,
           pageSize: 10
-      }).then(res => {
-        console.log(res);
-        if (res.code === 1) {
+        }).then(res => {
+          console.log(res);
+          if (res.code === 1) {
              _this.tableData = res.data.data;
             _this.total = res.data.total;
           } else {
@@ -216,14 +177,15 @@ export default {
               type: "error"
             });
           }
-      });}else{
-        _this.listLeader();
+        });
+      } else {
+        _this.getKeywords();
       }
     },
-// 列表
-    listLeader() {
+    // 列表
+    getKeywords() {
       let _this = this;
-      listLeader({
+      getKeywords({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
         pageSize: 10,
@@ -242,13 +204,6 @@ export default {
         }
       });
     },
-    //显示编辑界面
-    // handleEdit: function(index, row) {
-    //   console.log(row);
-    //   // this.editFormVisible = true;
-    //   // this.editForm = Object.assign({}, row);
-    // },
-
     //删除
     handleDel: function(index, row) {
       let _this = this;
@@ -268,7 +223,7 @@ export default {
           });
           // 	this.getUsers();
           // });
-          deleteLeader({
+          delKeyword({
             token: sessionStorage.getItem("token"),
             id: row.id
           }).then(res => {
@@ -279,69 +234,25 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              _this.listLeader();
+              _this.getKeywords();
             }
           });
         })
         .catch(() => {});
     },
-    //查询单条
-    handleDetails: function(index,row){
-      
-        
-    },
-
-
-
-
-
     //分页
     handleCurrentChange(val) {
       this.page = val;
-      if(!this.filters.id){
-      this.listLeader();}
+      if (!this.filters.id) {
+        this.getKeywords();
+      }
     },
-//上传图片
-    handleAvatarSuccess(res, file) {
-      console.log(URL.createObjectURL(file.raw));
-        // this.imageUrl = URL.createObjectURL(file.raw);
-        if(res.code === 1 ){
-          this.addForm.headImg = res.data;
-          this.addHeadImg = res.data
-          this.editHeadImg = res.data
-          console.log(this.addForm.headImg)
-        }else{
-          this.$message({
-            message: '上传失败！',
-            type: "error"
-          });
-        }
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
-        const isLt2M = file.size / 1024 / 1024 < 4;
-
-        // if (!isJPG) {
-        //   this.$message.error('上传头像图片只能是 JPG 格式!');
-        // }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return  isLt2M;
-      },
-
-
-
 
     //显示新增界面
     handleAdd: function() {
       this.addFormVisible = true;
-      this.addHeadImg = ''
       this.addForm = {
-        // idCard: "",
-        displayName: "",
-        signature: "",
-        phone:"",
+        keyWord:""
       };
     },
     //新增
@@ -352,9 +263,10 @@ export default {
             this.addLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            console.log(para);
+            console.log(para)
+            // para.headImg=this.addForm.headImg
             para.token = sessionStorage.getItem("token");
-            addLeader(para).then(res => {
+            addKeyword(para).then(res => {
               console.log(res);
               if (res.code == 1) {
                 //NProgress.done();
@@ -364,7 +276,7 @@ export default {
                 });
                 this.$refs["addForm"].resetFields();
                 this.addFormVisible = false;
-                this.listLeader();
+                this.getKeywords();
               } else {
                 this.$message({
                   message: res.message,
@@ -383,8 +295,8 @@ export default {
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
-      this.editHeadImg = row.headImg;
       this.editForm = Object.assign({}, row);
+      console.log(this.editForm);
     },
     //编辑
     editSubmit: function() {
@@ -398,14 +310,12 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateLeader({
+            updateKeyword({
               token:sessionStorage.getItem("token"),
-              headImg:para.headImg,
-              displayName:para.displayName,
-              signature:para.signature,
-              idCard:para.idCard,
               id:para.id,
-            }).then(res => {
+              modifyTime:para.modifyTime,
+            })
+              .then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();
@@ -415,14 +325,14 @@ export default {
                   });
                   this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
-                  this.listLeader();
+                  this.getKeywords();
                 } else {
                   this.$message({
                     message: res.message,
                     type: "error"
                   });
                 }
-                // this.editLoading = false;
+                this.editLoading = false;
                 // //NProgress.done();
                 // this.$message({
                 // 	message: '提交成功',
@@ -440,14 +350,14 @@ export default {
         }
       });
     },
-
-
-
-   
     
+
+
+
+
   },
   mounted() {
-    this.listLeader();
+    this.getKeywords();
   }
 };
 </script>
@@ -482,5 +392,4 @@ export default {
   height: 178px;
   display: block;
 }
-
 </style>
