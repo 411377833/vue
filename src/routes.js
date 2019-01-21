@@ -23,8 +23,10 @@ import leader from './views/public-benefit/leader'
 import category from './views/public-benefit/category'
 // banner
 import banner from './views/banner/banner'
+//h5管理
+import h5 from './views/public-benefit/h5Page'
 
-import Initiator from './views/initiator/initiator.vue'
+import Initiator from './views/initiator/initiator'
 
 let routes = [
     {
@@ -53,6 +55,7 @@ let routes = [
             { path: '/receivor', component: receivor, name: '善款接收方' },
             { path: '/leader', component: leader, name: '项目负责人' },
             { path: '/category', component: category, name: '分类' },
+            { path: '/h5', component: h5, name: 'h5' },
         ]
     },
     {
@@ -78,13 +81,13 @@ let routes = [
     // {
     //     path: '/',
     //     component: Home,
-    //     name: '导航一',
+    //     name: '系统管理',
     //     iconCls: 'el-icon-message',//图标样式class
     //     children: [
-    //         { path: '/main', component: Main, name: '主页', hidden: true },
-    //         { path: '/table', component: Table, name: 'Table' },
-    //         { path: '/form', component: Form, name: 'Form' },
-    //         { path: '/user', component: user, name: '列表' },
+    //         { path: '/user', component: user, name: 'password' },
+    //         // { path: '/table', component: Table, name: 'Table' },
+    //         // { path: '/form', component: Form, name: 'Form' },
+    //         // { path: '/user', component: user, name: '列表' },
     //     ]
     // },
     // {

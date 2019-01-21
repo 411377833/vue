@@ -35,18 +35,24 @@ export const deleteLeader = p => post(`${baseUrl}/api/delete_leader`, p);  //通
 export const updateLeader = p => post(`${baseUrl}/api/update_leader`, p);// 报400
 export const getLeader = p => post(`${baseUrl}/api/get_leader`, p);//通
 //分类
-export const listCategory= p => post(`${baseUrl}/api/list_category`, p);  //通 ，查询还需修改
+export const listCategory= p => post(`${baseUrl}/api/list_category`, p);  //通 
 export const addCategory = p => post(`${baseUrl}/api/add_category`, p);  // 接口通，上传图片未添加
 export const deleteCategory = p => post(`${baseUrl}/api/delete_category`, p);  //通
 export const updateCategory = p => post(`${baseUrl}/api/update_category`, p);// 报400
 //banner
 export const getBanners = p => post(`${baseUrl}/api/get_banners`, p);  //通
-export const addBanner = p => post(`${baseUrl}/api/add_banner`, p);  // 
-// export const deleteRecipients = p => post(`${baseUrl}/api/delete_recipients`, p);  //
-export const updateBanner = p => post(`${baseUrl}/api/update_banner`, p);// 
-// export const getRecipients = p => post(`${baseUrl}/api/get_recipients`, p);//通
+export const addBanner = p => post(`${baseUrl}/api/add_banner`, p);  // 通
+export const delBanner = p => post(`${baseUrl}/api/del_banner`, p);  //通
+export const updateBanner = p => post(`${baseUrl}/api/update_banner`, p);// 通
+//h5
+export const listH5= p => post(`${baseUrl}/api/list_h5`, p);  //通 
+// export const addCategory = p => post(`${baseUrl}/api/add_category`, p);  // 接口通，上传图片未添加
+// export const deleteCategory = p => post(`${baseUrl}/api/delete_category`, p);  //通
+// export const updateCategory = p => post(`${baseUrl}/api/update_category`, p);// 报400
 
-export const upload_img = p => post(`${baseUrl}/api/upload_img`, p);//上传图片
+// 上传图片
+export const upload_img = p => post(`${baseUrl}/api/upload_img`, p);//通
+
 
 
 //export const requestLogin = params => { return axios.post(`${baseUrl}/api/user_login`, params).then(res => res.data); };

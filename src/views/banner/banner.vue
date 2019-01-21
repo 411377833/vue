@@ -7,7 +7,7 @@
           <el-input v-model="filters.id" placeholder="请输入banner描述或标题"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="queryGetInitiator">查询</el-button>
+          <el-button type="primary" v-on:click="queryBanner">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -133,19 +133,13 @@
 </template>
 
 <script>
-import {
-  getBanners,
-  deleteInitiator,
-  getInitiator,
-  addBanner,
-  updateBanner
-} from "../../api/api";
+import { getBanners, delBanner, addBanner, updateBanner } from "../../api/api";
 export default {
   data() {
     return {
       page: 1,
       filters: {
-        id: ""
+        bannerDesc: ""
       },
       dialogVisible: false,
       abc: {
@@ -161,14 +155,14 @@ export default {
         bannerType: "",
         bannerDesc: "",
         priority: "",
-        bannerImg:""
+        bannerImg: ""
       },
       //编辑界面数据
       editForm: {
-       bannerType: "",
+        bannerType: "",
         bannerDesc: "",
         priority: "",
-        bannerImg:""
+        bannerImg: ""
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
@@ -179,38 +173,56 @@ export default {
         bannerType: [
           { required: true, message: "请填写banner类型", trigger: "blur" }
         ],
-        bannerDesc: [{ required: true, message: "请填写标题或描述", trigger: "blur" }],
-        priority: [{ required: true, message: "请填写优先级，最大为100", trigger: "blur" }],
+        bannerDesc: [
+          { required: true, message: "请填写标题或描述", trigger: "blur" }
+        ],
+        priority: [
+          {
+            required: true,
+            message: "请填写优先级，最大为100",
+            trigger: "blur"
+          }
+        ]
         // headImg:[
         //     {required: true, message: "请上传机构头像", trigger: "blur"}
         // ]
       },
       editFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-       bannerType: [
+        bannerType: [
           { required: true, message: "请填写banner类型", trigger: "blur" }
         ],
-        bannerDesc: [{ required: true, message: "请填写标题或描述", trigger: "blur" }],
-        priority: [{ required: true, message: "请填写优先级，最大为100", trigger: "blur" }]
+        bannerDesc: [
+          { required: true, message: "请填写标题或描述", trigger: "blur" }
+        ],
+        priority: [
+          {
+            required: true,
+            message: "请填写优先级，最大为100",
+            trigger: "blur"
+          }
+        ]
       },
-      addHeadImg:"",
-      editHeadImg:''
+      addHeadImg: "",
+      editHeadImg: ""
     };
   },
   methods: {
-    queryGetInitiator() {
+    queryBanner() {
       let _this = this;
       if (_this.filters.id) {
-        getInitiator({
+        getBanners({
           token: sessionStorage.getItem("token"),
-          id: _this.filters.id
+          bannerDesc: _this.filters.id,
+          pageNum: this.page,
+          pageSize: 10
         }).then(res => {
           console.log(res);
           if (res.code === 1) {
-            let arr = [];
-            arr.push(res.data);
-            _this.tableData = arr;
-            console.log(_this.tableData);
+            // let arr = [];
+            // arr.push(res.data);
+            _this.tableData = res.data.data;
+            // console.log(_this.tableData);
             _this.total = res.data.total;
           } else {
             this.$message({
@@ -229,9 +241,9 @@ export default {
       getBanners({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
-        pageSize: 10,
-        title: "",
-        description: ""
+        pageSize: 10
+        // title: "",
+        // description: ""
       }).then(res => {
         console.log(res);
         if (res.code === 1) {
@@ -271,7 +283,7 @@ export default {
           });
           // 	this.getUsers();
           // });
-          deleteInitiator({
+          delBanner({
             token: sessionStorage.getItem("token"),
             id: row.id
           }).then(res => {
@@ -299,31 +311,32 @@ export default {
     //上传图片
     handleAvatarSuccess(res, file) {
       console.log(URL.createObjectURL(file.raw));
-        // this.imageUrl = URL.createObjectURL(file.raw);
-        if(res.code === 1 ){
-          this.addForm.bannerImg = res.data;
-          this.addHeadImg = res.data
-          this.editHeadImg = res.data
-          console.log(this.addForm.bannerImg)
-        }else{
-          this.$message({
-            message: '上传失败！',
-            type: "error"
-          });
-        }
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
-        const isLt2M = file.size / 1024 / 1024 < 4;
+      // this.imageUrl = URL.createObjectURL(file.raw);
+      if (res.code === 1) {
+        this.addForm.bannerImg = res.data;
+        this.addHeadImg = res.data;
+        this.editHeadImg = res.data;
+        console.log(this.addForm.bannerImg);
+      } else {
+        this.$message({
+          message: "上传失败！",
+          type: "error"
+        });
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isJPG =
+        file.type === "image/gif,image/jpeg,image/jpg,image/png,image/svg";
+      const isLt2M = file.size / 1024 / 1024 < 4;
 
-        // if (!isJPG) {
-        //   this.$message.error('上传头像图片只能是 JPG 格式!');
-        // }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return  isLt2M;
-      },
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!');
+      // }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isLt2M;
+    },
 
     //显示新增界面
     handleAdd: function() {
@@ -331,7 +344,7 @@ export default {
       this.addForm = {
         bannerType: "",
         bannerDesc: "",
-        priority: "",
+        priority: ""
       };
     },
     //新增
@@ -373,7 +386,7 @@ export default {
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
-      this.editHeadImg = row.bannerImg
+      this.editHeadImg = row.bannerImg;
       this.editForm = Object.assign({}, row);
     },
     //编辑
@@ -399,6 +412,7 @@ export default {
                   });
                   this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
+
                   this.getBanners();
                 } else {
                   this.$message({
@@ -406,7 +420,7 @@ export default {
                     type: "error"
                   });
                 }
-                // this.editLoading = false;
+                this.editLoading = false;
                 // //NProgress.done();
                 // this.$message({
                 // 	message: '提交成功',
@@ -440,26 +454,26 @@ export default {
 }
 
 .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>
