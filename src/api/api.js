@@ -46,6 +46,7 @@ export const delBanner = p => post(`${baseUrl}/api/del_banner`, p);  //通
 export const updateBanner = p => post(`${baseUrl}/api/update_banner`, p);// 通
 //h5
 export const listH5= p => post(`${baseUrl}/api/list_h5`, p);  //通 
+export const addH5= p => post(`${baseUrl}/api/add_h5`, p);  //通 
 // export const addCategory = p => post(`${baseUrl}/api/add_category`, p);  // 接口通，上传图片未添加
 // export const deleteCategory = p => post(`${baseUrl}/api/delete_category`, p);  //通
 // export const updateCategory = p => post(`${baseUrl}/api/update_category`, p);// 报400
