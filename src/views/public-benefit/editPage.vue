@@ -25,7 +25,7 @@
     data(){
       return{
         content:"",
-        inputTitle:'',
+        inputTitle:this.editData.title,
         editDatas:this.editData
       }
     },

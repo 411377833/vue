@@ -96,6 +96,7 @@
           
           editor.create()  
         //   editor.txt.html(this.editorContent)
+        // editor.txt.html('<p>阿萨德阿萨德</p><p>阿萨德<img src="http://static.50wlkj.com/wlwl/img/2019-01/154808393413228788.png"></p>  ')
       },
  }
  </script>
