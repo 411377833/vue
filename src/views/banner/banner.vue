@@ -21,19 +21,21 @@
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
       <!-- <el-table-column prop="id" label="ID" width="200"></el-table-column> -->
-      <el-table-column prop="bannerType" label="类型	" min-width="180"></el-table-column>
+      <el-table-column prop="bannerType" label="类型	" width="180"></el-table-column>
       <el-table-column prop="bannerDesc" label="banner" width="300"></el-table-column>
 
-      <el-table-column prop="createTime" label="创建时间" min-width="250"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="250"></el-table-column>
       <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="250"></el-table-column>
       <!-- <el-table-column prop="projectId" label="项目id" min-width="150"></el-table-column> -->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" min-width="100">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+          <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button>
         </template>
+        
       </el-table-column>
     </el-table>
     <!--工具条-->
@@ -129,11 +131,17 @@
         <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
       </div>
     </el-dialog>
+
+
+     <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
+      <particulars :particulars = "particulars"/>
+    </el-dialog>
   </section>
 </template>
 
 <script>
 import { getBanners, delBanner, addBanner, updateBanner } from "../../api/api";
+import particulars from '../component/particulars'
 export default {
   data() {
     return {
@@ -145,11 +153,13 @@ export default {
       abc: {
         token: sessionStorage.getItem("token")
       },
+     detailsVisible:false,
 
       //   imageUrl: '',
       total: 0,
       tableData: [],
       listLoading: false,
+      particulars:{},
       //新增界面数据
       addForm: {
         bannerType: "",
@@ -300,6 +310,17 @@ export default {
         })
         .catch(() => {});
     },
+    //查询单条
+    handleDetails: function(index,row){
+      console.log(Object.assign({}, row))
+        this.detailsVisible = true;
+        this.particulars={}
+        this.particulars = Object.assign({}, row)
+    },
+
+
+
+
     //分页
     handleCurrentChange(val) {
       this.page = val;
@@ -441,7 +462,10 @@ export default {
   },
   mounted() {
     this.getBanners();
-  }
+  },
+  components: {
+      particulars
+  },
 };
 </script>
 <style lang="scss" scoped>

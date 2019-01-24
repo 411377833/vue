@@ -27,6 +27,8 @@
         content:"",
         inputTitle:''
       }
+
+      
     },
     
     methods:{

@@ -52,7 +52,7 @@
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
         <el-form-item label="关键字" prop="keyWord">
-          <el-input v-model="addForm.idCard"></el-input>
+          <el-input v-model="addForm.keyWord"></el-input>
         </el-form-item>
         <!-- <el-form-item label="机构名称" prop="displayName">
           <el-input v-model="addForm.displayName"></el-input>
@@ -91,7 +91,7 @@
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
         <el-form-item label="关键字" prop="keyWord">
-          <el-input v-model="editForm.idCard"></el-input>
+          <el-input v-model="editForm.keyWord"></el-input>
         </el-form-item>
         
       </el-form>
@@ -314,6 +314,7 @@ export default {//editForm.headImg
               token:sessionStorage.getItem("token"),
               id:para.id,
               modifyTime:para.modifyTime,
+              keyWord:para.keyWord
             })
               .then(res => {
                 console.log(res);

@@ -13,6 +13,8 @@
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
+
+
     </el-col>
 
     <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
@@ -24,15 +26,19 @@
       <!-- <el-table-column prop="idCard" label="机构代码" width="200"></el-table-column> -->
       <el-table-column prop="displayName" label="机构名称" width="300"></el-table-column>
       <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
-      <!-- <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
-      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>-->
+      <el-table-column prop="headImg" label="头像	" min-width="180">
+        <img :src="this.headImg" alt="">
+      </el-table-column>
+
+      <!-- <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column> -->
+      <!-- <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column> -->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" min-width="100">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-          <!-- <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button> -->
+          <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -107,6 +113,7 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
         >
+
           <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -116,11 +123,18 @@
         <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
       </div>
     </el-dialog>
+
+    <!-- 详情界面 -->
+    <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
+      <particulars :particulars = "particulars"/>
+    </el-dialog>
   </section>
 </template>
 
 <script>
 import { listOrg, deletOrg, getOrg, addOrg, updateOrg } from "../../api/api";
+import particulars from '../component/particulars'
+
 export default {//editForm.headImg
   data() {
     return {
@@ -132,10 +146,13 @@ export default {//editForm.headImg
       abc:{
         token:sessionStorage.getItem("token")
       },
+      detailsVisible:false,
       //   imageUrl: '',
+      headImg:"",
       total: 0,
       tableData: [],
       listLoading: false,
+      particulars:{},
       //新增界面数据
       addForm: {
         idCard: "",
@@ -267,6 +284,17 @@ export default {//editForm.headImg
         })
         .catch(() => {});
     },
+
+
+//查询单条
+    handleDetails: function(index,row){
+      console.log(Object.assign({}, row))
+        this.detailsVisible = true;
+        this.particulars={}
+        this.particulars = Object.assign({}, row)
+    },
+
+
     //分页
     handleCurrentChange(val) {
       this.page = val;
@@ -298,7 +326,7 @@ export default {//editForm.headImg
         //   this.$message.error('上传头像图片只能是 JPG 格式!');
         // }
         if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+          this.$message.error('上传头像图片大小不能超过 4MB!');
         }
         return  isLt2M;
       },
@@ -378,8 +406,7 @@ export default {//editForm.headImg
               signature:para.signature,
               idCard:para.idCard,
               id:para.id,
-            })
-              .then(res => {
+            }).then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();
@@ -422,7 +449,10 @@ export default {//editForm.headImg
   },
   mounted() {
     this.listOrg();
-  }
+  },
+  components: {
+      particulars
+  },
 };
 </script>
 <style lang="scss" scoped>

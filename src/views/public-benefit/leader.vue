@@ -29,7 +29,7 @@
 
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" min-width="50">
+      <el-table-column label="操作" min-width="100">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
@@ -123,6 +123,8 @@
         <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
       </div>
     </el-dialog>
+
+    <!-- 详情界面 -->
     <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
       <particulars :particulars = "particulars"/>
     </el-dialog>
@@ -134,7 +136,7 @@
 import {
   listLeader,
   deleteLeader,
-  getLeader,
+  // getLeader,
   addLeader,
   updateLeader
 } from "../../api/api";
@@ -326,15 +328,15 @@ export default {
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
-        const isLt2M = file.size / 1024 / 1024 < 4;
+        const isLt4M = file.size / 1024 / 1024 < 4;
 
         // if (!isJPG) {
         //   this.$message.error('上传头像图片只能是 JPG 格式!');
         // }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+        if (!isLt4M) {
+          this.$message.error('上传头像图片大小不能超过 4MB!');
         }
-        return  isLt2M;
+        return  isLt4M;
       },
 
 
@@ -429,7 +431,7 @@ export default {
                     type: "error"
                   });
                 }
-                // this.editLoading = false;
+                this.editLoading = false;
                 // //NProgress.done();
                 // this.$message({
                 // 	message: '提交成功',

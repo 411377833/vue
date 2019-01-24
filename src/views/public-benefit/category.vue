@@ -29,11 +29,12 @@
       <!-- <el-table-column prop="userType" label="类型" min-width="150"></el-table-column> -->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" min-width="150">
+      <el-table-column label="操作" min-width="100">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-        </template>
+       <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button>
+       </template>
       </el-table-column>
     </el-table>
     <!--工具条-->
