@@ -1,41 +1,41 @@
 <template>
   <section class="benefit">
     <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+    <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="请输入banner描述或标题"></el-input>
+          <el-input v-model="filters.id" placeholder="请输入机构名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="queryBanner">查询</el-button>
+          <el-button type="primary" v-on:click="queryListOrg">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
-    </el-col>
+
+
+    </el-col> -->
 
     <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
       <!-- <el-table-column type="selection" width="55">
       </el-table-column>-->
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
-      <!-- <el-table-column prop="id" label="ID" width="200"></el-table-column> -->
-      <el-table-column prop="bannerType" label="类型	" width="180"></el-table-column>
-      <el-table-column prop="bannerDesc" label="banner" width="300"></el-table-column>
+      <!-- <el-table-column prop="id" label="机构id" width="100"></el-table-column> -->
+      <!-- <el-table-column prop="idCard" label="机构代码" width="200"></el-table-column> -->
+      <el-table-column prop="displayName" label="昵称" width="300"></el-table-column>
+      <el-table-column prop="content" label="内容" min-width="180"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间" min-width="180"></el-table-column>
 
-      <el-table-column prop="createTime" label="创建时间" width="250"></el-table-column>
-      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="250"></el-table-column>
-      <!-- <el-table-column prop="projectId" label="项目id" min-width="150"></el-table-column> -->
-      <!-- <el-table-column prop="title" label="标题" min-width="180" >
-      </el-table-column>-->
+
+      
       <el-table-column label="操作" min-width="100">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
           <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button>
         </template>
-        
       </el-table-column>
     </el-table>
     <!--工具条-->
@@ -53,14 +53,14 @@
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="类型" prop="idCard">
-          <el-input v-model="addForm.bannerType"></el-input>
+        <el-form-item label="机构代码" prop="idCard">
+          <el-input v-model="addForm.idCard"></el-input>
         </el-form-item>
-        <el-form-item label="标题或描述" prop="displayName">
-          <el-input v-model="addForm.bannerDesc"></el-input>
+        <el-form-item label="机构名称" prop="displayName">
+          <el-input v-model="addForm.displayName"></el-input>
         </el-form-item>
-        <el-form-item label="优先级" prop="signature">
-          <el-input v-model="addForm.priority"></el-input>
+        <el-form-item label="说明" prop="signature">
+          <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
         <el-upload
           :data="abc"
@@ -70,10 +70,18 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
         >
-          <img v-if="addBannerImg" :src="addBannerImg" class="avatar">
+          <img v-if="addHeadImg" :src="addHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        
+        <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
+          <el-form-item label="发起人ID"><el-input v-model="addForm.initiatorId"></el-input></el-form-item>
+          <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
+          <el-form-item label="项目负责人ID"><el-input v-model="addForm.mgrId"></el-input></el-form-item>
+          <el-form-item label="标签"><el-input v-model="addForm.tags"></el-input></el-form-item>
+          <el-form-item label="图文详情" prop="imgs"><el-input v-model="addForm.h5Id"></el-input></el-form-item>
+          <el-form-item label="公益项目分类id"><el-input v-model="addForm.cateIds"></el-input></el-form-item>
+          <el-form-item label="目标善款金额"><el-input v-model="addForm.targetMoney"></el-input></el-form-item>
+        <el-form-item label="详情页轮播图"><el-input v-model="addForm.imgs"></el-input></el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -84,14 +92,14 @@
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="类型" prop="idCard">
-          <el-input v-model="editForm.bannerType"></el-input>
+        <el-form-item label="机构代码" prop="idCard">
+          <el-input v-model="editForm.idCard"></el-input>
         </el-form-item>
-        <el-form-item label="标题或描述" prop="displayName">
-          <el-input v-model="editForm.bannerDesc"></el-input>
+        <el-form-item label="机构名称" prop="displayName">
+          <el-input v-model="editForm.displayName"></el-input>
         </el-form-item>
-        <el-form-item label="优先级" prop="signature">
-          <el-input v-model="editForm.priority"></el-input>
+        <el-form-item label="说明" prop="signature">
+          <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
         <el-upload
           :data="abc"
@@ -101,7 +109,8 @@
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
         >
-          <img v-if="editBannerImg" :src="editBannerImg" class="avatar">
+
+          <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form>
@@ -111,107 +120,96 @@
       </div>
     </el-dialog>
 
-
-     <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
+    <!-- 详情界面 -->
+    <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
       <particulars :particulars = "particulars"/>
     </el-dialog>
   </section>
 </template>
 
 <script>
-import { getBanners, delBanner, addBanner, updateBanner } from "../../api/api";
+import { listOrg, deletOrg, getOrg, addOrg, updateOrg } from "../../api/api";
 import particulars from '../component/particulars'
-export default {
+
+export default {//editForm.headImg
   data() {
     return {
       page: 1,
       filters: {
-        bannerDesc: ""
+        displayName: ""
       },
-      dialogVisible: false,
-      abc: {
-        token: sessionStorage.getItem("token")
+      dialogVisible:false,
+      abc:{
+        token:sessionStorage.getItem("token")
       },
-     detailsVisible:false,
-
+      detailsVisible:false,
       //   imageUrl: '',
+      headImg:"",
       total: 0,
       tableData: [],
       listLoading: false,
       particulars:{},
       //新增界面数据
       addForm: {
-        bannerType: "",
-        bannerDesc: "",
-        priority: "",
-        bannerImg: ""
+        idCard: "",
+        displayName: "",
+        signature: "",
+        headImg:''
       },
       //编辑界面数据
       editForm: {
-        bannerType: "",
-        bannerDesc: "",
-        priority: "",
-        bannerImg: ""
+        idCard: "",
+        displayName: "",
+        signature: "",
+        headImg:''
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
       editFormVisible: false, //编辑界面是否显示
       editLoading: false,
       addFormRules: {
-        // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        bannerType: [
-          { required: true, message: "请填写banner类型", trigger: "blur" }
+        idCard: [
+          { required: true, message: "请输入机构代码", trigger: "blur" }
         ],
-        bannerDesc: [
-          { required: true, message: "请填写标题或描述", trigger: "blur" }
+        displayName: [
+          { required: true, message: "请输入机构名称", trigger: "blur" }
         ],
-        priority: [
-          {
-            required: true,
-            message: "请填写优先级，最大为100",
-            trigger: "blur"
-          }
+        signature: [
+          { required: true, message: "请填写机构说明", trigger: "blur" }
         ]
         // headImg:[
         //     {required: true, message: "请上传机构头像", trigger: "blur"}
         // ]
       },
       editFormRules: {
-        // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        bannerType: [
-          { required: true, message: "请填写banner类型", trigger: "blur" }
+        idCard: [
+          { required: true, message: "请输入机构代码", trigger: "blur" }
         ],
-        bannerDesc: [
-          { required: true, message: "请填写标题或描述", trigger: "blur" }
+        displayName: [
+          { required: true, message: "请输入机构名称", trigger: "blur" }
         ],
-        priority: [
-          {
-            required: true,
-            message: "请填写优先级，最大为100",
-            trigger: "blur"
-          }
+        signature: [
+          { required: true, message: "请填写机构说明", trigger: "blur" }
         ]
       },
-      addBannerImg: "",
-      editBannerImg: ""
+      addHeadImg:"",
+      editHeadImg:''
+      
     };
   },
   methods: {
-    queryBanner() {
+    queryListOrg() {
       let _this = this;
       if (_this.filters.id) {
-        getBanners({
+        listOrg({
           token: sessionStorage.getItem("token"),
-          bannerDesc: _this.filters.id,
+          displayName: _this.filters.id,
           pageNum: this.page,
           pageSize: 10
         }).then(res => {
           console.log(res);
           if (res.code === 1) {
-            // let arr = [];
-            // arr.push(res.data);
-            _this.tableData = res.data.data;
-            // console.log(_this.tableData);
+             _this.tableData = res.data.data;
             _this.total = res.data.total;
           } else {
             this.$message({
@@ -221,16 +219,16 @@ export default {
           }
         });
       } else {
-        _this.getBanners();
+        _this.listOrg();
       }
     },
     // 列表
-    getBanners() {
+    listOrg() {
       let _this = this;
-      getBanners({
+      listOrg({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
-        pageSize: 10
+        pageSize: 10,
         // title: "",
         // description: ""
       }).then(res => {
@@ -246,13 +244,6 @@ export default {
         }
       });
     },
-    // //显示编辑界面
-    // handleEdit: function(index, row) {
-    //   console.log(row);
-    //   // this.editFormVisible = true;
-    //   // this.editForm = Object.assign({}, row);
-    // },
-
     //删除
     handleDel: function(index, row) {
       let _this = this;
@@ -272,7 +263,7 @@ export default {
           });
           // 	this.getUsers();
           // });
-          delBanner({
+          deletOrg({
             token: sessionStorage.getItem("token"),
             id: row.id
           }).then(res => {
@@ -283,13 +274,15 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              _this.getBanners();
+              _this.listOrg();
             }
           });
         })
         .catch(() => {});
     },
-    //查询单条
+
+
+//查询单条
     handleDetails: function(index,row){
       console.log(Object.assign({}, row))
         this.detailsVisible = true;
@@ -298,54 +291,52 @@ export default {
     },
 
 
-
-
     //分页
     handleCurrentChange(val) {
       this.page = val;
       if (!this.filters.id) {
-        this.getBanners();
+        this.listOrg();
       }
     },
-
-    //上传图片
+//上传图片
     handleAvatarSuccess(res, file) {
       console.log(URL.createObjectURL(file.raw));
-      // this.imageUrl = URL.createObjectURL(file.raw);
-      if (res.code === 1) {
-        this.addForm.bannerImg = res.data;
-        this.addBannerImg = res.data;
-        this.editBannerImg= res.data;
-        console.log(this.addForm.bannerImg);
-      } else {
-        this.$message({
-          message: "上传失败！",
-          type: "error"
-        });
-      }
-    },
-    beforeAvatarUpload(file) {
-      const isJPG =
-        file.type === "image/gif,image/jpeg,image/jpg,image/png,image/svg";
-      const isLt2M = file.size / 1024 / 1024 < 4;
+        // this.imageUrl = URL.createObjectURL(file.raw);
+        if(res.code === 1 ){
+          this.addForm.headImg = res.data;
+          this.addHeadImg = res.data
+          this.editHeadImg = res.data
+          console.log(this.addForm.headImg)
+        }else{
+          this.$message({
+            message: '上传失败！',
+            type: "error"
+          });
+        }
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
+        const isLt2M = file.size / 1024 / 1024 < 4;
 
-      // if (!isJPG) {
-      //   this.$message.error('上传头像图片只能是 JPG 格式!');
-      // }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isLt2M;
-    },
+        // if (!isJPG) {
+        //   this.$message.error('上传头像图片只能是 JPG 格式!');
+        // }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 4MB!');
+        }
+        return  isLt2M;
+      },
+
 
     //显示新增界面
     handleAdd: function() {
       this.addFormVisible = true;
-      this.addBannerImg = ''
+      this.addHeadImg = ''
       this.addForm = {
-        bannerType: "",
-        bannerDesc: "",
-        priority: ""
+        idCard: "",
+        displayName: "",
+        signature: "",
+        
       };
     },
     //新增
@@ -356,9 +347,10 @@ export default {
             this.addLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            console.log(para);
+            console.log(para)
+            // para.headImg=this.addForm.headImg
             para.token = sessionStorage.getItem("token");
-            addBanner(para).then(res => {
+            addOrg(para).then(res => {
               console.log(res);
               if (res.code == 1) {
                 //NProgress.done();
@@ -368,7 +360,7 @@ export default {
                 });
                 this.$refs["addForm"].resetFields();
                 this.addFormVisible = false;
-                this.getBanners();
+                this.listOrg();
               } else {
                 this.$message({
                   message: res.message,
@@ -387,8 +379,9 @@ export default {
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
-      this.editBannerImg = row.bannerImg;
+      this.editHeadImg = row.headImg
       this.editForm = Object.assign({}, row);
+      console.log(this.editForm);
     },
     //编辑
     editSubmit: function() {
@@ -402,8 +395,14 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateBanner(para)
-              .then(res => {
+            updateOrg({
+              token:sessionStorage.getItem("token"),
+              headImg:para.headImg,
+              displayName:para.displayName,
+              signature:para.signature,
+              idCard:para.idCard,
+              id:para.id,
+            }).then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();
@@ -413,8 +412,7 @@ export default {
                   });
                   this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
-
-                  this.getBanners();
+                  this.listOrg();
                 } else {
                   this.$message({
                     message: res.message,
@@ -422,7 +420,14 @@ export default {
                   });
                 }
                 this.editLoading = false;
-                
+                // //NProgress.done();
+                // this.$message({
+                // 	message: '提交成功',
+                // 	type: 'success'
+                // });
+                // this.$refs['editForm'].resetFields();
+                // this.editFormVisible = false;
+                // this.getUsers();
               })
               .catch(res => {
                 this.editFormVisible = false;
@@ -431,10 +436,15 @@ export default {
           });
         }
       });
-    }
+    },
+    
+
+
+
+
   },
   mounted() {
-    this.getBanners();
+    this.listOrg();
   },
   components: {
       particulars
@@ -449,7 +459,6 @@ export default {
     margin-bottom: 20px;
   }
 }
-
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;

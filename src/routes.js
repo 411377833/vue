@@ -27,6 +27,10 @@ import banner from './views/banner/banner'
 import h5 from './views/public-benefit/h5Page'
 //keyword
 import keyWord from './views/keyword/keyWord'
+// 捐款
+import donation from './views/donation/donation'
+// 建议反馈
+import gySuggest from './views/gySuggest/gySuggest'
 
 // import Initiator from './views/initiator/initiator'
 
@@ -99,6 +103,26 @@ let routes = [
         leaf: true,//只有一个节点
         children: [
             { path: '/page6', component: Page6, name: '导航三' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '',
+        iconCls: 'fa fa-address-card',
+        leaf: true,//只有一个节点
+        children: [
+            { path: '/donation', component: donation, name: '捐款' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '',
+        iconCls: 'fa fa-address-card',
+        leaf: true,//只有一个节点
+        children: [
+            { path: '/gySuggest', component: gySuggest, name: '建议反馈' }
         ]
     },
     // {

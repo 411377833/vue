@@ -56,7 +56,9 @@ export const delKeyword= p => post(`${baseUrl}/api/del_keyword`, p);  //通
 export const addKeyword= p => post(`${baseUrl}/api/add_keyword`, p);  //通 
 export const updateKeyword= p => post(`${baseUrl}/api/update_keyword`, p);  
 //捐款
-// export const getDonations= p => post(`${baseUrl}/api/get_donations`, p);  //通 
+export const getDonations= p => post(`${baseUrl}/api/get_donations`, p);  //通 
+// 建议反馈
+export const listGy_suggest= p => post(`${baseUrl}/api/list_gy_suggest`, p);  //通 
 
 // 上传图片
 export const upload_img = p => post(`${baseUrl}/api/upload_img`, p);//通

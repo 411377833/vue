@@ -4,7 +4,7 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="请输入机构名称"></el-input>
+          <el-input v-model="filters.id" placeholder="请输入捐款订单号"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="queryListOrg">查询</el-button>
@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import { listOrg, deletOrg, getOrg, addOrg, updateOrg } from "../../api/api";
+import { getDonations, deletOrg, getOrg, addOrg, updateOrg } from "../../api/api";
 export default {//editForm.headImg
   data() {
     return {
@@ -190,7 +190,7 @@ export default {//editForm.headImg
     queryListOrg() {
       let _this = this;
       if (_this.filters.id) {
-        listOrg({
+        getDonations({
           token: sessionStorage.getItem("token"),
           displayName: _this.filters.id,
           pageNum: this.page,
@@ -208,13 +208,13 @@ export default {//editForm.headImg
           }
         });
       } else {
-        _this.listOrg();
+        _this.getDonations();
       }
     },
     // 列表
-    listOrg() {
+    getDonations() {
       let _this = this;
-      listOrg({
+      getDonations({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
         pageSize: 10,
@@ -263,7 +263,7 @@ export default {//editForm.headImg
                 message: "删除成功",
                 type: "success"
               });
-              _this.listOrg();
+              _this.getDonations();
             }
           });
         })
@@ -273,7 +273,7 @@ export default {//editForm.headImg
     handleCurrentChange(val) {
       this.page = val;
       if (!this.filters.id) {
-        this.listOrg();
+        this.getDonations();
       }
     },
 //上传图片
@@ -338,7 +338,7 @@ export default {//editForm.headImg
                 });
                 this.$refs["addForm"].resetFields();
                 this.addFormVisible = false;
-                this.listOrg();
+                this.getDonations();
               } else {
                 this.$message({
                   message: res.message,
@@ -391,7 +391,7 @@ export default {//editForm.headImg
                   });
                   this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
-                  this.listOrg();
+                  this.getDonations();
                 } else {
                   this.$message({
                     message: res.message,
@@ -423,7 +423,7 @@ export default {//editForm.headImg
 
   },
   mounted() {
-    this.listOrg();
+    this.getDonations();
   }
 };
 </script>
