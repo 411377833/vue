@@ -45,6 +45,12 @@
     <div v-if="particular.h5Id"><span class="name">图文详情</span>{{particular.h5Id}}</div>
     <div v-if="particular.transCount"><span class="name">转发次数</span>{{particular.transCount}}</div>
     <div v-if="particular.priority"><span class="name">优先级</span>{{particular.priority}}</div>
+    <div v-if="particular.orderNum"><span class="name">订单编号</span>{{particular.orderNum}}</div>
+    <div v-if="particular.orderStatus"><span class="name">支付状态</span>{{particular.orderStatus}}</div>
+    <div v-if="particular.donationTotal"><span class="name">总捐款数</span>{{particular.donationTotal}}</div>
+    <div v-if="particular.donationCash"><span class="name">现金捐款数</span>{{particular.donationCash}}</div>
+    <div v-if="particular.donationFlower"><span class="name">小红花捐款数</span>{{particular.donationFlower}}</div>
+    <div v-if="particular.itemTitle"><span class="name">公益项目</span>{{particular.itemTitle}}</div>
     
     <div v-if="particular.headImg"><span class="name img">图片</span><img :src="particular.headImg" alt></div>
     <div v-if="particular.bannerImg"><span class="name img">图片</span><img :src="particular.bannerImg" alt></div>

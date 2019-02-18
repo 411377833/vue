@@ -31,6 +31,8 @@ import keyWord from './views/keyword/keyWord'
 import donation from './views/donation/donation'
 // 建议反馈
 import gySuggest from './views/gySuggest/gySuggest'
+// 求助
+import proves from './views/proves/proves'
 
 // import Initiator from './views/initiator/initiator'
 
@@ -123,6 +125,16 @@ let routes = [
         leaf: true,//只有一个节点
         children: [
             { path: '/gySuggest', component: gySuggest, name: '建议反馈' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '',
+        iconCls: 'fa fa-address-card',
+        leaf: true,//只有一个节点
+        children: [
+            { path: '/proves', component: proves, name: '为TA证实' }
         ]
     },
     // {
