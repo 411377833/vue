@@ -31,8 +31,10 @@ import keyWord from './views/keyword/keyWord'
 import donation from './views/donation/donation'
 // 建议反馈
 import gySuggest from './views/gySuggest/gySuggest'
-// 求助
+// 为他证实
 import proves from './views/proves/proves'
+// 公益咨询
+// import gyInfos from './views/gyInfos/gyInfos'
 
 // import Initiator from './views/initiator/initiator'
 
@@ -137,6 +139,16 @@ let routes = [
             { path: '/proves', component: proves, name: '为TA证实' }
         ]
     },
+    // {
+    //     path: '/',
+    //     component: Home,
+    //     name: '',
+    //     iconCls: 'fa fa-address-card',
+    //     leaf: true,//只有一个节点
+    //     children: [
+    //         { path: '/gyInfos', component: gyInfos, name: '为TA证实' }
+    //     ]
+    // },
     // {
     //     path: '/',
     //     component: Home,

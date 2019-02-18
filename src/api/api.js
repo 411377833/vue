@@ -64,7 +64,9 @@ export const getDonation= p => post(`${baseUrl}/api/get_donation`, p);
 export const listGy_suggest= p => post(`${baseUrl}/api/list_gy_suggest`, p);  //通 
 // 为TA证实
 export const getProves= p => post(`${baseUrl}/api/get_proves`, p);  //通 
-export const getProves= p => post(`${baseUrl}/api/get_proves`, p);  //通 
+export const delProve= p => post(`${baseUrl}/api/del_prove`, p);  //通 
+// export const getProves= p => post(`${baseUrl}/api/get_proves`, p);  //通 
+// export const getProves= p => post(`${baseUrl}/api/get_proves`, p);  //通 
 
 // 上传图片
 export const upload_img = p => post(`${baseUrl}/api/upload_img`, p);//通

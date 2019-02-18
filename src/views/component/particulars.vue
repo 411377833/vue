@@ -13,6 +13,7 @@
       {{particular.bannerDesc}}
     </div>
     <div v-if="particular.title">
+      
       <span class="name">标题</span>
       {{particular.title}}
     </div>

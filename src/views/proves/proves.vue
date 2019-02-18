@@ -4,14 +4,14 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.id" placeholder="请输入项目负责人姓名"></el-input>
+          <el-input v-model="filters.id" placeholder="请输入公益项目编号"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="queryListLeader">查询</el-button>
+          <el-button type="primary" v-on:click="queryGetProve">查询</el-button>
         </el-form-item>
-        <el-form-item>
+        <!-- <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
     </el-col>
 
@@ -21,8 +21,11 @@
       <!-- <el-table-column type="index" label="顺序" width="100" >
       </el-table-column>-->
       <!-- <el-table-column prop="id" label="ID" width="200"></el-table-column> -->
-      <el-table-column prop="displayName" label="项目负责人" width="300"></el-table-column>
-      <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
+      <el-table-column prop="gyItemId" label="公益项目编号" width="300"></el-table-column>
+      <el-table-column prop="userName" label="证实人姓名	" min-width="180"></el-table-column>
+      <el-table-column prop="userPhone" label="证实人联系方式	" min-width="180"></el-table-column>
+      <el-table-column prop="content" label="内容" min-width="180"></el-table-column>
+      <el-table-column prop="relation" label="与受捐者关系" min-width="180"></el-table-column>
       <!-- <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
       <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
       <el-table-column prop="userType" label="类型" min-width="150"></el-table-column> -->
@@ -49,47 +52,7 @@
       ></el-pagination>
     </el-col>
 
-    <!--新增界面-->
-    <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <!-- <el-form-item label="机构代码" prop="idCard">
-          <el-input v-model="addForm.idCard"></el-input>
-        </el-form-item> -->
-        <el-form-item label="项目负责人" prop="displayName">
-          <el-input v-model="addForm.displayName"></el-input>
-        </el-form-item>
-        <el-form-item label="说明" prop="signature">
-          <el-input v-model="addForm.signature"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话" >
-          <el-input v-model="addForm.phone"></el-input>
-        </el-form-item>
-        <el-upload
-          :data="abc"
-          class="avatar-uploader"
-          action="http://api.50wlkj.com/api/upload_img"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="addHeadImg" :src="addHeadImg" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-        <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
-          <el-form-item label="发起人ID"><el-input v-model="addForm.initiatorId"></el-input></el-form-item>
-          <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
-          <el-form-item label="项目负责人ID"><el-input v-model="addForm.mgrId"></el-input></el-form-item>
-          <el-form-item label="标签"><el-input v-model="addForm.tags"></el-input></el-form-item>
-          <el-form-item label="图文详情" prop="imgs"><el-input v-model="addForm.h5Id"></el-input></el-form-item>
-          <el-form-item label="公益项目分类id"><el-input v-model="addForm.cateIds"></el-input></el-form-item>
-          <el-form-item label="目标善款金额"><el-input v-model="addForm.targetMoney"></el-input></el-form-item>
-        <el-form-item label="详情页轮播图"><el-input v-model="addForm.imgs"></el-input></el-form-item>-->
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
-      </div>
-    </el-dialog>
+    
 
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
@@ -135,12 +98,12 @@
 <script>
 import {
   getProves,
-  deleteLeader,
+  delProve,
   // getLeader,
-  addLeader,
+  // addLeader,
   updateLeader
 } from "../../api/api";
-import particulars from '../component/particulars'
+// import particulars from '../component/particulars'
 export default {
   data() {
     return {
@@ -173,23 +136,11 @@ export default {
         signature: "",
         headImg:""
       },
-      addFormVisible: false, //新增界面是否显示
-      addLoading: false,
+      // addFormVisible: false, //新增界面是否显示
+      // addLoading: false,
       editFormVisible: false, //编辑界面是否显示
       editLoading: false,
-      addFormRules: {
-        // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        displayName: [
-          { required: true, message: "请填写项目负责人", trigger: "blur" }
-        ],
-        signature: [
-          { required: true, message: "请填写说明", trigger: "blur" }
-        ],
-        // headImg:[
-        //     {required: true, message: "请上传机构头像", trigger: "blur"}
-        // ]
-
-      },
+      
       editFormRules: {
         
         displayName: [
@@ -204,10 +155,10 @@ export default {
     };
   },
   methods: {
-    queryListLeader() {
+    queryGetProve() {
       let _this = this;
       if(_this.filters.id){
-      listLeader({
+      getProves({
         token: sessionStorage.getItem("token"),
         displayName: _this.filters.id,
           pageNum: this.page,
@@ -224,13 +175,13 @@ export default {
             });
           }
       });}else{
-        _this.listLeader();
+        _this.getProves();
       }
     },
 // 列表
-    listLeader() {
+    getProves() {
       let _this = this;
-      listLeader({
+      getProves({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
         pageSize: 10,
@@ -275,7 +226,7 @@ export default {
           });
           // 	this.getUsers();
           // });
-          deleteLeader({
+          delProve({
             token: sessionStorage.getItem("token"),
             id: row.id
           }).then(res => {
@@ -286,7 +237,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              _this.listLeader();
+              _this.getProves();
             }
           });
         })
@@ -308,7 +259,7 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       if(!this.filters.id){
-      this.listLeader();}
+      this.getProves();}
     },
 //上传图片
     handleAvatarSuccess(res, file) {
@@ -373,7 +324,7 @@ export default {
                 });
                 this.$refs["addForm"].resetFields();
                 this.addFormVisible = false;
-                this.listLeader();
+                this.getProves();
               } else {
                 this.$message({
                   message: res.message,
@@ -424,7 +375,7 @@ export default {
                   });
                   this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
-                  this.listLeader();
+                  this.getProves();
                 } else {
                   this.$message({
                     message: res.message,
@@ -456,7 +407,7 @@ export default {
     
   },
   mounted() {
-    this.listLeader();
+    this.getProves();
   },
   components: {
       particulars
