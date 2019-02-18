@@ -76,11 +76,16 @@
 }
 </style>
 <script>
+import {
+  getProject,
+} from "../../api/api";
 export default {
-  props: ["particulars"],
+  
+  props: ["particulars","page"],
   data() {
     return {
-      particular: this.particulars
+      particular: this.particulars,
+      page: this.page,
     };
   },
   methods: {
@@ -88,9 +93,43 @@ export default {
     //     console.log(value)
     //     this.content=value      //在这里接受子组件传过来的参数，赋值给data里的参数
     //   }
+    getProjects(){
+      getProject({
+        token: sessionStorage.getItem("token"),
+        id:this.particular.id
+      }).then(res => {
+        console.log(res);
+        if (res.code === 1) {
+          
+        } else {
+          this.$message({
+            message: res.message,
+            type: "error"
+          });
+        }
+      });
+    }
   },
   mounted() {
-    console.log(this.particular);
-  }
+    // console.log(11111111);
+    console.log(this.particulars);
+    console.log(this.page);
+    if(this.page == 1){
+      this.getProjects()
+    }
+  },
+  watch: {
+    particulars: {
+      handler(newValue, oldValue) {
+        this.particular = newValue;
+        // this.page = page;
+        if(this.page == 1){
+          this.getProjects()
+        }
+      },
+      deep: true
+　　}
+  },
+  
 };
 </script>

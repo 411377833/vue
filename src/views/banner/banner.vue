@@ -310,12 +310,17 @@ export default {
 
     //上传图片
     handleAvatarSuccess(res, file) {
+      console.log(this.addFormVisible)
       console.log(URL.createObjectURL(file.raw));
       // this.imageUrl = URL.createObjectURL(file.raw);
       if (res.code === 1) {
-        this.addForm.bannerImg = res.data;
-        this.addBannerImg = res.data;
-        this.editBannerImg= res.data;
+        if(this.addFormVisible){
+          this.addForm.bannerImg = res.data;      
+          this.addBannerImg = res.data;
+        }else if(this.editFormVisible){
+          this.editForm.bannerImg = res.data;
+          this.editBannerImg= res.data;
+        }
         console.log(this.addForm.bannerImg);
       } else {
         this.$message({
@@ -434,6 +439,7 @@ export default {
     }
   },
   mounted() {
+    
     this.getBanners();
   },
   components: {

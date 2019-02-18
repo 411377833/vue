@@ -63,7 +63,22 @@
           <el-input v-model="addForm.tips"></el-input>
         </el-form-item>
         <el-form-item label="发起机构ID">
-          <el-input v-model="addForm.orgId"></el-input>
+          <!-- <el-input v-model="addForm.orgId"></el-input> -->
+          <el-select
+            v-model="addForm.orgId"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入关键词"
+            :remote-method="remoteMethod"
+            :loading="loading">
+            <el-option
+              v-for="item in options4"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="发起人ID">
           <el-input v-model="addForm.initiatorId"></el-input>
@@ -158,7 +173,7 @@
 
     <!-- 详情页面 -->
     <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
-      <particulars :particulars = "particulars"/>
+      <particulars :particulars = "particulars" :page='1'/>
     </el-dialog>
   </section>
 </template>
@@ -169,7 +184,8 @@ import {
   delProject,
   // getProject,
   addProject,
-  updateProject
+  updateProject,
+  listOrg
 } from "../../api/api";
 import particulars from '../component/particulars'
 const checkLabel = ["一周一善行", "特别关注", "爱心进展"];
@@ -233,7 +249,8 @@ export default {
       editFormRules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
         imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
-      }
+      },
+      options:[]
     };
   },
   methods: {
@@ -319,12 +336,13 @@ export default {
         })
         .catch(() => {});
     },
-//查询单条
-handleDetails: function(index,row){
-      console.log(Object.assign({}, row))
+    //查询单条
+    handleDetails: function(index,row){
+        
         this.detailsVisible = true;
         this.particulars={}
         this.particulars = Object.assign({}, row)
+        console.log(this.particulars)
     },
 
 
@@ -453,14 +471,55 @@ handleDetails: function(index,row){
           });
         }
       });
+    },
+    //模糊搜索
+    remoteMethod(query) {
+      console.log(query)
+      if (query !== '') {
+        // this.loading = true;
+          let _this = this;
+        setTimeout(() => {
+          // this.loading = false;
+          // this.options4 = this.list.filter(item => {
+          //   return item.label.toLowerCase()
+          //     .indexOf(query.toLowerCase()) > -1;
+          // });
+          listOrg({
+            token: sessionStorage.getItem("token"),
+            pageNum: this.page,
+            pageSize: 10,
+            displayName: query
+          }).then(res => {
+            console.log(res);
+            // if (res.code === 1) {
+            //   _this.tableData = res.data.data;
+            //   _this.total = res.data.total;
+            // } else {
+            //   this.$message({
+            //     message: res.message,
+            //     type: "error"
+            //   });
+            // }
+          });
+        }, 200);
+      } else {
+        this.options4 = [];
+      }
     }
   },
   mounted() {
     this.getProjects();
+    // this.list = this.states.map(item => {
+    //     return { value: item, label: item };
+    //   });
   },
   components: {
       particulars
   },
+  // updated(){
+  //   console.log(1)
+  //   console.log(this.particulars)
+  // }
 };
 </script>
 <style lang="scss" scoped>

@@ -14,10 +14,9 @@
 			</el-col> -->
 			<el-col :span="4" class="userinfo">
 				<el-dropdown trigger="hover">
-					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{sysUserName}}</span>
+					<span class="el-dropdown-link userinfo-inner"><img src="http://static.50wlkj.com/wlwl/img/2019-02/155049537530824310.ico" /> {{sysUserName}}</span>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item>我的消息</el-dropdown-item>
-						<el-dropdown-item>设置</el-dropdown-item>
+						<el-dropdown-item @click.native="amend">修改密码</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -70,11 +69,28 @@
 					</el-col>
 				</div>
 			</section>
+			<el-dialog title="修改密码" v-model="isAmend" :close-on-click-modal="false">
+				<el-form label-width="80px">
+					<el-form-item label="旧密码">
+						<el-input v-model="oldPassword"></el-input>
+					</el-form-item>
+					<el-form-item label="新密码">
+						<el-input v-model="newPassword"></el-input>
+					</el-form-item>
+				</el-form>
+				<div slot="footer" class="dialog-footer">
+					<el-button @click.native="isAmend = false">取消</el-button>
+					<el-button type="primary" @click="editSubmit">提交</el-button>
+				</div>
+			</el-dialog>
 		</el-col>
 	</el-row>
 </template>
 
 <script>
+	import {
+		updatePassword
+	} from "../api/api";
 	export default {
 		data() {
 			return {
@@ -91,7 +107,10 @@
 					type: [],
 					resource: '',
 					desc: ''
-				}
+				},
+				isAmend:false,
+				oldPassword:'',
+				newPassword:''
 			}
 		},
 		methods: {
@@ -126,7 +145,48 @@
 			},
 			showMenu(i,status){
 				this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-'+i)[0].style.display=status?'block':'none';
-			}
+			},
+			//修改密码
+			amend() {
+				this.isAmend=true
+				
+			},
+			editSubmit: function() {
+				if(!this.oldPassword){
+					this.$message({
+					message: '请输入原密码',
+					type: "error"
+					});
+					return
+				}
+				if(!this.newPassword){
+					this.$message({
+					message: '请输入新密码',
+					type: "error"
+					});
+					return
+				}
+				updatePassword({
+					token: sessionStorage.getItem("token"),
+					password: this.oldPassword,
+					newPassword: this.newPassword,
+				}).then(res => {
+				console.log(res);
+				if (res.code === 1) {
+					this.isAmend=false;
+					this.$message({
+						message: "修改成功",
+                		type: "success"
+					});
+					// sessionStorage.removeItem('user');
+					// this.$router.push('/login');
+				} else {
+					this.$message({
+					message: res.message,
+					type: "error"
+					});
+				}
+			})}
 		},
 		mounted() {
 			var user = sessionStorage.getItem('user');

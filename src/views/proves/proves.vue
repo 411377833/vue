@@ -410,7 +410,7 @@ export default {
     this.getProves();
   },
   components: {
-      particulars
+      // particulars
   },
 };
 </script>

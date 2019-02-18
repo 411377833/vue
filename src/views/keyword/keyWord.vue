@@ -90,8 +90,8 @@
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="关键字" prop="keyWord">
-          <el-input v-model="editForm.keyWord"></el-input>
+        <el-form-item label="次数" prop="modifyTime">
+          <el-input v-model="editForm.modifyTime"></el-input>
         </el-form-item>
         
       </el-form>
@@ -123,12 +123,11 @@ export default {//editForm.headImg
       //新增界面数据
       addForm: {
         keyWord: "",
-        
       },
       //编辑界面数据
       editForm: {
-        keyWord: "",
-        
+        // keyWord: "",
+        modifyTime:''
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
@@ -301,20 +300,20 @@ export default {//editForm.headImg
     //编辑
     editSubmit: function() {
       this.$refs.editForm.validate(valid => {
+        console.log(valid)
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.editLoading = true;
-            //NProgress.start();
-            console.log(valid);
-            console.dir(this.editForm);
+            
             let para = Object.assign({}, this.editForm);
+            this.editForm.modifyTime=para.modifyTime
             console.log(para);
             para.token = sessionStorage.getItem("token");
             updateKeyword({
               token:sessionStorage.getItem("token"),
               id:para.id,
               modifyTime:para.modifyTime,
-              keyWord:para.keyWord
+              // keyWord:para.keyWord
             })
               .then(res => {
                 console.log(res);
@@ -324,7 +323,7 @@ export default {//editForm.headImg
                     message: "提交成功",
                     type: "success"
                   });
-                  this.$refs["editForm"].resetFields();
+                  // this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
                   this.getKeywords();
                 } else {

@@ -14,7 +14,7 @@
     <el-form-item prop="checkPass">
       <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
-    <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+    <el-checkbox v-model="checked" :checked="checked" class="remember">记住密码</el-checkbox>
     <el-form-item style="width:100%;">
       <el-button
         type="primary"
@@ -48,7 +48,7 @@ export default {
           //{ validator: validaePass2 }
         ]
       },
-      checked: true
+      checked: false
     };
   },
   created() {
@@ -77,8 +77,14 @@ export default {
             password: this.ruleForm2.checkPass
           };
           requestLogin(loginParams).then(res => {
-            console.log(res);
             if (res.code === 1) {
+              if(this.checked){
+                localStorage.setItem('username',this.ruleForm2.account)
+                localStorage.setItem('password',this.ruleForm2.checkPass)
+              }else{
+                localStorage.removeItem('username')
+                localStorage.removeItem('password')
+              }
               sessionStorage.setItem("token", res.data);
               _this.$router.push({ path: "/public-benefit-index" });
             } else {
@@ -94,6 +100,14 @@ export default {
           return false;
         }
       });
+    }
+  },
+  mounted(){
+    if(localStorage.getItem('username')&&localStorage.getItem('password')){
+      // console.log(1)
+      this.checked=true
+      this.ruleForm2.account=localStorage.getItem('username')
+      this.ruleForm2.checkPass=localStorage.getItem('password')
     }
   }
 };
