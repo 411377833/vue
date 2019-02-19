@@ -67,8 +67,10 @@ export const listGy_suggest= p => post(`${baseUrl}/api/list_gy_suggest`, p);  //
 // 为TA证实
 export const getProves= p => post(`${baseUrl}/api/get_proves`, p);  //通 
 export const delProve= p => post(`${baseUrl}/api/del_prove`, p);  //通 
+export const updateProve= p => post(`${baseUrl}/api/update_prove`, p);  //通 
 // export const getProves= p => post(`${baseUrl}/api/get_proves`, p);  //通 
-// export const getProves= p => post(`${baseUrl}/api/get_proves`, p);  //通 
+// 公益咨询
+export const getGyInfos= p => post(`${baseUrl}/api/get_gy_infos`, p);  //通 
 
 // 上传图片
 export const upload_img = p => post(`${baseUrl}/api/upload_img`, p);//通

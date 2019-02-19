@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import E from 'wangeditor'
+    // import E from 'wangeditor'
     export default {
         props:['catchData','editDatas'],
       name: 'editorElem',

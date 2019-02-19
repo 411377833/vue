@@ -14,7 +14,7 @@
 			</el-col> -->
 			<el-col :span="4" class="userinfo">
 				<el-dropdown trigger="hover">
-					<span class="el-dropdown-link userinfo-inner"><img src="http://static.50wlkj.com/wlwl/img/2019-02/155049537530824310.ico" /> {{sysUserName}}</span>
+					<span class="el-dropdown-link userinfo-inner"><img src="http://static.50wlkj.com/wlwl/img/2019-02/155054512702695191.png" /> {{sysUserName}}</span>
 					<el-dropdown-menu slot="dropdown">
 						<el-dropdown-item @click.native="amend">修改密码</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>

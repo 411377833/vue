@@ -7,7 +7,7 @@
 
 </style>
 <script>
-  import wangeditor from './wangeditor.vue'
+  // import wangeditor from './wangeditor.vue'
   export default {
     data(){
       return{
@@ -20,8 +20,8 @@
         this.content=value      //在这里接受子组件传过来的参数，赋值给data里的参数
       }
     },
-    components: {
-      wangeditor
-    },
+    // components: {
+    //   wangeditor
+    // },
   }
 </script>

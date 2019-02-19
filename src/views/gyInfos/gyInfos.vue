@@ -5,10 +5,10 @@
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" :model="filters">
           <el-form-item>
-            <el-input v-model="filters.id" placeholder="请输入标题"></el-input>
+            <el-input v-model="filters.id" placeholder="请输入标题或描述进行查询"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" v-on:click="queryListH5">查询</el-button>
+            <el-button type="primary" v-on:click="queryGetGyInfos">查询</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -23,7 +23,7 @@
         </el-table-column>-->
         <!-- <el-table-column prop="id" label="id" width="200"></el-table-column> -->
         <el-table-column prop="title" label="标题" width="300"></el-table-column>
-        <el-table-column prop="creatorId" label="创建人编号" width="200"></el-table-column>
+        <el-table-column prop="description" label="描述" width="200"></el-table-column>
         <!-- <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column> -->
         <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
         <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
@@ -64,13 +64,13 @@
 
 <script>
 import {
-  listH5,
-  deleteCategory,
-  addCategory,
-  updateCategory
+  getGyInfos,
+  // deleteCategory,
+  // addCategory,
+  // updateCategory
 } from "../../api/api";
-import addPage from './addH5Page'
-import editPage from './editPage'
+// import addPage from './addH5Page'
+// import editPage from './editPage'
 export default {
   data() {
     return {
@@ -89,12 +89,13 @@ export default {
     };
   },
   methods: {
-    queryListH5() {
+    queryGetGyInfos() {
       let _this = this;
       if (_this.filters.id) {
-        listH5({
+        getGyInfos({
           token: sessionStorage.getItem("token"),
           title: _this.filters.id,
+          description:_this.filters.id,
           pageNum: this.page,
           pageSize: 10
         }).then(res => {
@@ -113,13 +114,13 @@ export default {
           }
         });
       } else {
-        _this.listH5();
+        _this.getGyInfos();
       }
     },
     // 列表
-    listH5() {
+    getGyInfos() {
       let _this = this;
-      listH5({
+      getGyInfos({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
         pageSize: 10
@@ -168,7 +169,7 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              _this.listH5();
+              _this.getGyInfos();
             }
           });
         })
@@ -178,7 +179,7 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       if (!this.filters.id) {
-        this.listH5();
+        this.getGyInfos();
       }
     },
     //显示新增界面
@@ -202,17 +203,17 @@ export default {
       this.editFormVisible= false;
       this.addFormVisible = false;
       this.nextPage = false;
-      this.listH5()
+      this.getGyInfos()
     }
     
   },
   mounted() {
-    this.listH5();
+    this.getGyInfos();
   },
-  components: {
-       addPage,
-       editPage
-  },
+  // components: {
+  //      addPage,
+  //      editPage
+  // },
 };
 </script>
 <style lang="scss" scoped>

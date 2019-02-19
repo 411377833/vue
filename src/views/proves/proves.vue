@@ -11,7 +11,7 @@
         </el-form-item>
         <!-- <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
-        </el-form-item> -->
+        </el-form-item>-->
       </el-form>
     </el-col>
 
@@ -22,17 +22,16 @@
       </el-table-column>-->
       <!-- <el-table-column prop="id" label="ID" width="200"></el-table-column> -->
       <el-table-column prop="gyItemId" label="公益项目编号" width="300"></el-table-column>
-      <el-table-column prop="userName" label="证实人姓名	" min-width="180"></el-table-column>
+      <el-table-column prop="userName" label="证实人姓名	" width="180"></el-table-column>
       <el-table-column prop="userPhone" label="证实人联系方式	" min-width="180"></el-table-column>
       <el-table-column prop="content" label="内容" min-width="180"></el-table-column>
       <el-table-column prop="relation" label="与受捐者关系" min-width="180"></el-table-column>
       <!-- <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
       <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
-      <el-table-column prop="userType" label="类型" min-width="150"></el-table-column> -->
-
+      <el-table-column prop="userType" label="类型" min-width="150"></el-table-column>-->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" min-width="100">
+      <el-table-column label="操作" min-width="200">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
@@ -52,24 +51,24 @@
       ></el-pagination>
     </el-col>
 
-    
-
     <!--编辑界面-->
-    <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false" >
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="项目负责人" prop="displayName">
-          <el-input v-model="editForm.displayName"></el-input>
+        <el-form-item label="证实人姓名" prop="userName">
+          <el-input v-model="editForm.userName"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="id" >
-          <el-input v-model="editForm.id"></el-input>
-        </el-form-item> -->
-        <el-form-item label="说明" prop="signature">
-          <el-input v-model="editForm.signature"></el-input>
+        <el-form-item label="联系电话" prop="userPhone">
+          <el-input v-model="editForm.userPhone"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话" >
-          <el-input v-model="editForm.phone"></el-input>
+        
+
+        <el-form-item label="证实内容" prop="content">
+          <el-input v-model="editForm.content"></el-input>
         </el-form-item>
-        <el-upload
+        <el-form-item label="与受款人关系" prop="relation">
+          <el-input v-model="editForm.relation"></el-input>
+        </el-form-item>
+        <!-- <el-upload
           :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -79,7 +78,7 @@
         >
           <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+        </el-upload>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -89,9 +88,8 @@
 
     <!-- 详情界面 -->
     <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
-      <particulars :particulars = "particulars"/>
+      <particulars :particulars="particulars"/>
     </el-dialog>
-
   </section>
 </template>
 
@@ -101,72 +99,79 @@ import {
   delProve,
   // getLeader,
   // addLeader,
-  updateLeader
+  updateProve
 } from "../../api/api";
-// import particulars from '../component/particulars'
+import particulars from "../component/particulars";
 export default {
   data() {
     return {
       page: 1,
       filters: {
-        displayName: ""
+        gyItemId: ""
       },
-    //   imageUrl: '',
-     dialogVisible:false,
-     detailsVisible:false,
-      abc:{
-        token:sessionStorage.getItem("token")
+      //   imageUrl: '',
+      dialogVisible: false,
+      detailsVisible: false,
+      abc: {
+        token: sessionStorage.getItem("token")
       },
       total: 0,
       tableData: [],
       listLoading: false,
-      particulars:{},
+      particulars: {},
       //新增界面数据
-      addForm: {
-        
-        // idCard: "",
-        displayName: "",
-        signature: "",
-        headImg:""
-      },
+      // addForm: {
+
+      //   // idCard: "",
+      //   displayName: "",
+      //   signature: "",
+      //   headImg:""
+      // },
       //编辑界面数据
       editForm: {
         // idCard: "",
-        displayName: "",
-        signature: "",
-        headImg:""
+        userName: "",
+        userPhone: "",
+        content: "",
+        relation: ""
       },
       // addFormVisible: false, //新增界面是否显示
       // addLoading: false,
       editFormVisible: false, //编辑界面是否显示
       editLoading: false,
-      
+
       editFormRules: {
-        
-        displayName: [
-          { required: true, message: "请填写项目负责人", trigger: "blur" }
+        userName: [
+          { required: true, message: "请填写证实人姓名", trigger: "blur" }
         ],
-        signature: [
-          { required: true, message: "请填写说明", trigger: "blur" }
+        userPhone: [
+          { required: true, message: "联系电话不能为空", trigger: "blur" }
+          // { type: 'number', message: '年龄必须为数字值'}
         ],
-      },
-      addHeadImg:"",
-      editHeadImg:''
+        content: [
+          { required: true, message: "请填写证实内容", trigger: "blur" }
+        ],
+        relation: [
+          { required: true, message: "请填写与受款人的关系", trigger: "blur" }
+        ]
+      }
+      // addHeadImg:"",
+      // editHeadImg:''
     };
   },
   methods: {
     queryGetProve() {
       let _this = this;
-      if(_this.filters.id){
-      getProves({
-        token: sessionStorage.getItem("token"),
-        displayName: _this.filters.id,
+      if (_this.filters.id) {
+        getProves({
+          token: sessionStorage.getItem("token"),
+          gyItemId: _this.filters.id,
           pageNum: this.page,
           pageSize: 10
-      }).then(res => {
-        console.log(res);
-        if (res.code === 1) {
-             _this.tableData = res.data.data;
+        }).then(res => {
+          console.log(res);
+          if (res.code === 1) {
+            _this.tableData = res.data.data;
             _this.total = res.data.total;
           } else {
             this.$message({
@@ -174,17 +179,18 @@ export default {
               type: "error"
             });
           }
-      });}else{
+        });
+      } else {
         _this.getProves();
       }
     },
-// 列表
+    // 列表
     getProves() {
       let _this = this;
       getProves({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
-        pageSize: 10,
+        pageSize: 10
         // title: "",
         // description: ""
       }).then(res => {
@@ -200,12 +206,6 @@ export default {
         }
       });
     },
-    //显示编辑界面
-    // handleEdit: function(index, row) {
-    //   console.log(row);
-    //   // this.editFormVisible = true;
-    //   // this.editForm = Object.assign({}, row);
-    // },
 
     //删除
     handleDel: function(index, row) {
@@ -244,106 +244,100 @@ export default {
         .catch(() => {});
     },
     //查询单条
-    handleDetails: function(index,row){
-      console.log(Object.assign({}, row))
-        this.detailsVisible = true;
-        this.particulars={}
-        this.particulars = Object.assign({}, row)
+    handleDetails: function(index, row) {
+      console.log(Object.assign({}, row));
+      this.detailsVisible = true;
+      this.particulars = {};
+      this.particulars = Object.assign({}, row);
     },
-
-
-
-
 
     //分页
     handleCurrentChange(val) {
       this.page = val;
-      if(!this.filters.id){
-      this.getProves();}
+      if (!this.filters.id) {
+        this.getProves();
+      }
     },
-//上传图片
-    handleAvatarSuccess(res, file) {
-      console.log(URL.createObjectURL(file.raw));
-        // this.imageUrl = URL.createObjectURL(file.raw);
-        if(res.code === 1 ){
-          this.addForm.headImg = res.data;
-          this.addHeadImg = res.data
-          this.editHeadImg = res.data
-          console.log(this.addForm.headImg)
-        }else{
-          this.$message({
-            message: '上传失败！',
-            type: "error"
-          });
-        }
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
-        const isLt4M = file.size / 1024 / 1024 < 4;
+    //上传图片
+    // handleAvatarSuccess(res, file) {
+    //   console.log(URL.createObjectURL(file.raw));
+    //     // this.imageUrl = URL.createObjectURL(file.raw);
+    //     if(res.code === 1 ){
+    //       this.addForm.headImg = res.data;
+    //       this.addHeadImg = res.data
+    //       this.editHeadImg = res.data
+    //       console.log(this.addForm.headImg)
+    //     }else{
+    //       this.$message({
+    //         message: '上传失败！',
+    //         type: "error"
+    //       });
+    //     }
+    //   },
+    //   beforeAvatarUpload(file) {
+    //     const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
+    //     const isLt4M = file.size / 1024 / 1024 < 4;
 
-        // if (!isJPG) {
-        //   this.$message.error('上传头像图片只能是 JPG 格式!');
-        // }
-        if (!isLt4M) {
-          this.$message.error('上传头像图片大小不能超过 4MB!');
-        }
-        return  isLt4M;
-      },
+    //     // if (!isJPG) {
+    //     //   this.$message.error('上传头像图片只能是 JPG 格式!');
+    //     // }
+    //     if (!isLt4M) {
+    //       this.$message.error('上传头像图片大小不能超过 4MB!');
+    //     }
+    //     return  isLt4M;
+    //   },
 
+    // //显示新增界面
+    // handleAdd: function() {
+    //   this.addFormVisible = true;
+    //   this.addHeadImg = ''
+    //   this.addForm = {
+    //     // idCard: "",
+    //     displayName: "",
+    //     signature: "",
+    //     phone:"",
+    //   };
+    // },
+    // //新增
+    // addSubmit: function() {
+    //   this.$refs.addForm.validate(valid => {
+    //     if (valid) {
+    //       this.$confirm("确认提交吗？", "提示", {}).then(() => {
+    //         this.addLoading = true;
+    //         //NProgress.start();
+    //         let para = Object.assign({}, this.addForm);
+    //         console.log(para);
+    //         para.token = sessionStorage.getItem("token");
+    //         addLeader(para).then(res => {
+    //           console.log(res);
+    //           if (res.code == 1) {
+    //             //NProgress.done();
+    //             this.$message({
+    //               message: "提交成功",
+    //               type: "success"
+    //             });
+    //             this.$refs["addForm"].resetFields();
+    //             this.addFormVisible = false;
+    //             this.getProves();
+    //           } else {
+    //             this.$message({
+    //               message: res.message,
+    //               type: "error"
+    //             });
+    //           }
+    //           this.addLoading = false;
 
-
-
-    //显示新增界面
-    handleAdd: function() {
-      this.addFormVisible = true;
-      this.addHeadImg = ''
-      this.addForm = {
-        // idCard: "",
-        displayName: "",
-        signature: "",
-        phone:"",
-      };
-    },
-    //新增
-    addSubmit: function() {
-      this.$refs.addForm.validate(valid => {
-        if (valid) {
-          this.$confirm("确认提交吗？", "提示", {}).then(() => {
-            this.addLoading = true;
-            //NProgress.start();
-            let para = Object.assign({}, this.addForm);
-            console.log(para);
-            para.token = sessionStorage.getItem("token");
-            addLeader(para).then(res => {
-              console.log(res);
-              if (res.code == 1) {
-                //NProgress.done();
-                this.$message({
-                  message: "提交成功",
-                  type: "success"
-                });
-                this.$refs["addForm"].resetFields();
-                this.addFormVisible = false;
-                this.getProves();
-              } else {
-                this.$message({
-                  message: res.message,
-                  type: "error"
-                });
-              }
-              this.addLoading = false;
-
-              // this.getUsers();
-            });
-          });
-        }
-      });
-    },
+    //           // this.getUsers();
+    //         });
+    //       });
+    //     }
+    //   });
+    // },
     //显示编辑界面
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
-      this.editHeadImg = row.headImg;
+      // this.editHeadImg = row.headImg;
       this.editForm = Object.assign({}, row);
     },
     //编辑
@@ -358,14 +352,15 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateLeader({
-              token:sessionStorage.getItem("token"),
-              headImg:para.headImg,
-              displayName:para.displayName,
-              signature:para.signature,
-              idCard:para.idCard,
-              id:para.id,
-            }).then(res => {
+            updateProve({
+              token: sessionStorage.getItem("token"),
+              id: para.id,
+              userName: para.userName,
+              userPhone: para.userPhone,
+              content: para.content,
+              relation: para.relation
+            })
+              .then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();
@@ -399,19 +394,14 @@ export default {
           });
         }
       });
-    },
-
-
-
-   
-    
+    }
   },
   mounted() {
     this.getProves();
   },
   components: {
-      // particulars
-  },
+    particulars
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -445,5 +435,4 @@ export default {
   height: 178px;
   display: block;
 }
-
 </style>
