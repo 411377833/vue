@@ -282,9 +282,15 @@ export default {
       console.log(URL.createObjectURL(file.raw));
         // this.imageUrl = URL.createObjectURL(file.raw);
         if(res.code === 1 ){
-          this.addForm.headImg = res.data;
-          this.addHeadImg = res.data
-          this.editHeadImg = res.data
+          if(this.addFormVisible){
+             this.addForm.headImg = res.data;
+             this.addHeadImg = res.data
+          }else if(this.editFormVisible){
+            this.editForm.headImg = res.data;
+          this.editHeadImg= res.data;
+          }
+         
+          
           console.log(this.addForm.headImg)
         }else{
           this.$message({
@@ -295,7 +301,7 @@ export default {
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
-        const isLt2M = file.size / 1024 / 1024 < 4;
+        const isLt2M = file.size / 1024 / 1024 < 2;
 
         // if (!isJPG) {
         //   this.$message.error('上传头像图片只能是 JPG 格式!');
@@ -305,8 +311,6 @@ export default {
         }
         return  isLt2M;
       },
-
-
 
     
     //显示新增界面
