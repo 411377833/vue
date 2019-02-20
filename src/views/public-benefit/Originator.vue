@@ -113,6 +113,10 @@
         <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
       </div>
     </el-dialog>
+    <!-- 详情界面 -->
+    <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
+      <particulars :particulars = "particulars"/>
+    </el-dialog>
   </section>
 </template>
 
@@ -124,6 +128,7 @@ import {
   addInitiator,
   updateInitiator
 } from "../../api/api";
+import particulars from '../component/particulars'
 export default {
   data() {
     return {
@@ -269,6 +274,16 @@ export default {
         })
         .catch(() => {});
     },
+//查询单条
+    handleDetails: function(index,row){
+      console.log(Object.assign({}, row))
+        this.detailsVisible = true;
+        this.particulars={}
+        this.particulars = Object.assign({}, row)
+    },
+
+
+
     //分页
     handleCurrentChange(val) {
       this.page = val;
@@ -424,7 +439,10 @@ export default {
   },
   mounted() {
     this.listInitiator();
-  }
+  },
+  components: {
+      particulars
+  },
 };
 </script>
 <style lang="scss" scoped>
