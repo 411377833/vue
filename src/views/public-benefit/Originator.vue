@@ -138,6 +138,7 @@ export default {
       },
       //   imageUrl: '',
       dialogVisible:false,
+      detailsVisible:false,
       abc:{
         token:sessionStorage.getItem("token")
       },
@@ -182,6 +183,16 @@ export default {
       },
        addHeadImg:"",
       editHeadImg:''
+    };
+  },
+  created() {
+    let that = this;
+    document.onkeypress = function(e) {
+      var keycode = document.all ? event.keyCode : e.which;
+      if (keycode == 13) {
+        that.queryListInitiator(); // 登录方法名
+        return false;
+      }
     };
   },
   methods: {

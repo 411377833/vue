@@ -198,6 +198,16 @@ export default {//editForm.headImg
       
     };
   },
+  created() {
+    let that = this;
+    document.onkeypress = function(e) {
+      var keycode = document.all ? event.keyCode : e.which;
+      if (keycode == 13) {
+        that.queryListOrg(); // 登录方法名
+        return false;
+      }
+    };
+  },
   methods: {
     queryListOrg() {
       let _this = this;

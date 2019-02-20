@@ -196,6 +196,16 @@ export default {
       editBannerImg: ""
     };
   },
+  created() {
+    let that = this;
+    document.onkeypress = function(e) {
+      var keycode = document.all ? event.keyCode : e.which;
+      if (keycode == 13) {
+        that.queryBanner(); // 登录方法名
+        return false;
+      }
+    };
+  },
   methods: {
     queryBanner() {
       let _this = this;

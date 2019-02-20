@@ -253,6 +253,16 @@ export default {
       options:[]
     };
   },
+  created() {
+    let that = this;
+    document.onkeypress = function(e) {
+      var keycode = document.all ? event.keyCode : e.which;
+      if (keycode == 13) {
+        that.queryGetProjects(); // 登录方法名
+        return false;
+      }
+    };
+  },
   methods: {
     queryGetProjects() {
       let _this = this;
