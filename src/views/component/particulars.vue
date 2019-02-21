@@ -3,7 +3,7 @@
     
     
     <div v-if="particular.bannerDesc">
-      <span class="name">banner描述</span>
+      <span class="name">轮播图描述</span>
       {{particular.bannerDesc}}
     </div>
     <div v-if="particular.title">
@@ -28,8 +28,8 @@
       <span class="name">与受款人关系</span>
       {{particular.relation}}
     </div>
-    <div v-if="particular.createTime"><span class="name">创建时间</span>{{particular.createTime}}</div>
-    <div v-if="particular.lastUpdateTime"><span class="name">最后更新时间</span>{{particular.lastUpdateTime}}</div>
+    <!-- <div v-if="particular.createTime"><span class="name">创建时间</span>{{particular.createTime}}</div>
+    <div v-if="particular.lastUpdateTime"><span class="name">最后更新时间</span>{{particular.lastUpdateTime}}</div> -->
     <!-- <div v-if="particular.deleteFlag"><span class="name">删除标记</span>{{particular.deleteFlag}}</div> -->
     <div v-if="particular.displayName"><span class="name">名称</span>{{particular.displayName}}</div>
     <!-- <div v-if="particular.orgId"><span class="name">发起机构ID</span>{{particular.orgId}}</div>
@@ -56,11 +56,11 @@
     <div v-if="particular.donationFlower"><span class="name">小红花捐款数</span>{{particular.donationFlower}}</div>
     <div v-if="particular.itemTitle"><span class="name">公益项目</span>{{particular.itemTitle}}</div>
     
-    <div v-if="particular.headImg"><span class="name img">图片</span><img :src="particular.headImg" alt></div>
-    <div v-if="particular.bannerImg"><span class="name img">图片</span><img :src="particular.bannerImg" alt></div>
-    <div v-if="particular.imgs"><span class="name img">轮播图</span><img :src="particular.imgs" alt></div>
-    <div v-if="particular.url"><span class="name img">内容</span><img :src="particular.url" alt></div>
-    <div v-if="particular.image"><span class="name img">内容</span><img :src="particular.image" alt></div>
+    <div v-if="particular.headImg"><span class="name img">头像</span><img :src="particular.headImg" class="avatar"></div>
+    <div v-if="particular.bannerImg"><span class="name img">轮播图</span><img :src="particular.bannerImg" class="avatar"></div>
+    <div v-if="particular.imgs"><span class="name img">头像</span><img :src="particular.imgs" class="avatar"></div>
+    <div v-if="particular.url"><span class="name img">内容</span><img :src="particular.url" class="avatar"></div>
+    <div v-if="particular.image"><span class="name img">内容</span><img :src="particular.image" class="avatar"></div>
 
   </div>
 </template>
@@ -76,6 +76,11 @@
 }
 .img{
   vertical-align: top;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: inline-block;
 }
 </style>
 <script>

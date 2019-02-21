@@ -26,12 +26,12 @@
       <!-- <el-table-column prop="idCard" label="机构代码" width="200"></el-table-column> -->
       <el-table-column prop="displayName" label="机构名称" width="300"></el-table-column>
       <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
-      <el-table-column prop="headImg" label="头像	" min-width="180">
+      <!-- <el-table-column prop="headImg" label="头像	" min-width="180">
         <img :src="this.headImg" alt="">
-      </el-table-column>
+      </el-table-column> -->
 
       
-      <el-table-column label="操作" min-width="100">
+      <el-table-column label="操作" min-width="180">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>

@@ -52,7 +52,7 @@
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
         <el-form-item label="关键字" prop="keyWord">
-          <el-input v-model="addForm.keyWord"></el-input>
+          <el-input v-model="addForm.keyWord" placeholder="请输入关键字"></el-input>
         </el-form-item>
         <!-- <el-form-item label="机构名称" prop="displayName">
           <el-input v-model="addForm.displayName"></el-input>
@@ -91,7 +91,7 @@
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
         <el-form-item label="次数" prop="modifyTime">
-          <el-input v-model="editForm.modifyTime"></el-input>
+          <el-input v-model="editForm.modifyTime" placeholder="请输入关键字搜索次数"></el-input>
         </el-form-item>
         
       </el-form>
@@ -148,8 +148,8 @@ export default {//editForm.headImg
         // ]
       },
       editFormRules: {
-        keyWord: [
-          { required: true, message: "请输入关键字", trigger: "blur" }
+        modifyTime: [
+          { required: true, message: "请输入关键字次数", trigger: "blur" }
         ],
       
       },

@@ -63,7 +63,7 @@
           <el-input v-model="addForm.tips"></el-input>
         </el-form-item>
         <el-form-item label="发起机构ID">
-          <!-- <el-input v-model="addForm.orgId"></el-input> -->
+          
           <el-select
             v-model="addForm.orgId"
             filterable
@@ -540,4 +540,5 @@ export default {
     margin-bottom: 20px;
   }
 }
+
 </style>

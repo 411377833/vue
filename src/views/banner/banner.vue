@@ -29,7 +29,7 @@
       <!-- <el-table-column prop="projectId" label="项目id" min-width="150"></el-table-column> -->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" min-width="100">
+      <el-table-column label="操作" min-width="180">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
@@ -52,27 +52,37 @@
 
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="类型" prop="idCard">
+      <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm">
+        <!-- <el-form-item label="类型" prop="bannerType" class=".el-form-item__label">
           <el-input v-model="addForm.bannerType"></el-input>
+        </el-form-item> -->
+        <el-form-item label="类型" prop="bannerType">
+          <el-select v-model="addForm.bannerType" placeholder="请选择类型">
+            <el-option label="项目" value="项目"></el-option>
+            <el-option label="资讯" value="资讯"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="标题或描述" prop="displayName">
-          <el-input v-model="addForm.bannerDesc"></el-input>
+        <el-form-item label="标题" prop="bannerDesc" class=".el-form-item__label">
+          <el-input v-model="addForm.bannerDesc" placeholder="请简单描述一下"></el-input>
         </el-form-item>
-        <el-form-item label="优先级" prop="signature">
-          <el-input v-model="addForm.priority"></el-input>
+        <el-form-item label="优先级" prop="priority">
+          <el-input v-model="addForm.priority" placeholder="数字越小优先级越高，最高为100"></el-input>
         </el-form-item>
-        <el-upload
-          :data="abc"
-          class="avatar-uploader"
-          action="http://api.50wlkj.com/api/upload_img"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="addBannerImg" :src="addBannerImg" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+        <el-form-item label="轮播图">
+          <el-upload
+            :data="abc"
+            class="avatar-uploader"
+            action="http://api.50wlkj.com/api/upload_img"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            :on-preview="handlePictureCardPreview"
+          >
+            <img v-if="addBannerImg" :src="addBannerImg" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        
         
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -83,27 +93,36 @@
 
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="类型" prop="idCard">
+      <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
+        <!-- <el-form-item label="类型" prop="bannerType">
           <el-input v-model="editForm.bannerType"></el-input>
+        </el-form-item> -->
+        <el-form-item label="类型" prop="bannerType">
+          <el-select v-model="editForm.bannerType" placeholder="请选择类型">
+            <el-option label="项目" value="项目"></el-option>
+            <el-option label="资讯" value="资讯"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="标题或描述" prop="displayName">
+        <el-form-item label="标题或描述" prop="bannerDesc">
           <el-input v-model="editForm.bannerDesc"></el-input>
         </el-form-item>
-        <el-form-item label="优先级" prop="signature">
+        <el-form-item label="优先级" prop="priority">
           <el-input v-model="editForm.priority"></el-input>
         </el-form-item>
-        <el-upload
+        <el-form-item label="轮播图">
+          <el-upload
           :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
-        >
+          >
           <img v-if="editBannerImg" :src="editBannerImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+          </el-upload>
+        </el-form-item>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -160,7 +179,7 @@ export default {
       addFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
         bannerType: [
-          { required: true, message: "请填写banner类型", trigger: "blur" }
+          { required: true, message: "请选择轮播图类型", trigger: "blur" }
         ],
         bannerDesc: [
           { required: true, message: "请填写标题或描述", trigger: "blur" }
@@ -179,7 +198,7 @@ export default {
       editFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
         bannerType: [
-          { required: true, message: "请填写banner类型", trigger: "blur" }
+          { required: true, message: "请选择轮播图类型", trigger: "blur" }
         ],
         bannerDesc: [
           { required: true, message: "请填写标题或描述", trigger: "blur" }
@@ -342,7 +361,7 @@ export default {
     beforeAvatarUpload(file) {
       const isJPG =
         file.type === "image/gif,image/jpeg,image/jpg,image/png,image/svg";
-      const isLt2M = file.size / 1024 / 1024 < 4;
+      const isLt2M = file.size / 1024 / 1024 < 2;
 
       // if (!isJPG) {
       //   this.$message.error('上传头像图片只能是 JPG 格式!');
@@ -467,7 +486,7 @@ export default {
 }
 
 .avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
+  border: 1px dashed #000;
   border-radius: 6px;
   cursor: pointer;
   position: relative;
@@ -488,5 +507,8 @@ export default {
   width: 178px;
   height: 178px;
   display: block;
+}
+.el-form-item__label{
+  width: 120px!important;
 }
 </style>

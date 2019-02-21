@@ -29,7 +29,7 @@
       <!-- <el-table-column prop="userType" label="类型" min-width="150"></el-table-column> -->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" min-width="100">
+      <el-table-column label="操作" min-width="180">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
@@ -56,12 +56,13 @@
           <el-input v-model="addForm.idCard"></el-input>
         </el-form-item> -->
         <el-form-item label="分类名称" prop="cateName">
-          <el-input v-model="addForm.cateName"></el-input>
+          <el-input v-model="addForm.cateName" placeholder="请输入分类名称"></el-input>
         </el-form-item>
         <el-form-item label="排序号" prop="priority">
-          <el-input v-model="addForm.priority"></el-input>
+          <el-input v-model="addForm.priority" placeholder="请输入排序号，越小优先级越高，最高100"></el-input>
         </el-form-item>
-        <el-upload
+        <el-form-item label="图片">
+          <el-upload
           :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -72,6 +73,8 @@
           <img v-if="addCateImg" :src="addCateImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        </el-form-item>
+        
         
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -89,7 +92,8 @@
         <el-form-item label="排序号" prop="priority">
           <el-input v-model="editForm.priority"></el-input>
         </el-form-item>
-        <el-upload
+        <el-form-item label="图片">
+          <el-upload
           :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -100,6 +104,8 @@
           <img v-if="editCateImg" :src="editCateImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        </el-form-item>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -155,7 +161,7 @@ export default {
         cateName: [
           { required: true, message: "请填写分类名称", trigger: "blur" }
         ],
-        priority: [{ required: true, message: "请输入排序号", trigger: "blur" }],
+        priority: [{ required: true, message: "请输入排序号，越小优先级越高，最高100", trigger: "blur" }],
         // cateImg:[
         //     {required: true, message: "请上传图片", trigger: "blur"}
         // ]
@@ -168,6 +174,16 @@ export default {
       },
       addCateImg:"",
       editCateImg:""
+    };
+  },
+  created() {
+    let that = this;
+    document.onkeypress = function(e) {
+      var keycode = document.all ? event.keyCode : e.which;
+      if (keycode == 13) {
+        that.queryCateName(); // 登录方法名
+        return false;
+      }
     };
   },
   methods: {
@@ -275,15 +291,15 @@ export default {
         // this.imageUrl = URL.createObjectURL(file.raw);
         if(res.code === 1 ){
           if(this.addFormVisible){
-             this.addForm.headImg = res.data;
-             this.addHeadImg = res.data
+             this.addForm.cateImg = res.data;
+             this.addCateImg = res.data
           }else if(this.editFormVisible){
-            this.editForm.headImg = res.data;
-          this.editHeadImg= res.data;
+            this.editForm.cateImg = res.data;
+          this.editCateImg= res.data;
           }
          
           
-          console.log(this.addForm.headImg)
+          console.log(this.addForm.cateImg)
         }else{
           this.$message({
             message: '上传失败！',
