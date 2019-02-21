@@ -413,14 +413,17 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateLeader({
+            updateLeader(
+              {
               token: sessionStorage.getItem("token"),
               headImg: para.headImg,
               displayName: para.displayName,
               signature: para.signature,
               idCard: para.idCard,
               id: para.id
-            })
+            }
+            // para
+            )
               .then(res => {
                 console.log(res);
                 if (res.code == 1) {

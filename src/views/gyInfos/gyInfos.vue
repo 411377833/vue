@@ -23,14 +23,14 @@
         </el-table-column>-->
         <!-- <el-table-column prop="id" label="id" width="200"></el-table-column> -->
         <el-table-column prop="title" label="标题" width="300"></el-table-column>
-        <el-table-column prop="description" label="描述" width="200"></el-table-column>
+        <el-table-column prop="description" label="描述" min-width="180"></el-table-column>
         <!-- <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column> -->
-        <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
-        <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
+        <!-- <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
+        <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column> -->
         <!-- <el-table-column prop="userType" label="类型" min-width="150"></el-table-column> -->
         <!-- <el-table-column prop="title" label="标题" min-width="180" >
         </el-table-column>-->
-        <el-table-column label="操作" min-width="150">
+        <el-table-column label="操作" min-width="180">
           <template slot-scope="scope">
             <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
@@ -49,6 +49,17 @@
           style="float:right;"
         ></el-pagination>
       </el-col>
+
+
+
+
+
+
+
+      <!-- 详情界面 -->
+      <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
+      <particulars :particulars = "particulars"/>
+    </el-dialog>
       
     </div>
     <div v-if="nextPage" >
@@ -65,27 +76,49 @@
 <script>
 import {
   getGyInfos,
-  // deleteCategory,
+  delGyInfos,
   // addCategory,
   // updateCategory
 } from "../../api/api";
 // import addPage from './addH5Page'
 // import editPage from './editPage'
+import particulars from '../component/particulars'
+
 export default {
   data() {
     return {
       page: 1,
       filters: {
-        cateName: ""
+        title: "",
+        // description:""
       },
       nextPage:false,
       //   imageUrl: '',
       total: 0,
+      detailsVisible:false,
       tableData: [],
       listLoading: false,
       addFormVisible: false, //新增界面是否显示
       editFormVisible: false, //编辑界面是否显示
-      editData:{}
+      editData:{},
+      //编辑界面数据
+      // editForm: {
+      //   id: "",
+      //   title: "",
+      //   description: "",
+      //   image: ""
+      // },
+      // editImage:"",
+    };
+  },
+  created() {
+    let that = this;
+    document.onkeypress = function(e) {
+      var keycode = document.all ? event.keyCode : e.which;
+      if (keycode == 13) {
+        that.queryGetGyInfos(); // 登录方法名
+        return false;
+      }
     };
   },
   methods: {
@@ -95,7 +128,7 @@ export default {
         getGyInfos({
           token: sessionStorage.getItem("token"),
           title: _this.filters.id,
-          description:_this.filters.id,
+          // description:_this.filters.id,
           pageNum: this.page,
           pageSize: 10
         }).then(res => {
@@ -158,7 +191,7 @@ export default {
           });
           // 	this.getUsers();
           // });
-          deleteCategory({
+          delGyInfos({
             token: sessionStorage.getItem("token"),
             id: row.id
           }).then(res => {
@@ -175,6 +208,20 @@ export default {
         })
         .catch(() => {});
     },
+
+
+//查询单条
+    handleDetails: function(index,row){
+      console.log(Object.assign({}, row))
+        this.detailsVisible = true;
+        this.particulars={}
+        this.particulars = Object.assign({}, row)
+    },
+
+
+
+
+
     //分页
     handleCurrentChange(val) {
       this.page = val;
@@ -209,6 +256,9 @@ export default {
   },
   mounted() {
     this.getGyInfos();
+  },
+  components: {
+      particulars
   },
   // components: {
   //      addPage,

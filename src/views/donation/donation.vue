@@ -52,7 +52,7 @@
 
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+      <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm">
         <el-form-item label="公益项目编号" prop="gyItemId">
           <el-input v-model="addForm.gyItemId"></el-input>
         </el-form-item>

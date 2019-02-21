@@ -71,28 +71,9 @@ export const updateProve= p => post(`${baseUrl}/api/update_prove`, p);  //通
 // export const getProves= p => post(`${baseUrl}/api/get_proves`, p);  //通 
 // 公益咨询
 export const getGyInfos= p => post(`${baseUrl}/api/get_gy_infos`, p);  //通 
+export const delGyInfos= p => post(`${baseUrl}/api/del_gy_info`, p);  //通 
 
 // 上传图片
 export const upload_img = p => post(`${baseUrl}/api/upload_img`, p);//通
 
 
-
-//export const requestLogin = params => { return axios.post(`${baseUrl}/api/user_login`, params).then(res => res.data); };
-
-//export const PostAddInitiator = params => { return axios.post(`${baseUrl}/api/add_initiator`, params).then(res => res.data); };
-
-// export const GetListInitiator = params => { console.log(`${baseUrl}/api/list_category`);console.log(params); return axios.get(`${baseUrl}/api/list_initiator`, { params: params }); };
-
-// export const getUserList = params => { return axios.get(`${base}/user/list`, { params: params }); };
-
-// export const getUserListPage = params => { return axios.get(`${base}/user/listpage`, { params: params }); };
-
-// export const removeUser = params => { return axios.get(`${base}/user/remove`, { params: params }); };
-
-// export const batchRemoveUser = params => { return axios.get(`${base}/user/batchremove`, { params: params }); };
-
-// export const editUser = params => { return axios.get(`${base}/user/edit`, { params: params }); };
-
-// export const addUser = params => { return axios.get(`${base}/user/add`, { params: params }); };
-
-// export const requestLogin=(paramObj)=>{return $server.post('/api.php?ac=v2_djList',paramObj)}

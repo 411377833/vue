@@ -46,7 +46,7 @@
     <!-- <div v-if="particular.projectId"><span class="name">关联的项目id</span>{{particular.projectId}}</div> -->
     <div v-if="particular.status"><span class="name">状态</span>{{particular.status}}</div>
     <div v-if="particular.targetMoney"><span class="name">目标善款金额</span>{{particular.targetMoney}}</div>
-    <div v-if="particular.h5Id"><span class="name">图文详情</span>{{particular.h5Id}}</div>
+    <!-- <div v-if="particular.h5Id"><span class="name">图文详情</span>{{particular.h5Id}}</div> -->
     <div v-if="particular.transCount"><span class="name">转发次数</span>{{particular.transCount}}</div>
     <div v-if="particular.priority"><span class="name">优先级</span>{{particular.priority}}</div>
     <div v-if="particular.orderNum"><span class="name">订单编号</span>{{particular.orderNum}}</div>
@@ -60,7 +60,7 @@
     <div v-if="particular.bannerImg"><span class="name img">轮播图</span><img :src="particular.bannerImg" class="avatar"></div>
     <div v-if="particular.imgs"><span class="name img">头像</span><img :src="particular.imgs" class="avatar"></div>
     <div v-if="particular.url"><span class="name img">内容</span><img :src="particular.url" class="avatar"></div>
-    <div v-if="particular.image"><span class="name img">内容</span><img :src="particular.image" class="avatar"></div>
+    <div v-if="particular.image"><span class="name img">图片</span><img :src="particular.image" class="avatar"></div>
 
   </div>
 </template>

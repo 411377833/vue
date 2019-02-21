@@ -23,15 +23,15 @@
       <!-- <el-table-column prop="id" label="ID" width="200"></el-table-column> -->
       <el-table-column prop="gyItemId" label="公益项目编号" width="300"></el-table-column>
       <el-table-column prop="userName" label="证实人姓名	" width="180"></el-table-column>
-      <el-table-column prop="userPhone" label="证实人联系方式	" min-width="180"></el-table-column>
-      <el-table-column prop="content" label="内容" min-width="180"></el-table-column>
+      <el-table-column prop="userPhone" label="证实人手机号码	" width="180"></el-table-column>
+      <el-table-column prop="content" label="证实内容" min-width="180"></el-table-column>
       <el-table-column prop="relation" label="与受捐者关系" min-width="180"></el-table-column>
       <!-- <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
       <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
       <el-table-column prop="userType" label="类型" min-width="150"></el-table-column>-->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" min-width="200">
+      <el-table-column label="操作" min-width="180">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
@@ -53,7 +53,7 @@
 
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false" >
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+      <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
         <el-form-item label="证实人姓名" prop="userName">
           <el-input v-model="editForm.userName"></el-input>
         </el-form-item>
@@ -94,6 +94,16 @@
 </template>
 
 <script>
+var validPhone=(rule, value,callback)=>{
+      if (!value){
+          callback(new Error('请输入电话号码'))
+      }else  if (!isvalidPhone(value)){
+        callback(new Error('请输入正确的11位手机号码'))
+      }else {
+          callback()
+      }
+  };
+
 import {
   getProves,
   delProve,
@@ -102,6 +112,7 @@ import {
   updateProve
 } from "../../api/api";
 import particulars from "../component/particulars";
+import {isvalidPhone} from "../../common/js/validate"
 export default {
   data() {
     return {
@@ -145,7 +156,8 @@ export default {
           { required: true, message: "请填写证实人姓名", trigger: "blur" }
         ],
         userPhone: [
-          { required: true, message: "联系电话不能为空", trigger: "blur" }
+          // { required: true, message: "联系电话不能为空", trigger: "blur" }
+          { required: true,trigger: "blur" , validator: validPhone }
           // { type: 'number', message: '年龄必须为数字值'}
         ],
         content: [
@@ -157,6 +169,16 @@ export default {
       }
       // addHeadImg:"",
       // editHeadImg:''
+    };
+  },
+  created() {
+    let that = this;
+    document.onkeypress = function(e) {
+      var keycode = document.all ? event.keyCode : e.which;
+      if (keycode == 13) {
+        that.queryGetProve(); // 登录方法名
+        return false;
+      }
     };
   },
   methods: {
@@ -352,6 +374,32 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
+            // updateProve(para)
+            //   .then(res => {
+            //     console.log(res);
+            //     if (res.code == 1) {
+            //       //NProgress.done();
+            //       this.$message({
+            //         message: "提交成功",
+            //         type: "success"
+            //       });
+            //       this.$refs["editForm"].resetFields();
+            //       this.editFormVisible = false;
+
+            //       this.getBanners();
+            //     } else {
+            //       this.$message({
+            //         message: res.message,
+            //         type: "error"
+            //       });
+            //     }
+            //     this.editLoading = false;
+                
+            //   })
+            //   .catch(res => {
+            //     this.editFormVisible = false;
+            //     console.log(res);
+            //   });
             updateProve({
               token: sessionStorage.getItem("token"),
               id: para.id,

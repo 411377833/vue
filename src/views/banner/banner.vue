@@ -508,7 +508,5 @@ export default {
   height: 178px;
   display: block;
 }
-.el-form-item__label{
-  width: 120px!important;
-}
+
 </style>
