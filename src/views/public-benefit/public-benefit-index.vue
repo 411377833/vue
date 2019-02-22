@@ -34,7 +34,7 @@
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-        <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button>
+          <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -52,7 +52,7 @@
 
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+      <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm">
         <el-form-item label="标题" prop="title">
           <el-input v-model="addForm.title"></el-input>
         </el-form-item>
@@ -62,26 +62,42 @@
         <el-form-item label="公益透明度提示">
           <el-input v-model="addForm.tips"></el-input>
         </el-form-item>
-        <el-form-item label="发起机构ID">
-          
-          <el-select
+        <el-form-item label="公益机构">
+          <!-- <el-select
             v-model="addForm.orgId"
             filterable
             remote
             reserve-keyword
             placeholder="请输入关键词"
             :remote-method="remoteMethod"
-            :loading="loading">
+            :loading="loading"
+          >
             <el-option
               v-for="item in options4"
               :key="item.value"
               :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+              :value="item.value"
+            ></el-option>
+          </el-select> -->
+          <el-autocomplete
+            class="inline-input"
+            v-model="addAllIdsName.orgName"
+            :fetch-suggestions="querySearchOrg"
+            placeholder="请输入机构名称关键字进行查询"
+            :trigger-on-focus="false"
+            @select="handleSelectOrg"
+          ></el-autocomplete>
         </el-form-item>
-        <el-form-item label="发起人ID">
+        <el-form-item label="发起人">
           <el-input v-model="addForm.initiatorId"></el-input>
+          <!-- <el-autocomplete
+            class="inline-input"
+            v-model="addAllIdsName.originatorName"
+            :fetch-suggestions="querySearchOriginator"
+            placeholder="请输入机构名称关键字进行查询"
+            :trigger-on-focus="false"
+            @select="handleSelectOrg"
+          ></el-autocomplete> -->
         </el-form-item>
         <el-form-item label="善款接受方ID">
           <el-input v-model="addForm.recipientId"></el-input>
@@ -92,20 +108,27 @@
         <el-form-item label="标签" prop="tags">
           <el-checkbox-group v-model="checkedLabels" :min="1" :max="3">
             <el-checkbox v-for="label in labels" :label="label" :key="label">{{label}}</el-checkbox>
+           
+
           </el-checkbox-group>
+          <!-- <div slot="tip" class="el-upload__tip">请至少选择一个标签</div> -->
+          
         </el-form-item>
 
         <el-form-item label="图文详情" prop="imgs">
           <el-input v-model="addForm.h5Id"></el-input>
         </el-form-item>
         <el-form-item label="公益项目分类id">
-          <el-input v-model="addForm.cateIds"></el-input>
+          <!-- <el-input v-model="addForm.cateIds"></el-input> -->
+          <el-checkbox-group v-model="addCheckboxData.checkedCities">
+              <el-checkbox v-for="item in addCheckboxData.cities" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
+            </el-checkbox-group>
         </el-form-item>
         <el-form-item label="目标善款金额">
           <el-input v-model="addForm.targetMoney"></el-input>
         </el-form-item>
-        <el-form-item label="详情页轮播图">
-          <el-upload
+        <el-form-item label="轮播图">
+          <!-- <el-upload
             :data="abc"
             action="http://api.50wlkj.com/api/upload_img"
             list-type="picture-card"
@@ -116,7 +139,8 @@
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt>
-          </el-dialog>
+          </el-dialog> -->
+          <bannner-Upload @returnImgList="getBannerList"></bannner-Upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -173,7 +197,7 @@
 
     <!-- 详情页面 -->
     <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
-      <particulars :particulars = "particulars" :page='1'/>
+      <particulars :particulars="particulars" :page="1"/>
     </el-dialog>
   </section>
 </template>
@@ -185,38 +209,56 @@ import {
   // getProject,
   addProject,
   updateProject,
-  listOrg
+  listOrg,
+  listInitiator,
+  listCategory
 } from "../../api/api";
-import particulars from '../component/particulars'
+import particulars from "../component/particulars";
+import bannerUpload from "../component/bannerUpload";
 const checkLabel = ["一周一善行", "特别关注", "爱心进展"];
 export default {
   data() {
     return {
-      checkedLabels: ["一周一善行", "特别关注"],
+       
+      checkedLabels: [],
       labels: checkLabel,
       page: 1,
       filters: {
         title: ""
       },
+      //关联数据接口
+      addAllIdsName: {
+        orgName: "",
+        // originatorName:""
+      },
+      searhAllId:{
+          orgIds: [],
+        },
+
+//此处数据为新增的复选框数据
+        addCheckboxData:{
+          checkedCities: [],
+          cities: [],
+        },
       dialogImageUrl: "",
       dialogVisible: false,
-      detailsVisible:false,
+      detailsVisible: false,
       abc: {
         token: sessionStorage.getItem("token")
       },
       total: 0,
       tableData: [],
       listLoading: false,
-      particulars:{},
+      particulars: {},
       //新增界面数据
       addForm: {
-        initiatorId: "",
+        // initiatorId: "",
         recipientId: "",
         mgrId: "",
-        // tags: "",
+        tags: "",
         h5Id: "",
         cateIds: "",
-        orgId: "",
+        // orgId: "",
         tips: "",
         description: "",
         title: "",
@@ -244,13 +286,13 @@ export default {
       editLoading: false,
       addFormRules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
-        imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
+        // imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
       },
       editFormRules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
-        imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
+        // imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
       },
-      options:[]
+      options: []
     };
   },
   created() {
@@ -264,6 +306,7 @@ export default {
     };
   },
   methods: {
+    // 搜索
     queryGetProjects() {
       let _this = this;
       if (_this.filters.id) {
@@ -288,6 +331,7 @@ export default {
         _this.getProjects();
       }
     },
+// 列表
     getProjects() {
       let _this = this;
       getProjects({
@@ -347,15 +391,12 @@ export default {
         .catch(() => {});
     },
     //查询单条
-    handleDetails: function(index,row){
-        
-        this.detailsVisible = true;
-        this.particulars={}
-        this.particulars = Object.assign({}, row)
-        console.log(this.particulars)
+    handleDetails: function(index, row) {
+      this.detailsVisible = true;
+      this.particulars = {};
+      this.particulars = Object.assign({}, row);
+      console.log(this.particulars);
     },
-
-
 
     //分页
     handleCurrentChange(val) {
@@ -379,13 +420,13 @@ export default {
     handleAdd: function() {
       this.addFormVisible = true;
       this.addForm = {
-        initiatorId: "",
+        // initiatorId: "",
         recipientId: "",
         mgrId: "",
         tags: "",
         h5Id: "",
         cateIds: "",
-        orgId: "",
+        // orgId: "",
         tips: "",
         description: "",
         title: "",
@@ -400,6 +441,9 @@ export default {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.addLoading = true;
             //NProgress.start();
+            this.addForm.cateIds = this.addCheckboxData.checkedCities.toString();
+
+            this.addForm.tags = this.checkedLabels.toString();
             let para = Object.assign({}, this.addForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
@@ -482,50 +526,107 @@ export default {
         }
       });
     },
-    //模糊搜索
-    remoteMethod(query) {
-      console.log(query)
-      if (query !== '') {
-        // this.loading = true;
-          let _this = this;
-        setTimeout(() => {
-          // this.loading = false;
-          // this.options4 = this.list.filter(item => {
-          //   return item.label.toLowerCase()
-          //     .indexOf(query.toLowerCase()) > -1;
-          // });
-          listOrg({
-            token: sessionStorage.getItem("token"),
-            pageNum: this.page,
-            pageSize: 10,
-            displayName: query
-          }).then(res => {
-            console.log(res);
-            // if (res.code === 1) {
-            //   _this.tableData = res.data.data;
-            //   _this.total = res.data.total;
-            // } else {
-            //   this.$message({
-            //     message: res.message,
-            //     type: "error"
-            //   });
-            // }
-          });
-        }, 200);
-      } else {
-        this.options4 = [];
-      }
-    }
+    
+
+
+// 关联接口数据
+    //此方法为机构关键字搜索方法 
+      querySearchOrg(queryString, cb) {
+        var restaurants = this.searhAllId.orgIds;
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      //此方法为选中机构之后获取到的数据
+      handleSelectOrg(item) {
+        this.addForm.orgId = String(item.id);
+      },
+      //此方法为输入关键字获取相关数据过滤数组通用方法
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      // 发起人搜索方法
+      querySearchOriginator(queryString, cb) {
+        var restaurants = this.searhAllId.orgIds;
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      
+      // 轮播图上传
+      //子父传值获取图片上传之后的图片地址
+      getBannerList(val){
+        this.addForm.imgs = String(val);
+      },
+      
   },
   mounted() {
     this.getProjects();
     // this.list = this.states.map(item => {
     //     return { value: item, label: item };
     //   });
+    //获取新增复选框数据
+      listCategory({
+          token:sessionStorage.getItem('token'),
+          pageNum:this.page,
+          pageSize:10,
+          cateName:''
+        }).then((res)=>{
+          if(res.code == 1){
+            for(var i = 0;i<res.data.data.length;i++){
+              var item = res.data.data[i];
+              this.addCheckboxData.cities.push({
+                name:item.cateName,
+                id:item.id
+              })
+            }
+          }
+        })
+    //获取所有 机构数据 保存在searhAllId中，如需获取其他的可在下方继续调用数据接口
+      listOrg({
+          token:sessionStorage.getItem('token'),
+          pageNum:this.page,
+          pageSize:10,
+          displayName:''
+        }).then((res)=>{
+          if(res.code == 1){
+            let reOrg = [];
+            for(let i = 0; i< res.data.data.length;i++){
+              let item = res.data.data[i];
+              reOrg.push({
+                value:item.displayName,
+                id:item.id
+              })
+            }
+            this.searhAllId.orgIds = reOrg;
+          }
+        })
+        // 获取所有发起人保存在searhAllId中，如需获取其他的可在下方继续调用数据接口
+        // listInitiator({
+        //   token:sessionStorage.getItem('token'),
+        //   pageNum:this.page,
+        //   pageSize:10,
+        //   displayName:''
+        // }).then((res)=>{
+        //   if(res.code == 1){
+        //     let reInitiator = [];
+        //     for(let i = 0; i< res.data.data.length;i++){
+        //       let item = res.data.data[i];
+        //       reInitiator.push({
+        //         value:item.displayName,
+        //         id:item.id
+        //       })
+        //     }
+        //     this.searhAllId.orgIds = reInitiator;
+        //   }
+        // })
   },
   components: {
-      particulars
-  },
+    particulars,
+    'bannner-Upload':bannerUpload
+  }
   // updated(){
   //   console.log(1)
   //   console.log(this.particulars)
@@ -540,5 +641,7 @@ export default {
     margin-bottom: 20px;
   }
 }
-
+.inline-input{
+  width: 380px;
+}
 </style>

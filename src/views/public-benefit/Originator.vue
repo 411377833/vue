@@ -51,7 +51,7 @@
 
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+      <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm">
         <!-- <el-form-item label="机构代码" prop="idCard">
           <el-input v-model="addForm.idCard"></el-input>
         </el-form-item>-->
@@ -86,7 +86,7 @@
 
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+      <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
         <el-form-item label="发起人姓名" prop="displayName">
           <el-input v-model="editForm.displayName"></el-input>
         </el-form-item>
