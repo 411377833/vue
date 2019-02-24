@@ -30,7 +30,7 @@
       <el-table-column prop="donationCash" label="捐款现金数" min-width="120"></el-table-column>
       <el-table-column prop="donationFlower" label="捐款小红花数" min-width="120"></el-table-column>
 
-      <el-table-column label="操作" min-width="120">
+      <el-table-column label="操作" width="220" fixed="right">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>

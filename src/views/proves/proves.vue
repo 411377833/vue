@@ -31,7 +31,7 @@
       <el-table-column prop="userType" label="类型" min-width="150"></el-table-column>-->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->
-      <el-table-column label="操作" min-width="180">
+      <el-table-column label="操作" width="220" fixed="right">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
