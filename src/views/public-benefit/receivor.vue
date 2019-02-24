@@ -61,10 +61,11 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话" >
+        <el-form-item label="联系电话" prop="phone" >
           <el-input v-model="addForm.phone"></el-input>
         </el-form-item>
-        <el-upload
+        <el-form-item label="头像" prop="headImg">
+          <el-upload
         :data='abc'
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -75,6 +76,8 @@
           <img  v-if="addHeadImg" :src="addHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        </el-form-item>
+        
         
         
       </el-form>
@@ -96,10 +99,11 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话" >
+        <el-form-item label="联系电话" prop="phone">
           <el-input v-model="editForm.phone"></el-input>
         </el-form-item>
-        <el-upload
+        <el-form-item label="头像" prop="headImg">
+          <el-upload
           :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -110,6 +114,8 @@
           <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        </el-form-item>
+        
       </el-form>
 
 
@@ -157,15 +163,17 @@ export default {
         // idCard: "",
         displayName: "",
         signature: "",
-        headImg:""
+        headImg:"",
+        phone:""
       },
+      particulars:{},
       //编辑界面数据
       editForm: {
         // idCard: "",
         displayName: "",
         signature: "",
-        headImg:""
-
+        headImg:"",
+phone:""
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
@@ -179,22 +187,41 @@ export default {
         signature: [
           { required: true, message: "请填写说明", trigger: "blur" }
         ],
-        // headImg:[
-        //     {required: true, message: "请上传机构头像", trigger: "blur"}
-        // ]
+        phone:[
+            {required: true, message: "请填写正确的电话号码", trigger: "blur"}
+        ],
+        headImg:[
+            {required: true, message: "请上传头像", trigger: "blur"}
+        ]
 
       },
       editFormRules: {
-        // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
-        id: [
-          { required: true, message: "请输入id", trigger: "blur" }
+        displayName: [
+          { required: true, message: "请填写善款接受方", trigger: "blur" }
         ],
-        // signature: [
-        //   { required: true, message: "填写说明", trigger: "blur" }
-        // ]
+        signature: [
+          { required: true, message: "请填写说明", trigger: "blur" }
+        ],
+        phone:[
+            {required: true, message: "请填写正确的电话号码", trigger: "blur"}
+        ],
+        headImg:[
+            {required: true, message: "请上传头像", trigger: "blur"}
+        ]
       },
       addHeadImg:"",
       editHeadImg:''
+    };
+  },
+  // 查询启用回车键
+    created() {
+    let that = this;
+    document.onkeypress = function(e) {
+      var keycode = document.all ? event.keyCode : e.which;
+      if (keycode == 13) {
+        that.queryListRecipients(); // 登录方法名
+        return false;
+      }
     };
   },
   methods: {
@@ -221,6 +248,7 @@ export default {
         _this.listRecipients();
       }
     },
+    
 // 列表
     listRecipients() {
       let _this = this;
@@ -422,7 +450,7 @@ export default {
                     message: "提交成功",
                     type: "success"
                   });
-                  this.$refs["editForm"].resetFields();
+                  // this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
                   this.listRecipients();
                 } else {

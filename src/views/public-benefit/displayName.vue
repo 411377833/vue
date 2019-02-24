@@ -31,7 +31,7 @@
       </el-table-column> -->
 
       
-      <el-table-column label="操作" min-width="180" fixed="right">
+      <el-table-column label="操作" width="220" fixed="right">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
@@ -53,8 +53,8 @@
 
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="机构代码" prop="idCard">
+      <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm" class="label">
+        <el-form-item label="机构代码" prop="idCard" style="el-form-item__label:text-align:left">
           <el-input v-model="addForm.idCard"></el-input>
         </el-form-item>
         <el-form-item label="机构名称" prop="displayName">
@@ -63,7 +63,8 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
-        <el-upload
+        <el-form-item label="头像" prop="headImg">
+          <el-upload
           :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -74,6 +75,8 @@
           <img v-if="addHeadImg" :src="addHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        </el-form-item>
+        
         <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
           <el-form-item label="发起人ID"><el-input v-model="addForm.initiatorId"></el-input></el-form-item>
           <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
@@ -102,18 +105,21 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
-        <el-upload
+        <el-form-item label="头像" prop="headImg">
+          <el-upload
           :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
-        >
+          >
 
           <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        </el-form-item>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -177,10 +183,10 @@ export default {//editForm.headImg
         ],
         signature: [
           { required: true, message: "请填写机构说明", trigger: "blur" }
+        ],
+        headImg:[
+            {required: true, message: "请上传机构头像", trigger: "blur"}
         ]
-        // headImg:[
-        //     {required: true, message: "请上传机构头像", trigger: "blur"}
-        // ]
       },
       editFormRules: {
         idCard: [
@@ -191,6 +197,9 @@ export default {//editForm.headImg
         ],
         signature: [
           { required: true, message: "请填写机构说明", trigger: "blur" }
+        ],
+        headImg:[
+            {required: true, message: "请上传机构头像", trigger: "blur"}
         ]
       },
       addHeadImg:"",
@@ -208,6 +217,7 @@ export default {//editForm.headImg
       }
     };
   },
+  
   methods: {
     queryListOrg() {
       let _this = this;
@@ -355,6 +365,10 @@ export default {//editForm.headImg
         
       };
     },
+
+
+    
+
     //新增
     addSubmit: function() {
       this.$refs.addForm.validate(valid => {
@@ -426,7 +440,7 @@ export default {//editForm.headImg
                     message: "提交成功",
                     type: "success"
                   });
-                  this.$refs["editForm"].resetFields();
+                  // this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
                   this.listOrg();
                 } else {
@@ -497,5 +511,9 @@ export default {//editForm.headImg
   width: 178px;
   height: 178px;
   display: block;
+}
+.label{
+  text-align: left;
+  padding-left: 10px;
 }
 </style>

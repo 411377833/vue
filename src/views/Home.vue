@@ -178,6 +178,7 @@
 						message: "修改成功",
                 		type: "success"
 					});
+					// this.isAmend=false;
 					// sessionStorage.removeItem('user');
 					// this.$router.push('/login');
 				} else {

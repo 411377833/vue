@@ -499,7 +499,7 @@ export default {
                     message: "提交成功",
                     type: "success"
                   });
-                  this.$refs["editForm"].resetFields();
+                  // this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
                   this.getProjects();
                 } else {

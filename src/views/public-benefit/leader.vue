@@ -60,10 +60,10 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话">
+        <el-form-item label="联系电话" prop="phone">
           <el-input v-model="addForm.phone"></el-input>
         </el-form-item>
-        <el-form-item label="头像">
+        <el-form-item label="头像" prop="headImg">
           <el-upload
             :data="abc"
             class="avatar-uploader"
@@ -104,10 +104,10 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话">
+        <el-form-item label="联系电话" prop="phone">
           <el-input v-model="editForm.phone"></el-input>
         </el-form-item>
-        <el-form-item label="头像">
+        <el-form-item label="头像" prop="headImg">
           <el-upload
             :data="abc"
             class="avatar-uploader"
@@ -165,14 +165,17 @@ export default {
         // idCard: "",
         displayName: "",
         signature: "",
-        headImg: ""
+        headImg: "",
+        phone:""
       },
       //编辑界面数据
       editForm: {
         // idCard: "",
         displayName: "",
         signature: "",
-        headImg: ""
+        headImg: "",
+        phone:""
+
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
@@ -183,16 +186,25 @@ export default {
         displayName: [
           { required: true, message: "请填写项目负责人", trigger: "blur" }
         ],
-        signature: [{ required: true, message: "请填写说明", trigger: "blur" }]
-        // headImg:[
-        //     {required: true, message: "请上传机构头像", trigger: "blur"}
-        // ]
+        signature: [{ required: true, message: "请填写说明", trigger: "blur" }],
+        headImg:[
+            {required: true, message: "请上传机构头像", trigger: "blur"}
+        ],
+        phone:[
+            {required: true, message: "请填写正确的电话号码", trigger: "blur"}
+        ],
       },
       editFormRules: {
         displayName: [
           { required: true, message: "请填写项目负责人", trigger: "blur" }
         ],
-        signature: [{ required: true, message: "请填写说明", trigger: "blur" }]
+        signature: [{ required: true, message: "请填写说明", trigger: "blur" }],
+        headImg:[
+            {required: true, message: "请上传机构头像", trigger: "blur"}
+        ],
+        phone:[
+            {required: true, message: "请填写正确的电话号码", trigger: "blur"}
+        ],
       },
       addHeadImg: "",
       editHeadImg: ""
@@ -432,7 +444,7 @@ export default {
                     message: "提交成功",
                     type: "success"
                   });
-                  this.$refs["editForm"].resetFields();
+                  // this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
                   this.listLeader();
                 } else {

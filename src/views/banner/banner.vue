@@ -76,7 +76,7 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
-            :on-preview="handlePictureCardPreview"
+            
           >
             <img v-if="addBannerImg" :src="addBannerImg" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -190,10 +190,10 @@ export default {
             message: "请填写优先级，最大为100",
             trigger: "blur"
           }
+        ],
+        bannerImg:[
+            {required: true, message: "请上传轮播图图片", trigger: "blur"}
         ]
-        // headImg:[
-        //     {required: true, message: "请上传机构头像", trigger: "blur"}
-        // ]
       },
       editFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
@@ -209,6 +209,9 @@ export default {
             message: "请填写优先级，最大为100",
             trigger: "blur"
           }
+        ],
+        bannerImg:[
+            {required: true, message: "请上传轮播图图片", trigger: "blur"}
         ]
       },
       addBannerImg: "",
@@ -445,7 +448,7 @@ export default {
                     message: "提交成功",
                     type: "success"
                   });
-                  this.$refs["editForm"].resetFields();
+                  // this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
 
                   this.getBanners();

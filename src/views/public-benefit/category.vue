@@ -61,7 +61,7 @@
         <el-form-item label="排序号" prop="priority">
           <el-input v-model="addForm.priority" placeholder="请输入排序号，越小优先级越高，最高100"></el-input>
         </el-form-item>
-        <el-form-item label="图片">
+        <el-form-item label="图片" prop="cateImg">
           <el-upload
           :data="abc"
           class="avatar-uploader"
@@ -92,7 +92,7 @@
         <el-form-item label="排序号" prop="priority">
           <el-input v-model="editForm.priority"></el-input>
         </el-form-item>
-        <el-form-item label="图片">
+        <el-form-item label="图片" prop="cateImg">
           <el-upload
           :data="abc"
           class="avatar-uploader"
@@ -162,15 +162,18 @@ export default {
           { required: true, message: "请填写分类名称", trigger: "blur" }
         ],
         priority: [{ required: true, message: "请输入排序号，越小优先级越高，最高100", trigger: "blur" }],
-        // cateImg:[
-        //     {required: true, message: "请上传图片", trigger: "blur"}
-        // ]
+        cateImg:[
+            {required: true, message: "请上传图片", trigger: "blur"}
+        ]
       },
       editFormRules: {
          cateName: [
           { required: true, message: "请填写分类名称", trigger: "blur" }
         ],
-        // priority: [{ required: true, message: "请输入排序号", trigger: "blur" }],
+        priority: [{ required: true, message: "请输入排序号，越小优先级越高，最高100", trigger: "blur" }],
+        cateImg:[
+            {required: true, message: "请上传图片", trigger: "blur"}
+        ]
       },
       addCateImg:"",
       editCateImg:""
@@ -382,8 +385,8 @@ export default {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.editLoading = true;
             //NProgress.start();
-            console.log(valid);
-            console.dir(this.editForm);
+            // console.log(valid);
+            // console.dir(this.editForm);
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
@@ -402,7 +405,7 @@ export default {
                     message: "提交成功",
                     type: "success"
                   });
-                  this.$refs["editForm"].resetFields();
+                  // this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
                   this.listCategory();
                 } else {

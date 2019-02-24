@@ -61,10 +61,11 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
+        <el-form-item label="手机号" prop="phone">
           <el-input v-model="addForm.phone"></el-input>
         </el-form-item>
-        <el-upload
+        <el-form-item label="头像" prop="headImg">
+          <el-upload
         :data='abc'
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -75,6 +76,8 @@
           <img  v-if="addHeadImg" :src="addHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        </el-form-item>
+        
        
         
       </el-form>
@@ -93,10 +96,11 @@
         <el-form-item label="说明" prop="signature">
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
+        <el-form-item label="手机号" prop="phone">
           <el-input v-model="editForm.phone"></el-input>
         </el-form-item>
-        <el-upload
+        <el-form-item label="头像" prop="headImg">
+          <el-upload
           :data="abc"
           class="avatar-uploader"
           action="http://api.50wlkj.com/api/upload_img"
@@ -107,6 +111,8 @@
           <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        </el-form-item>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -150,16 +156,19 @@ export default {
         // idCard: "",
         displayName: "",
         signature: "",
-        headImg:""
+        headImg:"",
+        phone:""
       },
       //编辑界面数据
       editForm: {
         // idCard: "",
         displayName: "",
         signature: "",
-        headImg:""
+        headImg:"",
+        phone:""
 
       },
+      particulars:{},
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
       editFormVisible: false, //编辑界面是否显示
@@ -169,17 +178,26 @@ export default {
         displayName: [
           { required: true, message: "请输入发起人姓名", trigger: "blur" }
         ],
-        signature: [{ required: true, message: "请填写说明", trigger: "blur" }]
-        // headImg:[
-        //     {required: true, message: "请上传机构头像", trigger: "blur"}
-        // ]
+        signature: [{ required: true, message: "请填写说明", trigger: "blur" }],
+        headImg:[
+            {required: true, message: "请上传发起人头像", trigger: "blur"}
+        ],
+        phone:[
+            {required: true, message: "请输入手机号码", trigger: "blur"}
+        ],
       },
       editFormRules: {
         // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
         displayName: [
           { required: true, message: "请输入发起人姓名", trigger: "blur" }
         ],
-        signature: [{ required: true, message: "填写说明", trigger: "blur" }]
+        signature: [{ required: true, message: "填写说明", trigger: "blur" }],
+        headImg:[
+            {required: true, message: "请上传发起人头像", trigger: "blur"}
+        ],
+        phone:[
+            {required: true, message: "请输入手机号码", trigger: "blur"}
+        ],
       },
        addHeadImg:"",
       editHeadImg:''
@@ -420,7 +438,7 @@ export default {
                     message: "提交成功",
                     type: "success"
                   });
-                  this.$refs["editForm"].resetFields();
+                  // this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
                   this.listInitiator();
                 } else {
