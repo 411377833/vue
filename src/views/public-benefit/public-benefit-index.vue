@@ -215,6 +215,7 @@ import {
 } from "../../api/api";
 import particulars from "../component/particulars";
 import bannerUpload from "../component/bannerUpload";
+import "../../style/element-ui.css";
 const checkLabel = ["一周一善行", "特别关注", "爱心进展"];
 export default {
   data() {

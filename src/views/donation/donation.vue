@@ -32,7 +32,7 @@
 
       <el-table-column label="操作" width="220" fixed="right">
         <template slot-scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
           <el-button size="small" @click="handleDetails(scope.$index, scope.row)">详情</el-button>
         </template>
@@ -53,38 +53,20 @@
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="公益项目编号" prop="gyItemId">
+        <el-form-item label="公益项目" prop="gyItemId">
           <el-input v-model="addForm.gyItemId"></el-input>
+          
         </el-form-item>
-        <el-form-item label="用户编号" prop="userId">
+        <el-form-item label="用户编号" prop="userId" placeholder="请填写用户编号">
           <el-input v-model="addForm.userId"></el-input>
         </el-form-item>
-        <el-form-item label="捐款的现金数" prop="donationCash">
+        <el-form-item label="捐款的现金数" prop="donationCash" placeholder="请填写捐款金额">
           <el-input v-model="addForm.donationCash"></el-input>
         </el-form-item>
-        <el-form-item label="捐款的小红花数" prop="donationFlower">
+        <el-form-item label="捐款的小红花数" prop="donationFlower" placeholder="请填写捐款小红花数量">
           <el-input v-model="addForm.donationFlower"></el-input>
         </el-form-item>
-        <!-- <el-upload
-          :data="abc"
-          class="avatar-uploader"
-          action="http://api.50wlkj.com/api/upload_img"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="addHeadImg" :src="addHeadImg" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload> -->
-        <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
-          <el-form-item label="发起人ID"><el-input v-model="addForm.initiatorId"></el-input></el-form-item>
-          <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
-          <el-form-item label="项目负责人ID"><el-input v-model="addForm.mgrId"></el-input></el-form-item>
-          <el-form-item label="标签"><el-input v-model="addForm.tags"></el-input></el-form-item>
-          <el-form-item label="图文详情" prop="imgs"><el-input v-model="addForm.h5Id"></el-input></el-form-item>
-          <el-form-item label="公益项目分类id"><el-input v-model="addForm.cateIds"></el-input></el-form-item>
-          <el-form-item label="目标善款金额"><el-input v-model="addForm.targetMoney"></el-input></el-form-item>
-        <el-form-item label="详情页轮播图"><el-input v-model="addForm.imgs"></el-input></el-form-item>-->
+       
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -92,35 +74,7 @@
       </div>
     </el-dialog>
 
-    <!--编辑界面-->
-    <!-- <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="机构代码" prop="idCard">
-          <el-input v-model="editForm.idCard"></el-input>
-        </el-form-item>
-        <el-form-item label="机构名称" prop="displayName">
-          <el-input v-model="editForm.displayName"></el-input>
-        </el-form-item>
-        <el-form-item label="说明" prop="signature">
-          <el-input v-model="editForm.signature"></el-input>
-        </el-form-item>
-        <el-upload
-          :data="abc"
-          class="avatar-uploader"
-          action="http://api.50wlkj.com/api/upload_img"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-      </div>
-    </el-dialog> -->
+    
 
     <!-- 详情界面 -->
     <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
@@ -130,7 +84,7 @@
 </template>
 
 <script>
-import { getDonations, delDonation, addDonation, } from "../../api/api";
+import { getDonations, delDonation, addDonation } from "../../api/api";
 import particulars from '../component/particulars'
 
 export default {//editForm.headImg
@@ -157,13 +111,7 @@ export default {//editForm.headImg
         donationCash: "",
         donationFlower:''
       },
-      //编辑界面数据
-      // editForm: {
-      //   idCard: "",
-      //   displayName: "",
-      //   signature: "",
-      //   headImg:''
-      // },
+      
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
       editFormVisible: false, //编辑界面是否显示
@@ -292,9 +240,7 @@ export default {//editForm.headImg
         this.particulars={}
         this.particulars = Object.assign({}, row)
     },
-components: {
-      particulars
-  },
+
 
 
     //分页
@@ -304,34 +250,7 @@ components: {
         this.getDonations();
       }
     },
-//上传图片
-    // handleAvatarSuccess(res, file) {
-    //   console.log(URL.createObjectURL(file.raw));
-    //     // this.imageUrl = URL.createObjectURL(file.raw);
-    //     if(res.code === 1 ){
-    //       this.addForm.headImg = res.data;
-    //       this.addHeadImg = res.data
-    //       this.editHeadImg = res.data
-    //       console.log(this.addForm.headImg)
-    //     }else{
-    //       this.$message({
-    //         message: '上传失败！',
-    //         type: "error"
-    //       });
-    //     }
-    //   },
-    //   beforeAvatarUpload(file) {
-    //     const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
-    //     const isLt2M = file.size / 1024 / 1024 < 4;
 
-    //     // if (!isJPG) {
-    //     //   this.$message.error('上传头像图片只能是 JPG 格式!');
-    //     // }
-    //     if (!isLt2M) {
-    //       this.$message.error('上传头像图片大小不能超过 2MB!');
-    //     }
-    //     return  isLt2M;
-    //   },
 
 
     //显示新增界面
@@ -382,78 +301,19 @@ components: {
         }
       });
     },
-    //显示编辑界面
-    // handleEdit: function(index, row) {
-    //   console.log(row);
-    //   this.editFormVisible = true;
-    //   this.editHeadImg = row.headImg
-    //   this.editForm = Object.assign({}, row);
-    //   console.log(this.editForm);
-    // },
-    //编辑
-    // editSubmit: function() {
-    //   this.$refs.editForm.validate(valid => {
-    //     if (valid) {
-    //       this.$confirm("确认提交吗？", "提示", {}).then(() => {
-    //         this.editLoading = true;
-    //         //NProgress.start();
-    //         console.log(valid);
-    //         console.dir(this.editForm);
-    //         let para = Object.assign({}, this.editForm);
-    //         console.log(para);
-    //         para.token = sessionStorage.getItem("token");
-    //         updateOrg({
-    //           token:sessionStorage.getItem("token"),
-    //           headImg:para.headImg,
-    //           displayName:para.displayName,
-    //           signature:para.signature,
-    //           idCard:para.idCard,
-    //           id:para.id,
-    //         })
-    //           .then(res => {
-    //             console.log(res);
-    //             if (res.code == 1) {
-    //               //NProgress.done();
-    //               this.$message({
-    //                 message: "提交成功",
-    //                 type: "success"
-    //               });
-    //               this.$refs["editForm"].resetFields();
-    //               this.editFormVisible = false;
-    //               this.getDonations();
-    //             } else {
-    //               this.$message({
-    //                 message: res.message,
-    //                 type: "error"
-    //               });
-    //             }
-    //             this.editLoading = false;
-    //             // //NProgress.done();
-    //             // this.$message({
-    //             // 	message: '提交成功',
-    //             // 	type: 'success'
-    //             // });
-    //             // this.$refs['editForm'].resetFields();
-    //             // this.editFormVisible = false;
-    //             // this.getUsers();
-    //           })
-    //           .catch(res => {
-    //             this.editFormVisible = false;
-    //             console.log(res);
-    //           });
-    //       });
-    //     }
-    //   });
-    // },
     
-
+   
 
 
 
   },
   mounted() {
     this.getDonations();
-  }
+    
+  },
+  components: {
+      particulars
+  },
 };
 </script>
 <style lang="scss" scoped>

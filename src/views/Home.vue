@@ -72,15 +72,15 @@
 			<el-dialog title="修改密码" v-model="isAmend" :close-on-click-modal="false">
 				<el-form label-width="80px">
 					<el-form-item label="旧密码">
-						<el-input v-model="oldPassword"></el-input>
+						<el-input v-model="oldPassword" placeholder="请输入原密码"></el-input>
 					</el-form-item>
 					<el-form-item label="新密码">
-						<el-input v-model="newPassword"></el-input>
+						<el-input v-model="newPassword" placeholder="请输入新密码"></el-input>
 					</el-form-item>
 				</el-form>
 				<div slot="footer" class="dialog-footer">
 					<el-button @click.native="isAmend = false">取消</el-button>
-					<el-button type="primary" @click="editSubmit">提交</el-button>
+					<el-button type="primary" @click.native="editSubmit">提交</el-button>
 				</div>
 			</el-dialog>
 		</el-col>
@@ -109,8 +109,11 @@
 					desc: ''
 				},
 				isAmend:false,
-				oldPassword:'',
+				// editForm:{
+					oldPassword:'',
 				newPassword:''
+				// }
+				
 			}
 		},
 		methods: {
@@ -148,9 +151,12 @@
 			},
 			//修改密码
 			amend() {
-				this.isAmend=true
-				
+				this.isAmend=true,
+				this.oldPassword='',
+				this.newPassword=''
 			},
+
+			
 			editSubmit: function() {
 				if(!this.oldPassword){
 					this.$message({
@@ -178,9 +184,11 @@
 						message: "修改成功",
                 		type: "success"
 					});
-					// this.isAmend=false;
 					// sessionStorage.removeItem('user');
 					// this.$router.push('/login');
+					// this.$refs["isAmend"].resetFields();
+					// this.$refs["addForm"].resetFields();
+					this.isAmend=false;
 				} else {
 					this.$message({
 					message: res.message,

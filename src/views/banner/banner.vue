@@ -426,6 +426,8 @@ export default {
       this.editFormVisible = true;
       this.editBannerImg = row.bannerImg;
       this.editForm = Object.assign({}, row);
+      this.editForm.priority=String(row.priority)
+
     },
     //编辑
     editSubmit: function() {

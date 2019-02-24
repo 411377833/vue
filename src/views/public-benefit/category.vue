@@ -377,6 +377,7 @@ export default {
       this.editFormVisible = true;
       this.editCateImg = row.cateImg
       this.editForm = Object.assign({}, row);
+      this.editForm.priority=String(row.priority)
     },
     //编辑
     editSubmit: function() {

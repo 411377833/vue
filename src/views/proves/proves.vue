@@ -280,81 +280,7 @@ export default {
         this.getProves();
       }
     },
-    //上传图片
-    // handleAvatarSuccess(res, file) {
-    //   console.log(URL.createObjectURL(file.raw));
-    //     // this.imageUrl = URL.createObjectURL(file.raw);
-    //     if(res.code === 1 ){
-    //       this.addForm.headImg = res.data;
-    //       this.addHeadImg = res.data
-    //       this.editHeadImg = res.data
-    //       console.log(this.addForm.headImg)
-    //     }else{
-    //       this.$message({
-    //         message: '上传失败！',
-    //         type: "error"
-    //       });
-    //     }
-    //   },
-    //   beforeAvatarUpload(file) {
-    //     const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
-    //     const isLt4M = file.size / 1024 / 1024 < 4;
-
-    //     // if (!isJPG) {
-    //     //   this.$message.error('上传头像图片只能是 JPG 格式!');
-    //     // }
-    //     if (!isLt4M) {
-    //       this.$message.error('上传头像图片大小不能超过 4MB!');
-    //     }
-    //     return  isLt4M;
-    //   },
-
-    // //显示新增界面
-    // handleAdd: function() {
-    //   this.addFormVisible = true;
-    //   this.addHeadImg = ''
-    //   this.addForm = {
-    //     // idCard: "",
-    //     displayName: "",
-    //     signature: "",
-    //     phone:"",
-    //   };
-    // },
-    // //新增
-    // addSubmit: function() {
-    //   this.$refs.addForm.validate(valid => {
-    //     if (valid) {
-    //       this.$confirm("确认提交吗？", "提示", {}).then(() => {
-    //         this.addLoading = true;
-    //         //NProgress.start();
-    //         let para = Object.assign({}, this.addForm);
-    //         console.log(para);
-    //         para.token = sessionStorage.getItem("token");
-    //         addLeader(para).then(res => {
-    //           console.log(res);
-    //           if (res.code == 1) {
-    //             //NProgress.done();
-    //             this.$message({
-    //               message: "提交成功",
-    //               type: "success"
-    //             });
-    //             this.$refs["addForm"].resetFields();
-    //             this.addFormVisible = false;
-    //             this.getProves();
-    //           } else {
-    //             this.$message({
-    //               message: res.message,
-    //               type: "error"
-    //             });
-    //           }
-    //           this.addLoading = false;
-
-    //           // this.getUsers();
-    //         });
-    //       });
-    //     }
-    //   });
-    // },
+    
     //显示编辑界面
     handleEdit: function(index, row) {
       console.log(row);
@@ -374,32 +300,7 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            // updateProve(para)
-            //   .then(res => {
-            //     console.log(res);
-            //     if (res.code == 1) {
-            //       //NProgress.done();
-            //       this.$message({
-            //         message: "提交成功",
-            //         type: "success"
-            //       });
-            //       this.$refs["editForm"].resetFields();
-            //       this.editFormVisible = false;
-
-            //       this.getBanners();
-            //     } else {
-            //       this.$message({
-            //         message: res.message,
-            //         type: "error"
-            //       });
-            //     }
-            //     this.editLoading = false;
-                
-            //   })
-            //   .catch(res => {
-            //     this.editFormVisible = false;
-            //     console.log(res);
-            //   });
+            
             updateProve({
               token: sessionStorage.getItem("token"),
               id: para.id,
