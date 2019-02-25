@@ -62,7 +62,8 @@
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="addForm.phone"></el-input>
+          <el-input v-model="addForm.phone" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         <el-form-item label="头像" prop="headImg">
           <el-upload
@@ -97,7 +98,8 @@
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="editForm.phone"></el-input>
+          <el-input v-model="editForm.phone" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         <el-form-item label="头像" prop="headImg">
           <el-upload
@@ -127,6 +129,16 @@
 </template>
 
 <script>
+// 手机号全局变量
+var validPhone=(rule, value,callback)=>{
+      if (!value){
+          callback(new Error('请输入电话号码'))
+      }else  if (!isvalidPhone(value)){
+        callback(new Error('请输入正确的11位手机号码'))
+      }else {
+          callback()
+      }
+  };
 import {
   listInitiator,
   deleteInitiator,
@@ -135,6 +147,7 @@ import {
   updateInitiator
 } from "../../api/api";
 import particulars from '../component/particulars'
+import {isvalidPhone} from "../../common/js/validate"
 export default {
   data() {
     return {
@@ -183,7 +196,7 @@ export default {
             {required: true, message: "请上传发起人头像", trigger: "blur"}
         ],
         phone:[
-            {required: true, message: "请输入手机号码", trigger: "blur"}
+            {required: true, trigger: "blur",validator: validPhone}
         ],
       },
       editFormRules: {
@@ -196,7 +209,7 @@ export default {
             {required: true, message: "请上传发起人头像", trigger: "blur"}
         ],
         phone:[
-            {required: true, message: "请输入手机号码", trigger: "blur"}
+            {required: true, trigger: "blur",validator: validPhone}
         ],
       },
        addHeadImg:"",
@@ -367,6 +380,9 @@ export default {
         signature: "",
         phone: ""
       };
+      this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
     //新增
     addSubmit: function() {
@@ -409,9 +425,7 @@ export default {
       this.editFormVisible = true;
       this.editHeadImg = row.headImg
       this.editForm = Object.assign({}, row);
-      this.$nextTick(() => {
-        this.$refs["editForm"].resetFields();
-      });
+      
     },
     //编辑
     editSubmit: function() {

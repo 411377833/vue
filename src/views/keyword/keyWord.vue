@@ -253,6 +253,9 @@ export default {//editForm.headImg
       this.addForm = {
         keyWord:""
       };
+       this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
     //新增
     addSubmit: function() {

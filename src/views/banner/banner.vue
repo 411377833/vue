@@ -22,7 +22,7 @@
       </el-table-column>-->
       <!-- <el-table-column prop="id" label="ID" width="200"></el-table-column> -->
       <el-table-column prop="bannerType" label="类型	" width="180"></el-table-column>
-      <el-table-column prop="bannerDesc" label="banner" width="300"></el-table-column>
+      <el-table-column prop="bannerDesc" label="标题或描述" width="300"></el-table-column>
 
       <el-table-column prop="createTime" label="创建时间" width="250"></el-table-column>
       <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="250"></el-table-column>
@@ -66,9 +66,10 @@
           <el-input v-model="addForm.bannerDesc" placeholder="请简单描述一下"></el-input>
         </el-form-item>
         <el-form-item label="优先级" prop="priority">
-          <el-input v-model="addForm.priority" placeholder="数字越小优先级越高，最高为100"></el-input>
+          <el-input v-model="addForm.priority" placeholder="数字越小优先级越高，最高为100" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
-        <el-form-item label="轮播图">
+        <el-form-item label="轮播图" prop="bannerImg">
           <el-upload
             :data="abc"
             class="avatar-uploader"
@@ -107,9 +108,10 @@
           <el-input v-model="editForm.bannerDesc"></el-input>
         </el-form-item>
         <el-form-item label="优先级" prop="priority">
-          <el-input v-model="editForm.priority"></el-input>
+          <el-input v-model="editForm.priority" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
-        <el-form-item label="轮播图">
+        <el-form-item label="轮播图" prop="bannerImg">
           <el-upload
           :data="abc"
           class="avatar-uploader"
@@ -138,8 +140,17 @@
 </template>
 
 <script>
+// 优先级全局变量
+var priorit=(rule, value,callback)=>{
+      if (!isPriorit(value)){
+        callback(new Error('请输入1-100内的整数，数字越小优先级越高'))
+      }else {
+          callback()
+      }
+  };
 import { getBanners, delBanner, addBanner, updateBanner } from "../../api/api";
 import particulars from '../component/particulars'
+import {isPriorit} from "../../common/js/validate"
 export default {
   data() {
     return {
@@ -185,11 +196,7 @@ export default {
           { required: true, message: "请填写标题或描述", trigger: "blur" }
         ],
         priority: [
-          {
-            required: true,
-            message: "请填写优先级，最大为100",
-            trigger: "blur"
-          }
+          { required: true,  trigger: "blur", validator: priorit}
         ],
         bannerImg:[
             {required: true, message: "请上传轮播图图片", trigger: "blur"}
@@ -204,11 +211,7 @@ export default {
           { required: true, message: "请填写标题或描述", trigger: "blur" }
         ],
         priority: [
-          {
-            required: true,
-            message: "请填写优先级，最大为100",
-            trigger: "blur"
-          }
+          { required: true,  trigger: "blur", validator: priorit}
         ],
         bannerImg:[
             {required: true, message: "请上传轮播图图片", trigger: "blur"}
@@ -384,6 +387,9 @@ export default {
         bannerDesc: "",
         priority: ""
       };
+      this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
     //新增
     addSubmit: function() {

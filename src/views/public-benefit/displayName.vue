@@ -55,13 +55,13 @@
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm" class="label">
         <el-form-item label="机构代码" prop="idCard" style="el-form-item__label:text-align:left">
-          <el-input v-model="addForm.idCard"></el-input>
+          <el-input v-model="addForm.idCard" placeholder="请输入机构代码"></el-input>
         </el-form-item>
         <el-form-item label="机构名称" prop="displayName">
-          <el-input v-model="addForm.displayName"></el-input>
+          <el-input v-model="addForm.displayName" placeholder="请输入机构名称"></el-input>
         </el-form-item>
         <el-form-item label="说明" prop="signature">
-          <el-input v-model="addForm.signature"></el-input>
+          <el-input v-model="addForm.signature" placeholder="请填写说明"></el-input>
         </el-form-item>
         <el-form-item label="头像" prop="headImg">
           <el-upload
@@ -97,11 +97,10 @@
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
         <el-form-item label="机构代码" prop="idCard">
-          <el-input v-model="editForm.idCard" type="number"
-            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
+          <el-input v-model="editForm.idCard"></el-input>
         </el-form-item>
         <el-form-item label="机构名称" prop="displayName">
-          <el-input v-model="editForm.displayName"></el-input>
+          <el-input v-model="editForm.displayName" ></el-input>
         </el-form-item>
         <el-form-item label="说明" prop="signature">
           <el-input v-model="editForm.signature"></el-input>
@@ -136,9 +135,17 @@
 </template>
 
 <script>
+var idCards=(rule, value,callback)=>{
+      if (!isIdCard(value)){
+        callback(new Error('请输入正确的机构代码'))
+      }else {
+          callback()
+      }
+  };
+
 import { listOrg, deletOrg, getOrg, addOrg, updateOrg } from "../../api/api";
 import particulars from '../component/particulars'
-
+import {isIdCard} from "../../common/js/validate"
 export default {//editForm.headImg
   data() {
     return {
@@ -178,7 +185,7 @@ export default {//editForm.headImg
       editLoading: false,
       addFormRules: {
         idCard: [
-          { required: true, message: "请输入机构代码", trigger: "blur" }
+          {required: true,trigger: "blur" , validator: idCards }
         ],
         displayName: [
           { required: true, message: "请输入机构名称", trigger: "blur" }
@@ -192,7 +199,7 @@ export default {//editForm.headImg
       },
       editFormRules: {
         idCard: [
-          { required: true, message: "请输入机构代码", trigger: "blur" }
+          {required: true,trigger: "blur" , validator: idCards  }
         ],
         displayName: [
           { required: true, message: "请输入机构名称", trigger: "blur" }
@@ -418,9 +425,7 @@ export default {//editForm.headImg
       this.editForm = Object.assign({}, row);
       
       console.log(this.editForm);
-      this.$nextTick(() => {
-        this.$refs["editForm"].resetFields();
-      });
+      
     },
     //编辑
     editSubmit: function() {

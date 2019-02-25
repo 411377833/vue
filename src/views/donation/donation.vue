@@ -1,21 +1,21 @@
 <template>
   <section class="benefit">
     <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+    <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
-        <!-- <el-form-item>
+        <el-form-item>
           <el-input v-model="filters.id" placeholder="请输入捐款订单号"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="queryListOrg">查询</el-button>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
 
       
-    </el-col>
+    </el-col> -->
 
     <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
       <!-- <el-table-column type="selection" width="55">
@@ -61,10 +61,12 @@
           <el-input v-model="addForm.userId"></el-input>
         </el-form-item>
         <el-form-item label="捐款的现金数" prop="donationCash" placeholder="请填写捐款金额">
-          <el-input v-model="addForm.donationCash"></el-input>
+          <el-input v-model="addForm.donationCash" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         <el-form-item label="捐款的小红花数" prop="donationFlower" placeholder="请填写捐款小红花数量">
-          <el-input v-model="addForm.donationFlower"></el-input>
+          <el-input v-model="addForm.donationFlower" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
        
       </el-form>
@@ -264,6 +266,9 @@ export default {//editForm.headImg
         donationFlower: "",
         
       };
+       this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
     //新增
     addSubmit: function() {

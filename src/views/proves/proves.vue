@@ -58,7 +58,8 @@
           <el-input v-model="editForm.userName"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" prop="userPhone">
-          <el-input v-model="editForm.userPhone"></el-input>
+          <el-input v-model="editForm.userPhone" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         
 
@@ -68,17 +69,7 @@
         <el-form-item label="与受款人关系" prop="relation">
           <el-input v-model="editForm.relation"></el-input>
         </el-form-item>
-        <!-- <el-upload
-          :data="abc"
-          class="avatar-uploader"
-          action="http://api.50wlkj.com/api/upload_img"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>-->
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>

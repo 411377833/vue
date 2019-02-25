@@ -61,7 +61,8 @@
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
-          <el-input v-model="addForm.phone"></el-input>
+          <el-input v-model="addForm.phone" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         <el-form-item label="头像" prop="headImg">
           <el-upload
@@ -105,7 +106,8 @@
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
-          <el-input v-model="editForm.phone"></el-input>
+          <el-input v-model="editForm.phone" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         <el-form-item label="头像" prop="headImg">
           <el-upload
@@ -135,6 +137,15 @@
 </template>
 
 <script>
+var validPhone=(rule, value,callback)=>{
+      if (!value){
+          callback(new Error('请输入电话号码'))
+      }else  if (!isvalidPhone(value)){
+        callback(new Error('请输入正确的11位手机号码'))
+      }else {
+          callback()
+      }
+  };
 import {
   listLeader,
   deleteLeader,
@@ -191,7 +202,7 @@ export default {
             {required: true, message: "请上传机构头像", trigger: "blur"}
         ],
         phone:[
-            {required: true, message: "请填写正确的电话号码", trigger: "blur"}
+            {required: true, trigger: "blur",validator: validPhone}
         ],
       },
       editFormRules: {
@@ -203,7 +214,7 @@ export default {
             {required: true, message: "请上传机构头像", trigger: "blur"}
         ],
         phone:[
-            {required: true, message: "请填写正确的电话号码", trigger: "blur"}
+            {required: true, trigger: "blur",validator: validPhone}
         ],
       },
       addHeadImg: "",
@@ -370,6 +381,9 @@ export default {
         signature: "",
         phone: ""
       };
+       this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
     //新增
     addSubmit: function() {

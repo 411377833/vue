@@ -59,7 +59,8 @@
           <el-input v-model="addForm.cateName" placeholder="请输入分类名称"></el-input>
         </el-form-item>
         <el-form-item label="排序号" prop="priority">
-          <el-input v-model="addForm.priority" placeholder="请输入排序号，越小优先级越高，最高100"></el-input>
+          <el-input v-model="addForm.priority" placeholder="请输入排序号，越小优先级越高，最高100" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         <el-form-item label="图片" prop="cateImg">
           <el-upload
@@ -90,7 +91,8 @@
           <el-input v-model="editForm.cateName"></el-input>
         </el-form-item>
         <el-form-item label="排序号" prop="priority">
-          <el-input v-model="editForm.priority"></el-input>
+          <el-input v-model="editForm.priority" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         <el-form-item label="图片" prop="cateImg">
           <el-upload
@@ -116,12 +118,22 @@
 </template>
 
 <script>
+// 优先级全局变量
+var priorit=(rule, value,callback)=>{
+      if (!isPriorit(value)){
+        callback(new Error('请输入1-100内的整数，数字越小优先级越高'))
+      }else {
+          callback()
+      }
+  };
 import {
   listCategory,
   deleteCategory,
   addCategory,
   updateCategory
 } from "../../api/api";
+import {isPriorit} from "../../common/js/validate"
+
 export default {
   data() {
     return {
@@ -161,7 +173,7 @@ export default {
         cateName: [
           { required: true, message: "请填写分类名称", trigger: "blur" }
         ],
-        priority: [{ required: true, message: "请输入排序号，越小优先级越高，最高100", trigger: "blur" }],
+        priority: [{ required: true,  trigger: "blur", validator: priorit}],
         cateImg:[
             {required: true, message: "请上传图片", trigger: "blur"}
         ]
@@ -170,7 +182,7 @@ export default {
          cateName: [
           { required: true, message: "请填写分类名称", trigger: "blur" }
         ],
-        priority: [{ required: true, message: "请输入排序号，越小优先级越高，最高100", trigger: "blur" }],
+        priority: [{ required: true, trigger: "blur", validator: priorit }],
         cateImg:[
             {required: true, message: "请上传图片", trigger: "blur"}
         ]
@@ -335,6 +347,9 @@ export default {
         priority: "",
         // cateImg:""
       };
+       this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
     //新增
     addSubmit: function() {
