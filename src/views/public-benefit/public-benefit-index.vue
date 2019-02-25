@@ -57,20 +57,13 @@
             v-model="addAllIdsName.orgName"
             :fetch-suggestions="querySearchOrg"
             placeholder="请输入机构名称关键字进行查询"
-            :trigger-on-focus="false"
+            :trigger-on-focus="true"
             @select="handleSelectOrg"
           ></el-autocomplete>
         </el-form-item>
         <el-form-item label="发起人">
           <el-input v-model="addForm.initiatorId"></el-input>
-          <!-- <el-autocomplete
-            class="inline-input"
-            v-model="addAllIdsName.originatorName"
-            :fetch-suggestions="querySearchOriginator"
-            placeholder="请输入机构名称关键字进行查询"
-            :trigger-on-focus="false"
-            @select="handleSelectOrg"
-          ></el-autocomplete>-->
+          
         </el-form-item>
         <el-form-item label="善款接受方">
           <el-input v-model="addForm.recipientId"></el-input>
