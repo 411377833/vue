@@ -35,7 +35,7 @@ import gySuggest from './views/gySuggest/gySuggest'
 import proves from './views/proves/proves'
 // 公益咨询
 import gyInfos from './views/gyInfos/gyInfos'
-
+// import addH5Page from './views/public-benefit/addH5Page'
 // import Initiator from './views/initiator/initiator'
 
 let routes = [
@@ -79,16 +79,6 @@ let routes = [
             { path: '/banner', component: banner, name: 'Banner' }
         ]
     },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '',
-    //     iconCls: 'fa fa-address-card',
-    //     leaf: true,//只有一个节点
-    //     children: [
-    //         { path: '/initiator', component: Initiator, name: '发起人' }
-    //     ]
-    // },
     {
         path: '/',
         component: Home,
@@ -97,16 +87,6 @@ let routes = [
         leaf: true,//只有一个节点
         children: [
             { path: '/keyWord', component: keyWord, name: '关键字' }
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
-        name: '',
-        iconCls: 'fa fa-address-card',
-        leaf: true,//只有一个节点
-        children: [
-            { path: '/page6', component: Page6, name: '导航三' }
         ]
     },
     {
@@ -149,38 +129,6 @@ let routes = [
             { path: '/gyInfos', component: gyInfos, name: '公益资讯' }
         ]
     },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '系统管理',
-    //     iconCls: 'el-icon-message',//图标样式class
-    //     children: [
-    //         { path: '/user', component: user, name: 'password' },
-    //         // { path: '/table', component: Table, name: 'Table' },
-    //         // { path: '/form', component: Form, name: 'Form' },
-    //         // { path: '/user', component: user, name: '列表' },
-    //     ]
-    // },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '导航二',
-    //     iconCls: 'fa fa-id-card-o',
-    //     children: [
-    //         { path: '/page4', component: Page4, name: '页面4' },
-    //         { path: '/page5', component: Page5, name: '页面5' }
-    //     ]
-    // },
-    
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: 'Charts',
-    //     iconCls: 'fa fa-bar-chart',
-    //     children: [
-    //         { path: '/echarts', component: echarts, name: 'echarts' }
-    //     ]
-    // },
     {
         path: '*',
         hidden: true,

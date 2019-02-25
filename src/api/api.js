@@ -6,6 +6,8 @@ let baseUrl = 'http://api.50wlkj.com'
 export const requestLogin = p => post(`${baseUrl}/api/user_login`, p); //通
 export const updatePassword = p => post(`${baseUrl}/api/user_update_password`, p); //通
 
+//-获取菜单
+export const getMenu = p => post(`${baseUrl}/api/get_menu`, p); //通
 // 公益项目
 export const delProject = p => post(`${baseUrl}/api/del_project`, p);  //通
 export const getProjects = p => post(`${baseUrl}/api/get_projects`, p);  //通

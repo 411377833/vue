@@ -23,10 +23,18 @@
 			</el-col>
 		</el-col>
 		<el-col :span="24" class="main">
-			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
+			<aside>
 				<!--导航菜单-->
-				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect"
-					 unique-opened router v-show="!collapsed">
+				<!-- <el-menu :default-active="data" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" unique-opened router v-show="!collapsed">
+					<template v-for="(item,index) in data" v-if="item.level === 1">
+						<el-submenu :index="index+''" v-if="!item.leaf">
+							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
+							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
+						</el-submenu>
+						<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
+					</template>
+				</el-menu> -->
+				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" unique-opened router v-show="!collapsed">
 					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
 						<el-submenu :index="index+''" v-if="!item.leaf">
 							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
@@ -89,7 +97,7 @@
 
 <script>
 	import {
-		updatePassword
+		updatePassword,getMenu
 	} from "../api/api";
 	export default {
 		data() {
@@ -110,7 +118,8 @@
 				},
 				isAmend:false,
 				oldPassword:'',
-				newPassword:''
+				newPassword:'',
+				data:[]
 			}
 		},
 		methods: {
@@ -187,7 +196,8 @@
 					type: "error"
 					});
 				}
-			})}
+			})},
+			
 		},
 		mounted() {
 			var user = sessionStorage.getItem('user');
@@ -196,7 +206,12 @@
 				this.sysUserName = user.name || '';
 				this.sysUserAvatar = user.avatar || '';
 			}
-
+			getMenu({
+				token:sessionStorage.getItem('token')
+			}).then((res)=>{
+				console.log(res)
+				this.data = res.data;
+			})
 		}
 	}
 

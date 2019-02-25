@@ -375,8 +375,9 @@ export default {
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
-      this.editCateImg = row.cateImg
+      this.editCateImg = row.cateImg;
       this.editForm = Object.assign({}, row);
+      this.editForm.priority=this.editForm.priority+''
     },
     //编辑
     editSubmit: function() {
@@ -386,7 +387,7 @@ export default {
             this.editLoading = true;
             //NProgress.start();
             // console.log(valid);
-            // console.dir(this.editForm);
+            console.dir(this.editForm);
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
