@@ -68,11 +68,14 @@
 .name{
   display: inline-block;
   width: 120px;
-  height: 30px;
-  font-size: 16px;
-  color: black;
-  text-align:right;
+  height: 34px;
+  font-size: 12px;
+  color: #999;
+  text-align:left;
   margin-right: 10px;
+  line-height: 34px;
+  margin-left: 30px;
+  letter-spacing: 4px
 }
 .img{
   vertical-align: top;
@@ -89,11 +92,11 @@ import {
 } from "../../api/api";
 export default {
   
-  props: ["particulars","page"],
+  props: ["particulars","pages"],
   data() {
     return {
       particular: this.particulars,
-      page: this.page,
+      page: this.pages,
     };
   },
   methods: {

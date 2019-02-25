@@ -87,6 +87,7 @@ import particulars from '../component/particulars'
 export default {
   data() {
     return {
+      particulars:{},
       page: 1,
       filters: {
         title: "",

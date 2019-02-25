@@ -16,20 +16,10 @@
     </el-col>
 
     <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
-      <!-- <el-table-column type="selection" width="55">
-      </el-table-column>-->
-      <!-- <el-table-column type="index" label="顺序" width="100" >
-      </el-table-column>-->
-      <!-- <el-table-column prop="id" label="编号" width="120" >
-      </el-table-column>-->
       <el-table-column prop="title" label="标题" width="280"></el-table-column>
-      <!-- <el-table-column prop="creatorId" label="创建人编号" width="200">
-      </el-table-column>-->
+
       <el-table-column prop="description" label="简介描述	" min-width="380"></el-table-column>
-      <!-- <el-table-column prop="createTime" label="创建日期" min-width="100" >
-          </el-table-column>
-          <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="120" >
-      </el-table-column>-->
+
       <el-table-column label="操作" width="220" fixed="right">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -40,7 +30,6 @@
     </el-table>
     <!--工具条-->
     <el-col :span="24" class="toolbar" v-if="total">
-      <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
       <el-pagination
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
@@ -85,31 +74,37 @@
         <el-form-item label="发起人">
           <el-input v-model="addForm.initiatorId"></el-input>
         </el-form-item>
-        <el-form-item label="善款接受方ID">
+        <el-form-item label="善款接受方">
           <el-input v-model="addForm.recipientId"></el-input>
         </el-form-item>
-        <el-form-item label="项目负责人ID">
+        <el-form-item label="项目负责人">
           <el-input v-model="addForm.mgrId"></el-input>
         </el-form-item>
         <el-form-item label="标签" prop="tags">
           <el-checkbox-group v-model="checkedLabels" :min="1" :max="3">
             <el-checkbox v-for="label in labels" :label="label" :key="label">{{label}}</el-checkbox>
-           
-
           </el-checkbox-group>
         </el-form-item>
 
         <el-form-item label="图文详情" prop="imgs">
           <el-input v-model="addForm.h5Id"></el-input>
         </el-form-item>
-        <el-form-item label="公益项目分类id">
+        <el-form-item label="公益项目分类">
           <!-- <el-input v-model="addForm.cateIds"></el-input> -->
           <el-checkbox-group v-model="addCheckboxData.checkedCities">
-              <el-checkbox v-for="item in addCheckboxData.cities" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
-            </el-checkbox-group>
+            <el-checkbox
+              v-for="item in addCheckboxData.cities"
+              :label="item.id"
+              :key="item.id"
+            >{{item.name}}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="目标善款金额">
-          <el-input v-model="addForm.targetMoney"></el-input>
+        <el-form-item label="目标善款金额" prop="targetMoney">
+          <el-input
+            v-model="addForm.targetMoney"
+            type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"
+          ></el-input>
         </el-form-item>
         <el-form-item label="轮播图">
           <bannner-Upload @returnImgList="getBannerList"></bannner-Upload>
@@ -154,7 +149,8 @@
         <el-form-item label="公益项目分类id">
           <el-input v-model="editForm.cateIds"></el-input>
         </el-form-item>
-        <el-form-item label="目标善款金额">
+        <el-form-item label="目标善款金额" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )">
           <el-input v-model="editForm.targetMoney"></el-input>
         </el-form-item>
         <el-form-item label="详情页轮播图">
@@ -187,6 +183,7 @@ import {
 } from "../../api/api";
 import particulars from "../component/particulars";
 import bannerUpload from "../component/bannerUpload";
+import "../../style/element-ui.css";
 const checkLabel = ["一周一善行", "特别关注", "爱心进展"];
 export default {
   data() {
@@ -200,7 +197,7 @@ export default {
       },
       //关联数据接口
       addAllIdsName: {
-        orgName: "",
+        orgName: ""
         // originatorName:""
       },
       orgIds:[],
@@ -256,10 +253,16 @@ export default {
       editLoading: false,
       addFormRules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
-        // imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
+        targetMoney: [
+          {
+            required: true,
+            message: "请输入正确的金额数值",
+            trigger: "blur"
+          }
+        ]
       },
       editFormRules: {
-        title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        title: [{ required: true, message: "请输入标题", trigger: "blur" }]
         // imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
       },
       options: []
@@ -275,6 +278,7 @@ export default {
       }
     };
   },
+
   methods: {
     // 搜索
     queryGetProjects() {
@@ -403,6 +407,10 @@ export default {
         targetMoney: "",
         imgs: ""
       };
+      // this.$refs['addForm'].resetFields();
+      this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
     //新增
     addSubmit: function() {
@@ -447,6 +455,9 @@ export default {
       console.log(row);
       this.editFormVisible = true;
       this.editForm = Object.assign({}, row);
+      this.$nextTick(() => {
+        this.$refs["editForm"].resetFields();
+      });
     },
     //编辑
     editSubmit: function() {
@@ -496,8 +507,39 @@ export default {
         }
       });
     },
-    
 
+    // 关联接口数据
+    //此方法为机构关键字搜索方法
+    querySearchOrg(queryString, cb) {
+      var restaurants = this.searhAllId.orgIds;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    //此方法为选中机构之后获取到的数据
+    handleSelectOrg(item) {
+      this.addForm.orgId = String(item.id);
+    },
+    //此方法为输入关键字获取相关数据过滤数组通用方法
+    createFilter(queryString) {
+      return restaurant => {
+        return (
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          0
+        );
+      };
+    },
+    // 发起人搜索方法
+    querySearchOriginator(queryString, cb) {
+      var restaurants = this.searhAllId.orgIds;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
 
     // 关联接口数据
     //此方法为机构关键字搜索方法 
@@ -557,7 +599,7 @@ export default {
   },
   components: {
     particulars,
-    'bannner-Upload':bannerUpload
+    "bannner-Upload": bannerUpload
   }
   
 };
@@ -570,7 +612,7 @@ export default {
     margin-bottom: 20px;
   }
 }
-.inline-input{
+.inline-input {
   width: 380px;
 }
 </style>

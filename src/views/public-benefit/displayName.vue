@@ -13,8 +13,6 @@
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
-
-
     </el-col>
 
     <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
@@ -28,9 +26,7 @@
       <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column>
       <!-- <el-table-column prop="headImg" label="头像	" min-width="180">
         <img :src="this.headImg" alt="">
-      </el-table-column> -->
-
-      
+      </el-table-column>-->
       <el-table-column label="操作" width="220" fixed="right">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -53,39 +49,41 @@
 
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm" class="label">
+      <el-form
+        size="mini"
+        :model="addForm"
+        label-width="120px"
+        :rules="addFormRules"
+        ref="addForm"
+        class="label"
+      >
         <el-form-item label="机构代码" prop="idCard" style="el-form-item__label:text-align:left">
-          <el-input v-model="addForm.idCard"></el-input>
+          <el-input v-model="addForm.idCard" placeholder="请输入机构代码"></el-input>
         </el-form-item>
         <el-form-item label="机构名称" prop="displayName">
-          <el-input v-model="addForm.displayName"></el-input>
+          <el-input v-model="addForm.displayName" placeholder="请输入机构名称"></el-input>
         </el-form-item>
         <el-form-item label="说明" prop="signature">
-          <el-input v-model="addForm.signature"></el-input>
+          <el-input v-model="addForm.signature" placeholder="请填写说明"></el-input>
         </el-form-item>
         <el-form-item label="头像" prop="headImg">
+          
           <el-upload
-          :data="abc"
-          class="avatar-uploader"
-          action="http://api.50wlkj.com/api/upload_img"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="addHeadImg" :src="addHeadImg" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+            :data="abc"
+            class="avatar-uploader"
+            action="http://api.50wlkj.com/api/upload_img"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <!-- <i class="el-icon-plus"></i> -->
+            <img v-if="addHeadImg" :src="addHeadImg" class="avatar"> 
+             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          
         </el-form-item>
+
         
-        <!-- <el-form-item label="发起机构ID"><el-input v-model="addForm.orgId"></el-input></el-form-item>
-          <el-form-item label="发起人ID"><el-input v-model="addForm.initiatorId"></el-input></el-form-item>
-          <el-form-item label="善款接受方ID"><el-input v-model="addForm.recipientId"></el-input></el-form-item>
-          <el-form-item label="项目负责人ID"><el-input v-model="addForm.mgrId"></el-input></el-form-item>
-          <el-form-item label="标签"><el-input v-model="addForm.tags"></el-input></el-form-item>
-          <el-form-item label="图文详情" prop="imgs"><el-input v-model="addForm.h5Id"></el-input></el-form-item>
-          <el-form-item label="公益项目分类id"><el-input v-model="addForm.cateIds"></el-input></el-form-item>
-          <el-form-item label="目标善款金额"><el-input v-model="addForm.targetMoney"></el-input></el-form-item>
-        <el-form-item label="详情页轮播图"><el-input v-model="addForm.imgs"></el-input></el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
@@ -95,7 +93,7 @@
 
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+      <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
         <el-form-item label="机构代码" prop="idCard">
           <el-input v-model="editForm.idCard"></el-input>
         </el-form-item>
@@ -107,19 +105,17 @@
         </el-form-item>
         <el-form-item label="头像" prop="headImg">
           <el-upload
-          :data="abc"
-          class="avatar-uploader"
-          action="http://api.50wlkj.com/api/upload_img"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
+            :data="abc"
+            class="avatar-uploader"
+            action="http://api.50wlkj.com/api/upload_img"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
           >
-
-          <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+            <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
-        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -129,82 +125,87 @@
 
     <!-- 详情界面 -->
     <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
-      <particulars :particulars = "particulars"/>
+      <particulars :particulars="particulars"/>
     </el-dialog>
   </section>
 </template>
 
 <script>
-import { listOrg, deletOrg, getOrg, addOrg, updateOrg } from "../../api/api";
-import particulars from '../component/particulars'
+var idCards = (rule, value, callback) => {
+  if (!isIdCard(value)) {
+    callback(new Error("请输入正确的机构代码"));
+  } else {
+    callback();
+  }
+};
 
-export default {//editForm.headImg
+import { listOrg, deletOrg, getOrg, addOrg, updateOrg } from "../../api/api";
+import particulars from "../component/particulars";
+import { isIdCard } from "../../common/js/validate";
+export default {
+  //editForm.headImg
   data() {
     return {
       page: 1,
       filters: {
         displayName: ""
       },
-      dialogVisible:false,
-      abc:{
-        token:sessionStorage.getItem("token")
+      dialogVisible: false,
+      detailsVisible: false,
+      abc: {
+        token: sessionStorage.getItem("token")
       },
-      detailsVisible:false,
+
       //   imageUrl: '',
-      headImg:"",
+      headImg: "",
       total: 0,
       tableData: [],
       listLoading: false,
-      particulars:{},
+      particulars: {},
       //新增界面数据
       addForm: {
         idCard: "",
         displayName: "",
         signature: "",
-        headImg:''
+        headImg: ""
       },
       //编辑界面数据
       editForm: {
         idCard: "",
         displayName: "",
         signature: "",
-        headImg:''
+        headImg: ""
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
       editFormVisible: false, //编辑界面是否显示
       editLoading: false,
       addFormRules: {
-        idCard: [
-          { required: true, message: "请输入机构代码", trigger: "blur" }
-        ],
+        idCard: [{ required: true, trigger: "blur", validator: idCards }],
         displayName: [
           { required: true, message: "请输入机构名称", trigger: "blur" }
         ],
         signature: [
           { required: true, message: "请填写机构说明", trigger: "blur" }
         ],
-        headImg:[
-            {required: true, message: "请上传机构头像", trigger: "blur"}
+        headImg: [
+          { required: true, message: "请上传机构头像", trigger: "blur" }
         ]
       },
       editFormRules: {
-        idCard: [
-          { required: true, message: "请输入机构代码", trigger: "blur" }
-        ],
+        idCard: [{ required: true, trigger: "blur", validator: idCards }],
         displayName: [
           { required: true, message: "请输入机构名称", trigger: "blur" }
         ],
         signature: [
           { required: true, message: "请填写机构说明", trigger: "blur" }
         ],
-        headImg:[
-            {required: true, message: "请上传机构头像", trigger: "blur"}
+        headImg: [
+          { required: true, message: "请上传机构头像", trigger: "blur" }
         ]
       },
-      addHeadImg:"",
-      editHeadImg:''
-      
+      addHeadImg: "",
+      editHeadImg: ""
     };
   },
   created() {
@@ -217,7 +218,7 @@ export default {//editForm.headImg
       }
     };
   },
-  
+
   methods: {
     queryListOrg() {
       let _this = this;
@@ -230,7 +231,7 @@ export default {//editForm.headImg
         }).then(res => {
           console.log(res);
           if (res.code === 1) {
-             _this.tableData = res.data.data;
+            _this.tableData = res.data.data;
             _this.total = res.data.total;
           } else {
             this.$message({
@@ -249,7 +250,7 @@ export default {//editForm.headImg
       listOrg({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
-        pageSize: 10,
+        pageSize: 10
         // title: "",
         // description: ""
       }).then(res => {
@@ -302,15 +303,13 @@ export default {//editForm.headImg
         .catch(() => {});
     },
 
-
-//查询单条
-    handleDetails: function(index,row){
-      console.log(Object.assign({}, row))
-        this.detailsVisible = true;
-        this.particulars={}
-        this.particulars = Object.assign({}, row)
+    //查询单条
+    handleDetails: function(index, row) {
+      console.log(Object.assign({}, row));
+      this.detailsVisible = true;
+      this.particulars = {};
+      this.particulars = Object.assign({}, row);
     },
-
 
     //分页
     handleCurrentChange(val) {
@@ -319,55 +318,55 @@ export default {//editForm.headImg
         this.listOrg();
       }
     },
-//上传图片
+    //上传图片
     handleAvatarSuccess(res, file) {
       console.log(URL.createObjectURL(file.raw));
-        // this.imageUrl = URL.createObjectURL(file.raw);
-        if(res.code === 1 ){
-          if(this.addFormVisible){
-             this.addForm.headImg = res.data;
-             this.addHeadImg = res.data
-          }else if(this.editFormVisible){
-            this.editForm.headImg = res.data;
-          this.editHeadImg= res.data;
-          }
-         
-          
-          console.log(this.addForm.headImg)
-        }else{
-          this.$message({
-            message: '上传失败！',
-            type: "error"
-          });
+      // this.imageUrl = URL.createObjectURL(file.raw);
+      if (res.code === 1) {
+        if (this.addFormVisible) {
+          this.addForm.headImg = res.data;
+          this.addHeadImg = res.data;
+        } else if (this.editFormVisible) {
+          this.editForm.headImg = res.data;
+          this.editHeadImg = res.data;
         }
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
 
-        // if (!isJPG) {
-        //   this.$message.error('上传头像图片只能是 JPG 格式!');
-        // }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return  isLt2M;
-      },
+        console.log(this.addForm.headImg);
+      } else {
+        this.$message({
+          message: "上传失败！",
+          type: "error"
+        });
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isJPG =
+        file.type === "image/gif,image/jpeg,image/jpg,image/png,image/svg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!');
+      // }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isLt2M;
+    },
+    
 
     //显示新增界面
     handleAdd: function() {
       this.addFormVisible = true;
-      this.addHeadImg = ''
+      this.addHeadImg = "";
       this.addForm = {
         idCard: "",
         displayName: "",
-        signature: "",
-        
+        signature: ""
       };
+      this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
-
-
-    
 
     //新增
     addSubmit: function() {
@@ -377,7 +376,7 @@ export default {//editForm.headImg
             this.addLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            console.log(para)
+            console.log(para);
             // para.headImg=this.addForm.headImg
             para.token = sessionStorage.getItem("token");
             addOrg(para).then(res => {
@@ -409,8 +408,9 @@ export default {//editForm.headImg
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
-      this.editHeadImg = row.headImg
+      this.editHeadImg = row.headImg;
       this.editForm = Object.assign({}, row);
+
       console.log(this.editForm);
     },
     //编辑
@@ -426,13 +426,14 @@ export default {//editForm.headImg
             console.log(para);
             para.token = sessionStorage.getItem("token");
             updateOrg({
-              token:sessionStorage.getItem("token"),
-              headImg:para.headImg,
-              displayName:para.displayName,
-              signature:para.signature,
-              idCard:para.idCard,
-              id:para.id,
-            }).then(res => {
+              token: sessionStorage.getItem("token"),
+              headImg: para.headImg,
+              displayName: para.displayName,
+              signature: para.signature,
+              idCard: para.idCard,
+              id: para.id
+            })
+              .then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();
@@ -450,14 +451,6 @@ export default {//editForm.headImg
                   });
                 }
                 this.editLoading = false;
-                // //NProgress.done();
-                // this.$message({
-                // 	message: '提交成功',
-                // 	type: 'success'
-                // });
-                // this.$refs['editForm'].resetFields();
-                // this.editFormVisible = false;
-                // this.getUsers();
               })
               .catch(res => {
                 this.editFormVisible = false;
@@ -466,19 +459,14 @@ export default {//editForm.headImg
           });
         }
       });
-    },
-    
-
-
-
-
+    }
   },
   mounted() {
     this.listOrg();
   },
   components: {
-      particulars
-  },
+    particulars
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -512,8 +500,10 @@ export default {//editForm.headImg
   height: 178px;
   display: block;
 }
-.label{
+.label {
   text-align: left;
   padding-left: 10px;
 }
+
+
 </style>

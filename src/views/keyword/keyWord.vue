@@ -90,7 +90,7 @@
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="次数" prop="modifyTime">
+        <el-form-item label="搜索次数" prop="modifyTime">
           <el-input v-model="editForm.modifyTime" placeholder="请输入关键字搜索次数"></el-input>
         </el-form-item>
         
@@ -149,7 +149,7 @@ export default {//editForm.headImg
       },
       editFormRules: {
         modifyTime: [
-          { required: true, message: "请输入关键字次数", trigger: "blur" }
+          { required: true, message: "请输入搜索次数,正数为增加搜索的次数量，负数为减少搜索的次数量", trigger: "blur" }
         ],
       
       },
@@ -253,6 +253,9 @@ export default {//editForm.headImg
       this.addForm = {
         keyWord:""
       };
+       this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
     //新增
     addSubmit: function() {

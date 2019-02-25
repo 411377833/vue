@@ -41,7 +41,7 @@
     </el-table>
     <!--工具条-->
     <el-col :span="24" class="toolbar" v-if="total">
-      <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
+      
       <el-pagination
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
@@ -58,7 +58,8 @@
           <el-input v-model="editForm.userName"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" prop="userPhone">
-          <el-input v-model="editForm.userPhone"></el-input>
+          <el-input v-model="editForm.userPhone" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         
 
@@ -68,17 +69,7 @@
         <el-form-item label="与受款人关系" prop="relation">
           <el-input v-model="editForm.relation"></el-input>
         </el-form-item>
-        <!-- <el-upload
-          :data="abc"
-          class="avatar-uploader"
-          action="http://api.50wlkj.com/api/upload_img"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="editHeadImg" :src="editHeadImg" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>-->
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -280,81 +271,7 @@ export default {
         this.getProves();
       }
     },
-    //上传图片
-    // handleAvatarSuccess(res, file) {
-    //   console.log(URL.createObjectURL(file.raw));
-    //     // this.imageUrl = URL.createObjectURL(file.raw);
-    //     if(res.code === 1 ){
-    //       this.addForm.headImg = res.data;
-    //       this.addHeadImg = res.data
-    //       this.editHeadImg = res.data
-    //       console.log(this.addForm.headImg)
-    //     }else{
-    //       this.$message({
-    //         message: '上传失败！',
-    //         type: "error"
-    //       });
-    //     }
-    //   },
-    //   beforeAvatarUpload(file) {
-    //     const isJPG = file.type === 'image/gif,image/jpeg,image/jpg,image/png,image/svg';
-    //     const isLt4M = file.size / 1024 / 1024 < 4;
-
-    //     // if (!isJPG) {
-    //     //   this.$message.error('上传头像图片只能是 JPG 格式!');
-    //     // }
-    //     if (!isLt4M) {
-    //       this.$message.error('上传头像图片大小不能超过 4MB!');
-    //     }
-    //     return  isLt4M;
-    //   },
-
-    // //显示新增界面
-    // handleAdd: function() {
-    //   this.addFormVisible = true;
-    //   this.addHeadImg = ''
-    //   this.addForm = {
-    //     // idCard: "",
-    //     displayName: "",
-    //     signature: "",
-    //     phone:"",
-    //   };
-    // },
-    // //新增
-    // addSubmit: function() {
-    //   this.$refs.addForm.validate(valid => {
-    //     if (valid) {
-    //       this.$confirm("确认提交吗？", "提示", {}).then(() => {
-    //         this.addLoading = true;
-    //         //NProgress.start();
-    //         let para = Object.assign({}, this.addForm);
-    //         console.log(para);
-    //         para.token = sessionStorage.getItem("token");
-    //         addLeader(para).then(res => {
-    //           console.log(res);
-    //           if (res.code == 1) {
-    //             //NProgress.done();
-    //             this.$message({
-    //               message: "提交成功",
-    //               type: "success"
-    //             });
-    //             this.$refs["addForm"].resetFields();
-    //             this.addFormVisible = false;
-    //             this.getProves();
-    //           } else {
-    //             this.$message({
-    //               message: res.message,
-    //               type: "error"
-    //             });
-    //           }
-    //           this.addLoading = false;
-
-    //           // this.getUsers();
-    //         });
-    //       });
-    //     }
-    //   });
-    // },
+    
     //显示编辑界面
     handleEdit: function(index, row) {
       console.log(row);
@@ -374,32 +291,7 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            // updateProve(para)
-            //   .then(res => {
-            //     console.log(res);
-            //     if (res.code == 1) {
-            //       //NProgress.done();
-            //       this.$message({
-            //         message: "提交成功",
-            //         type: "success"
-            //       });
-            //       this.$refs["editForm"].resetFields();
-            //       this.editFormVisible = false;
-
-            //       this.getBanners();
-            //     } else {
-            //       this.$message({
-            //         message: res.message,
-            //         type: "error"
-            //       });
-            //     }
-            //     this.editLoading = false;
-                
-            //   })
-            //   .catch(res => {
-            //     this.editFormVisible = false;
-            //     console.log(res);
-            //   });
+            
             updateProve({
               token: sessionStorage.getItem("token"),
               id: para.id,

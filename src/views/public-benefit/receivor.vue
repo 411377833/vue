@@ -51,7 +51,7 @@
 
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form size="mini" :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+      <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm">
         <!-- <el-form-item label="机构代码" prop="idCard">
           <el-input v-model="addForm.idCard"></el-input>
         </el-form-item> -->
@@ -62,7 +62,8 @@
           <el-input v-model="addForm.signature"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" prop="phone" >
-          <el-input v-model="addForm.phone"></el-input>
+          <el-input v-model="addForm.phone" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         <el-form-item label="头像" prop="headImg">
           <el-upload
@@ -89,7 +90,7 @@
 
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+      <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
         <el-form-item label="善款接收方" prop="displayName">
           <el-input v-model="editForm.displayName"></el-input>
         </el-form-item>
@@ -100,7 +101,8 @@
           <el-input v-model="editForm.signature"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
-          <el-input v-model="editForm.phone"></el-input>
+          <el-input v-model="editForm.phone" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         <el-form-item label="头像" prop="headImg">
           <el-upload
@@ -133,6 +135,15 @@
 </template>
 
 <script>
+var validPhone=(rule, value,callback)=>{
+      if (!value){
+          callback(new Error('请输入电话号码'))
+      }else  if (!isvalidPhone(value)){
+        callback(new Error('请输入正确的11位手机号码'))
+      }else {
+          callback()
+      }
+  };
 import {
   listRecipients,
   deleteRecipients,
@@ -141,6 +152,8 @@ import {
   updateRecipients
 } from "../../api/api";
 import particulars from '../component/particulars'
+import {isvalidPhone} from "../../common/js/validate"
+
 export default {
   data() {
     return {
@@ -188,7 +201,7 @@ phone:""
           { required: true, message: "请填写说明", trigger: "blur" }
         ],
         phone:[
-            {required: true, message: "请填写正确的电话号码", trigger: "blur"}
+            {required: true, trigger: "blur",validator: validPhone}
         ],
         headImg:[
             {required: true, message: "请上传头像", trigger: "blur"}
@@ -203,7 +216,7 @@ phone:""
           { required: true, message: "请填写说明", trigger: "blur" }
         ],
         phone:[
-            {required: true, message: "请填写正确的电话号码", trigger: "blur"}
+            {required: true, trigger: "blur",validator: validPhone}
         ],
         headImg:[
             {required: true, message: "请上传头像", trigger: "blur"}
@@ -380,6 +393,9 @@ phone:""
         signature: "",
         phone:"",
       };
+       this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
     //新增
     addSubmit: function() {
