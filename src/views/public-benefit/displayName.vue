@@ -95,9 +95,10 @@
 
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+      <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
         <el-form-item label="机构代码" prop="idCard">
-          <el-input v-model="editForm.idCard"></el-input>
+          <el-input v-model="editForm.idCard" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"></el-input>
         </el-form-item>
         <el-form-item label="机构名称" prop="displayName">
           <el-input v-model="editForm.displayName"></el-input>
@@ -146,10 +147,11 @@ export default {//editForm.headImg
         displayName: ""
       },
       dialogVisible:false,
+      detailsVisible:false,
       abc:{
         token:sessionStorage.getItem("token")
       },
-      detailsVisible:false,
+      
       //   imageUrl: '',
       headImg:"",
       total: 0,
@@ -364,6 +366,9 @@ export default {//editForm.headImg
         signature: "",
         
       };
+      this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
 
 
@@ -411,7 +416,11 @@ export default {//editForm.headImg
       this.editFormVisible = true;
       this.editHeadImg = row.headImg
       this.editForm = Object.assign({}, row);
+      
       console.log(this.editForm);
+      this.$nextTick(() => {
+        this.$refs["editForm"].resetFields();
+      });
     },
     //编辑
     editSubmit: function() {
@@ -450,14 +459,7 @@ export default {//editForm.headImg
                   });
                 }
                 this.editLoading = false;
-                // //NProgress.done();
-                // this.$message({
-                // 	message: '提交成功',
-                // 	type: 'success'
-                // });
-                // this.$refs['editForm'].resetFields();
-                // this.editFormVisible = false;
-                // this.getUsers();
+                
               })
               .catch(res => {
                 this.editFormVisible = false;

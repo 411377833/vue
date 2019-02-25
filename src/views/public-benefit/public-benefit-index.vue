@@ -16,20 +16,10 @@
     </el-col>
 
     <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
-      <!-- <el-table-column type="selection" width="55">
-      </el-table-column>-->
-      <!-- <el-table-column type="index" label="顺序" width="100" >
-      </el-table-column>-->
-      <!-- <el-table-column prop="id" label="编号" width="120" >
-      </el-table-column>-->
       <el-table-column prop="title" label="标题" width="280"></el-table-column>
-      <!-- <el-table-column prop="creatorId" label="创建人编号" width="200">
-      </el-table-column>-->
+
       <el-table-column prop="description" label="简介描述	" min-width="380"></el-table-column>
-      <!-- <el-table-column prop="createTime" label="创建日期" min-width="100" >
-          </el-table-column>
-          <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="120" >
-      </el-table-column>-->
+
       <el-table-column label="操作" width="220" fixed="right">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -40,7 +30,6 @@
     </el-table>
     <!--工具条-->
     <el-col :span="24" class="toolbar" v-if="total">
-      <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
       <el-pagination
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
@@ -63,22 +52,6 @@
           <el-input v-model="addForm.tips"></el-input>
         </el-form-item>
         <el-form-item label="公益机构">
-          <!-- <el-select
-            v-model="addForm.orgId"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入关键词"
-            :remote-method="remoteMethod"
-            :loading="loading"
-          >
-            <el-option
-              v-for="item in options4"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select> -->
           <el-autocomplete
             class="inline-input"
             v-model="addAllIdsName.orgName"
@@ -97,35 +70,40 @@
             placeholder="请输入机构名称关键字进行查询"
             :trigger-on-focus="false"
             @select="handleSelectOrg"
-          ></el-autocomplete> -->
+          ></el-autocomplete>-->
         </el-form-item>
-        <el-form-item label="善款接受方ID">
+        <el-form-item label="善款接受方">
           <el-input v-model="addForm.recipientId"></el-input>
         </el-form-item>
-        <el-form-item label="项目负责人ID">
+        <el-form-item label="项目负责人">
           <el-input v-model="addForm.mgrId"></el-input>
         </el-form-item>
         <el-form-item label="标签" prop="tags">
           <el-checkbox-group v-model="checkedLabels" :min="1" :max="3">
             <el-checkbox v-for="label in labels" :label="label" :key="label">{{label}}</el-checkbox>
-           
-
           </el-checkbox-group>
           <!-- <div slot="tip" class="el-upload__tip">请至少选择一个标签</div> -->
-          
         </el-form-item>
 
         <el-form-item label="图文详情" prop="imgs">
           <el-input v-model="addForm.h5Id"></el-input>
         </el-form-item>
-        <el-form-item label="公益项目分类id">
+        <el-form-item label="公益项目分类">
           <!-- <el-input v-model="addForm.cateIds"></el-input> -->
           <el-checkbox-group v-model="addCheckboxData.checkedCities">
-              <el-checkbox v-for="item in addCheckboxData.cities" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
-            </el-checkbox-group>
+            <el-checkbox
+              v-for="item in addCheckboxData.cities"
+              :label="item.id"
+              :key="item.id"
+            >{{item.name}}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="目标善款金额">
-          <el-input v-model="addForm.targetMoney"></el-input>
+        <el-form-item label="目标善款金额" prop="targetMoney">
+          <el-input
+            v-model="addForm.targetMoney"
+            type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"
+          ></el-input>
         </el-form-item>
         <el-form-item label="轮播图">
           <!-- <el-upload
@@ -139,7 +117,7 @@
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt>
-          </el-dialog> -->
+          </el-dialog>-->
           <bannner-Upload @returnImgList="getBannerList"></bannner-Upload>
         </el-form-item>
       </el-form>
@@ -182,7 +160,8 @@
         <el-form-item label="公益项目分类id">
           <el-input v-model="editForm.cateIds"></el-input>
         </el-form-item>
-        <el-form-item label="目标善款金额">
+        <el-form-item label="目标善款金额" type="number"
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )">
           <el-input v-model="editForm.targetMoney"></el-input>
         </el-form-item>
         <el-form-item label="详情页轮播图">
@@ -220,7 +199,6 @@ const checkLabel = ["一周一善行", "特别关注", "爱心进展"];
 export default {
   data() {
     return {
-       
       checkedLabels: [],
       labels: checkLabel,
       page: 1,
@@ -229,18 +207,18 @@ export default {
       },
       //关联数据接口
       addAllIdsName: {
-        orgName: "",
+        orgName: ""
         // originatorName:""
       },
-      searhAllId:{
-          orgIds: [],
-        },
+      searhAllId: {
+        orgIds: []
+      },
 
-//此处数据为新增的复选框数据
-        addCheckboxData:{
-          checkedCities: [],
-          cities: [],
-        },
+      //此处数据为新增的复选框数据
+      addCheckboxData: {
+        checkedCities: [],
+        cities: []
+      },
       dialogImageUrl: "",
       dialogVisible: false,
       detailsVisible: false,
@@ -287,10 +265,16 @@ export default {
       editLoading: false,
       addFormRules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
-        // imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
+        targetMoney: [
+          {
+            required: true,
+            message: "请输入正确的金额数值",
+            trigger: "blur"
+          }
+        ]
       },
       editFormRules: {
-        title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        title: [{ required: true, message: "请输入标题", trigger: "blur" }]
         // imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
       },
       options: []
@@ -306,6 +290,7 @@ export default {
       }
     };
   },
+
   methods: {
     // 搜索
     queryGetProjects() {
@@ -332,7 +317,7 @@ export default {
         _this.getProjects();
       }
     },
-// 列表
+    // 列表
     getProjects() {
       let _this = this;
       getProjects({
@@ -434,6 +419,10 @@ export default {
         targetMoney: "",
         imgs: ""
       };
+      // this.$refs['addForm'].resetFields();
+      this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
     //新增
     addSubmit: function() {
@@ -478,6 +467,9 @@ export default {
       console.log(row);
       this.editFormVisible = true;
       this.editForm = Object.assign({}, row);
+      this.$nextTick(() => {
+        this.$refs["editForm"].resetFields();
+      });
     },
     //编辑
     editSubmit: function() {
@@ -527,41 +519,45 @@ export default {
         }
       });
     },
-    
 
+    // 关联接口数据
+    //此方法为机构关键字搜索方法
+    querySearchOrg(queryString, cb) {
+      var restaurants = this.searhAllId.orgIds;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    //此方法为选中机构之后获取到的数据
+    handleSelectOrg(item) {
+      this.addForm.orgId = String(item.id);
+    },
+    //此方法为输入关键字获取相关数据过滤数组通用方法
+    createFilter(queryString) {
+      return restaurant => {
+        return (
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          0
+        );
+      };
+    },
+    // 发起人搜索方法
+    querySearchOriginator(queryString, cb) {
+      var restaurants = this.searhAllId.orgIds;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
 
-// 关联接口数据
-    //此方法为机构关键字搜索方法 
-      querySearchOrg(queryString, cb) {
-        var restaurants = this.searhAllId.orgIds;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        // 调用 callback 返回建议列表的数据
-        cb(results);
-      },
-      //此方法为选中机构之后获取到的数据
-      handleSelectOrg(item) {
-        this.addForm.orgId = String(item.id);
-      },
-      //此方法为输入关键字获取相关数据过滤数组通用方法
-      createFilter(queryString) {
-        return (restaurant) => {
-          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      // 发起人搜索方法
-      querySearchOriginator(queryString, cb) {
-        var restaurants = this.searhAllId.orgIds;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        // 调用 callback 返回建议列表的数据
-        cb(results);
-      },
-      
-      // 轮播图上传
-      //子父传值获取图片上传之后的图片地址
-      getBannerList(val){
-        this.addForm.imgs = String(val);
-      },
-      
+    // 轮播图上传
+    //子父传值获取图片上传之后的图片地址
+    getBannerList(val) {
+      this.addForm.imgs = String(val);
+    }
   },
   mounted() {
     this.getProjects();
@@ -569,64 +565,64 @@ export default {
     //     return { value: item, label: item };
     //   });
     //获取新增复选框数据
-      listCategory({
-          token:sessionStorage.getItem('token'),
-          pageNum:this.page,
-          pageSize:10,
-          cateName:''
-        }).then((res)=>{
-          if(res.code == 1){
-            for(var i = 0;i<res.data.data.length;i++){
-              var item = res.data.data[i];
-              this.addCheckboxData.cities.push({
-                name:item.cateName,
-                id:item.id
-              })
-            }
-          }
-        })
+    listCategory({
+      token: sessionStorage.getItem("token"),
+      pageNum: this.page,
+      pageSize: 10,
+      cateName: ""
+    }).then(res => {
+      if (res.code == 1) {
+        for (var i = 0; i < res.data.data.length; i++) {
+          var item = res.data.data[i];
+          this.addCheckboxData.cities.push({
+            name: item.cateName,
+            id: item.id
+          });
+        }
+      }
+    });
     //获取所有 机构数据 保存在searhAllId中，如需获取其他的可在下方继续调用数据接口
-      listOrg({
-          token:sessionStorage.getItem('token'),
-          pageNum:this.page,
-          pageSize:10,
-          displayName:''
-        }).then((res)=>{
-          if(res.code == 1){
-            let reOrg = [];
-            for(let i = 0; i< res.data.data.length;i++){
-              let item = res.data.data[i];
-              reOrg.push({
-                value:item.displayName,
-                id:item.id
-              })
-            }
-            this.searhAllId.orgIds = reOrg;
-          }
-        })
-        // 获取所有发起人保存在searhAllId中，如需获取其他的可在下方继续调用数据接口
-        // listInitiator({
-        //   token:sessionStorage.getItem('token'),
-        //   pageNum:this.page,
-        //   pageSize:10,
-        //   displayName:''
-        // }).then((res)=>{
-        //   if(res.code == 1){
-        //     let reInitiator = [];
-        //     for(let i = 0; i< res.data.data.length;i++){
-        //       let item = res.data.data[i];
-        //       reInitiator.push({
-        //         value:item.displayName,
-        //         id:item.id
-        //       })
-        //     }
-        //     this.searhAllId.orgIds = reInitiator;
-        //   }
-        // })
+    listOrg({
+      token: sessionStorage.getItem("token"),
+      pageNum: this.page,
+      pageSize: 10,
+      displayName: ""
+    }).then(res => {
+      if (res.code == 1) {
+        let reOrg = [];
+        for (let i = 0; i < res.data.data.length; i++) {
+          let item = res.data.data[i];
+          reOrg.push({
+            value: item.displayName,
+            id: item.id
+          });
+        }
+        this.searhAllId.orgIds = reOrg;
+      }
+    });
+    // 获取所有发起人保存在searhAllId中，如需获取其他的可在下方继续调用数据接口
+    // listInitiator({
+    //   token:sessionStorage.getItem('token'),
+    //   pageNum:this.page,
+    //   pageSize:10,
+    //   displayName:''
+    // }).then((res)=>{
+    //   if(res.code == 1){
+    //     let reInitiator = [];
+    //     for(let i = 0; i< res.data.data.length;i++){
+    //       let item = res.data.data[i];
+    //       reInitiator.push({
+    //         value:item.displayName,
+    //         id:item.id
+    //       })
+    //     }
+    //     this.searhAllId.orgIds = reInitiator;
+    //   }
+    // })
   },
   components: {
     particulars,
-    'bannner-Upload':bannerUpload
+    "bannner-Upload": bannerUpload
   }
   // updated(){
   //   console.log(1)
@@ -642,7 +638,7 @@ export default {
     margin-bottom: 20px;
   }
 }
-.inline-input{
+.inline-input {
   width: 380px;
 }
 </style>

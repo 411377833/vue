@@ -409,6 +409,9 @@ export default {
       this.editFormVisible = true;
       this.editHeadImg = row.headImg
       this.editForm = Object.assign({}, row);
+      this.$nextTick(() => {
+        this.$refs["editForm"].resetFields();
+      });
     },
     //编辑
     editSubmit: function() {
