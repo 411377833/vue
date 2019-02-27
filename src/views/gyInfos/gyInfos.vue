@@ -16,20 +16,15 @@
         </el-form>
       </el-col>
 
-      <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
-        <!-- <el-table-column type="selection" width="55">
-        </el-table-column>-->
-        <!-- <el-table-column type="index" label="顺序" width="100" >
-        </el-table-column>-->
-        <!-- <el-table-column prop="id" label="id" width="200"></el-table-column> -->
+      <el-table
+        :data="tableData"
+        highlight-current-row
+        v-loading="listLoading"
+        style="width: 100%;"
+      >
         <el-table-column prop="title" label="标题" width="300"></el-table-column>
         <el-table-column prop="description" label="描述" min-width="180"></el-table-column>
-        <!-- <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column> -->
-        <!-- <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
-        <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column> -->
-        <!-- <el-table-column prop="userType" label="类型" min-width="150"></el-table-column> -->
-        <!-- <el-table-column prop="title" label="标题" min-width="180" >
-        </el-table-column>-->
+
         <el-table-column label="操作" width="220" fixed="right">
           <template slot-scope="scope">
             <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -40,7 +35,6 @@
       </el-table>
       <!--工具条-->
       <el-col :span="24" class="toolbar" v-if="total">
-        <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
         <el-pagination
           layout="prev, pager, next"
           @current-change="handleCurrentChange"
@@ -50,26 +44,154 @@
         ></el-pagination>
       </el-col>
 
+      <!--新增界面-->
+      <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+        <el-form
+          size="mini"
+          :model="addForm"
+          label-width="120px"
+          :rules="addFormRules"
+          ref="addForm"
+        >
+          <el-form-item label="关联的公益项目">
+            <!-- <el-input v-model="addForm.gyItemId" ></el-input> -->
+            <el-select
+              v-model="addForm.gyItemId"
+              filterable
+              remote
+              placeholder="请输入公益项目进行查询"
+              :remote-method="querySearchProject"
+              clearable
+            >
+              <el-option
+                v-for="item in projectIds"
+                :key="item.id"
+                :label="item.value"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="关联的资讯" prop="h5Id">
+            <!-- <el-input v-model="addForm.h5Id"></el-input> -->
+            <el-select
+              v-model="addForm.h5Id"
+              filterable
+              remote
+              placeholder="请输入资讯进行查询"
+              :remote-method="querySearchH5"
+              clearable
+            >
+              <el-option
+                v-for="item in h5Ids"
+                :key="item.id"
+                :label="item.value"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="标题" prop="title">
+            <el-input v-model="addForm.title" placeholder="请填写标题"></el-input>
+          </el-form-item>
+          <el-form-item label="描述" prop="description">
+            <el-input v-model="addForm.description" placeholder="请填写描述" type="textarea" :rows="2"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="图片" prop="image">
+            <el-upload
+              :data="abc"
+              class="avatar-uploader"
+              action="http://api.50wlkj.com/api/upload_img"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+            >
+              <img v-if="addImage" :src="addImage" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+          
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click.native="addFormVisible = false">取消</el-button>
+          <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+        </div>
+      </el-dialog>
 
 
-
-
-
-
+<!--编辑界面-->
+    <!-- <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+      <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
+        <el-form-item label="关联的公益项目">
+            <el-select
+              v-model="editForm.gyItemId"
+              filterable
+              remote
+              placeholder="请输入公益项目进行查询"
+              :remote-method="querySearchProject"
+              clearable
+            >
+              <el-option
+                v-for="item in projectIds"
+                :key="item.id"
+                :label="item.value"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="标题" prop="title">
+            <el-input v-model="editForm.title" placeholder="请填写标题"></el-input>
+          </el-form-item>
+          <el-form-item label="描述" prop="description">
+            <el-input v-model="editForm.description" placeholder="请填写描述" type="textarea" :rows="2"></el-input>
+          </el-form-item>
+          <el-form-item label="关联的h5页面" prop="h5Id">
+            <el-select
+              v-model="editForm.h5Id"
+              filterable
+              remote
+              placeholder="请输入h5页面进行查询"
+              :remote-method="querySearchH5"
+              clearable
+            >
+              <el-option
+                v-for="item in h5Ids"
+                :key="item.id"
+                :label="item.value"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="图片" prop="image">
+            <el-upload
+              :data="abc"
+              class="avatar-uploader"
+              action="http://api.50wlkj.com/api/upload_img"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+            >
+              <img v-if="addImage" :src="addImage" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="editFormVisible = false">取消</el-button>
+        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
+      </div>
+    </el-dialog> -->
       <!-- 详情界面 -->
       <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
-      <particulars :particulars = "particulars"/>
-    </el-dialog>
-      
+        <particulars :particulars="particulars"/>
+      </el-dialog>
     </div>
-    <div v-if="nextPage" >
+    <div v-if="nextPage">
       <div class="goBack">
         <el-button type="primary" v-on:click="goBack">返回</el-button>
       </div>
       <addPage v-if="addFormVisible" :callback="callback"/>
       <editPage v-if="editFormVisible" :callback="callback" :editData="editData"/>
     </div>
-    
   </section>
 </template>
 
@@ -77,39 +199,77 @@
 import {
   getGyInfos,
   delGyInfos,
+  getGyInfo,
+  addGyInfo,
+  getProjects,
+  listH5
   // addCategory,
   // updateCategory
 } from "../../api/api";
 // import addPage from './addH5Page'
 // import editPage from './editPage'
-import particulars from '../component/particulars'
+import particulars from "../component/particulars";
 
 export default {
   data() {
     return {
-      particulars:{},
+      particulars: {},
       page: 1,
       filters: {
-        title: "",
+        title: ""
         // description:""
       },
-      nextPage:false,
+      nextPage: false,
       //   imageUrl: '',
       total: 0,
-      detailsVisible:false,
+      detailsVisible: false,
+      abc: {
+        token: sessionStorage.getItem("token")
+      },
       tableData: [],
       listLoading: false,
       addFormVisible: false, //新增界面是否显示
       editFormVisible: false, //编辑界面是否显示
-      editData:{},
+      addLoading: false,
+      editData: {},
+      projectIds: [],
+      h5Ids:[],
+      //新增界面数据
+      addForm: {
+        // idCard: "",
+        gyItemId: "",
+        title: "",
+        description: "",
+        image: "",
+        h5Id: ""
+        // phone:""
+      },
       //编辑界面数据
-      // editForm: {
-      //   id: "",
-      //   title: "",
-      //   description: "",
-      //   image: ""
-      // },
-      // editImage:"",
+      editForm: {
+        gyItemId: "",
+        title: "",
+        description: "",
+        image: "",
+        h5Id: ""
+      },
+      editImage:"",
+      addFormRules: {
+        // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
+        title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        description: [
+          { required: true, message: "请输入描述", trigger: "blur" }
+        ],
+        image: [{ required: true, message: "请上传图片", trigger: "blur" }]
+      },
+      editFormRules: {
+        // idCard: [{ required: true, message: "请输入机构id", trigger: "blur" }],
+        title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        description: [
+          { required: true, message: "请输入描述", trigger: "blur" }
+        ],
+        image: [{ required: true, message: "请上传图片", trigger: "blur" }]
+      },
+      addImage: ""
     };
   },
   created() {
@@ -123,6 +283,49 @@ export default {
     };
   },
   methods: {
+    // 关联接口数据
+    //此方法为机构关键字搜索方法
+    querySearchProject(queryString) {
+      getProjects({
+        token: sessionStorage.getItem("token"),
+        pageNum: this.page,
+        pageSize: 10,
+        title: queryString
+      }).then(res => {
+        if (res.code == 1) {
+          let reProject = [];
+          for (let i = 0; i < res.data.data.length; i++) {
+            let item = res.data.data[i];
+            reProject.push({
+              value: item.title,
+              id: item.id
+            });
+          }
+          this.projectIds = reProject;
+        }
+      });
+    },
+    //此方法为H5页面搜索方法
+    querySearchH5(queryString) {
+      listH5({
+        token: sessionStorage.getItem("token"),
+        pageNum: this.page,
+        pageSize: 10,
+        title: queryString
+      }).then(res => {
+        if (res.code == 1) {
+          let reH5 = [];
+          for (let i = 0; i < res.data.data.length; i++) {
+            let item = res.data.data[i];
+            reH5.push({
+              value: item.title,
+              id: item.id
+            });
+          }
+          this.h5Ids = reH5;
+        }
+      });
+    },
     queryGetGyInfos() {
       let _this = this;
       if (_this.filters.id) {
@@ -163,7 +366,6 @@ export default {
         if (res.code === 1) {
           _this.tableData = res.data.data;
           _this.total = res.data.total;
-          
         } else {
           this.$message({
             message: res.message,
@@ -209,19 +411,48 @@ export default {
         })
         .catch(() => {});
     },
+    //上传图片
+    handleAvatarSuccess(res, file) {
+      console.log(URL.createObjectURL(file.raw));
+      // this.imageUrl = URL.createObjectURL(file.raw);
+      if (res.code === 1) {
+        if (this.addFormVisible) {
+          this.addForm.image = res.data;
+          this.addImage = res.data;
+        } else if (this.editFormVisible) {
+          this.editForm.image = res.data;
+          this.editImage = res.data;
+        }
 
+        console.log(this.addForm.image);
+      } else {
+        this.$message({
+          message: "上传失败！",
+          type: "error"
+        });
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isJPG =
+        file.type === "image/gif,image/jpeg,image/jpg,image/png,image/svg";
+      const isLt4M = file.size / 1024 / 1024 < 4;
 
-//查询单条
-    handleDetails: function(index,row){
-      console.log(Object.assign({}, row))
-        this.detailsVisible = true;
-        this.particulars={}
-        this.particulars = Object.assign({}, row)
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!');
+      // }
+      if (!isLt4M) {
+        this.$message.error("上传头像图片大小不能超过 4MB!");
+      }
+      return isLt4M;
     },
 
-
-
-
+    //查询单条
+    handleDetails: function(index, row) {
+      console.log(Object.assign({}, row));
+      this.detailsVisible = true;
+      this.particulars = {};
+      this.particulars = Object.assign({}, row);
+    },
 
     //分页
     handleCurrentChange(val) {
@@ -232,9 +463,56 @@ export default {
     },
     //显示新增界面
     handleAdd: function() {
-      this.nextPage = true;
       this.addFormVisible = true;
+      this.addLoading=false;
+      this.addImage = "";
+      this.addForm = {
+        gyItemId: "",
+        title: "",
+        description: "",
+        image: "",
+        h5Id: ""
+      };
+      this.$nextTick(() => {
+        this.$refs["addForm"].resetFields();
+      });
     },
+    //新增
+    addSubmit: function() {
+      this.$refs.addForm.validate(valid => {
+        if (valid) {
+          this.$confirm("确认提交吗？", "提示", {}).then(() => {
+            this.addLoading = true;
+            //NProgress.start();
+            let para = Object.assign({}, this.addForm);
+            console.log(para);
+            para.token = sessionStorage.getItem("token");
+            addGyInfo(para).then(res => {
+              console.log(res);
+              if (res.code == 1) {
+                //NProgress.done();
+                this.$message({
+                  message: "提交成功",
+                  type: "success"
+                });
+                this.$refs["addForm"].resetFields();
+                this.addFormVisible = false;
+                this.getGyInfos();
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: "error"
+                });
+              }
+              this.addLoading = false;
+
+              // this.getUsers();
+            });
+          });
+        }
+      });
+    },
+
     //显示编辑界面
     handleEdit: function(index, row) {
       this.nextPage = true;
@@ -242,25 +520,24 @@ export default {
       this.editFormVisible = true;
       this.editData = Object.assign({}, row);
     },
-    goBack(){
-      this.editFormVisible= false;
+    goBack() {
+      this.editFormVisible = false;
       this.addFormVisible = false;
       this.nextPage = false;
     },
-    callback(){
-      this.editFormVisible= false;
+    callback() {
+      this.editFormVisible = false;
       this.addFormVisible = false;
       this.nextPage = false;
-      this.getGyInfos()
+      this.getGyInfos();
     }
-    
   },
   mounted() {
     this.getGyInfos();
   },
   components: {
-      particulars
-  },
+    particulars
+  }
   // components: {
   //      addPage,
   //      editPage
@@ -274,7 +551,7 @@ export default {
     justify-content: space-between;
     margin-bottom: 20px;
   }
-  .goBack{
+  .goBack {
     text-align: right;
     margin-bottom: 10px;
   }

@@ -33,7 +33,8 @@
       </el-table>
       <!--工具条-->
       <el-col :span="24" class="toolbar" v-if="total">
-        <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
+        
+      
         <el-pagination
           layout="prev, pager, next"
           @current-change="handleCurrentChange"
@@ -60,8 +61,7 @@ import {
   listH5,
   deleteH5,
   detailH5
-  // addCategory,
-  // updateCategory
+  
 } from "../../api/api";
 import addPage from './addH5Page'
 import editPage from './editPage'
@@ -166,7 +166,7 @@ export default {
           
           deleteH5({
             token: sessionStorage.getItem("token"),
-            id:27
+            id:row.id
           }).then(res => {
             console.log(res);
             if (res.code == 1) {
@@ -181,7 +181,14 @@ export default {
         })
         .catch(() => {});
     },
-
+//查询单条
+    handleDetails: function(index, row) {
+      console.log(Object.assign({}, row));
+      this.detailsVisible = true;
+      this.particulars = {};
+      
+      this.particulars = Object.assign({}, row);
+    },
     
     //分页
     handleCurrentChange(val) {

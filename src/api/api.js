@@ -7,7 +7,7 @@ export const requestLogin = p => post(`${baseUrl}/api/user_login`, p); //通
 export const updatePassword = p => post(`${baseUrl}/api/user_update_password`, p); //通
 
 //-获取菜单
-export const getMenu = p => post(`${baseUrl}/api/get_menu`, p); //通
+// export const getMenu = p => post(`${baseUrl}/api/get_menu`, p); //通
 // 公益项目
 export const delProject = p => post(`${baseUrl}/api/del_project`, p);  //通
 export const getProjects = p => post(`${baseUrl}/api/get_projects`, p);  //通
@@ -70,10 +70,11 @@ export const listGy_suggest= p => post(`${baseUrl}/api/list_gy_suggest`, p);  //
 export const getProves= p => post(`${baseUrl}/api/get_proves`, p);  //通 
 export const delProve= p => post(`${baseUrl}/api/del_prove`, p);  //通 
 export const updateProve= p => post(`${baseUrl}/api/update_prove`, p);  //通 
-// export const getProves= p => post(`${baseUrl}/api/get_proves`, p);  //通 
 // 公益咨询
 export const getGyInfos= p => post(`${baseUrl}/api/get_gy_infos`, p);  //通 
 export const delGyInfos= p => post(`${baseUrl}/api/del_gy_info`, p);  //通 
+export const getGyInfo= p => post(`${baseUrl}/api/get_gyinfo`, p);  //通 
+export const addGyInfo= p => post(`${baseUrl}/api/add_gy_info`, p);  //通 
 
 // 上传图片
 export const upload_img = p => post(`${baseUrl}/api/upload_img`, p);//通
