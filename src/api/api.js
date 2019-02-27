@@ -51,6 +51,7 @@ export const updateBanner = p => post(`${baseUrl}/api/update_banner`, p);// 通
 //h5
 export const listH5= p => post(`${baseUrl}/api/list_h5`, p);  //通 
 export const addH5= p => post(`${baseUrl}/api/add_h5`, p);  //通 
+export const updateH5= p => post(`${baseUrl}/api/update_h5`, p);  //通 
 export const detailH5 = p => post(`${baseUrl}/api/detail_h5`, p);  // 
 export const deleteH5 = p => post(`${baseUrl}/api/delete_h5`, p);  //接口通
 // export const updateCategory = p => post(`${baseUrl}/api/update_category`, p);// 报400

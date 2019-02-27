@@ -19,7 +19,7 @@
 </style>
 <script>
   import wangeditor from './wangeditor.vue'
-  import {addH5} from "../../api/api";
+  import {updateH5} from "../../api/api";
   export default {
     props:['callback','editData'],
     data(){
@@ -32,18 +32,20 @@
     
     methods:{
       catchData(value){
-        console.log(this)
-        console.log(this.editData)
+        // console.log(this)
+        // console.log(this.editData)
+        console.log(value)
         this.content=value      //在这里接受子组件传过来的参数，赋值给data里的参数
       },
       saves(){
           console.log(this.inputTitle)
           console.log(this.content)
           let _this = this
-          addH5({
+          updateH5({
               token: sessionStorage.getItem("token"),
               title:this.inputTitle,
-              content:this.content
+              content:this.content,
+              id:this.editData.id
           }).then((res)=>{
               if(res.code===1){
                   _this.callback()

@@ -481,10 +481,27 @@ export default {
     addSubmit: function() {
       this.$refs.addForm.validate(valid => {
         if (valid) {
+          let para = Object.assign({}, this.addForm);
+          console.log(!para.gyItemId || !para.h5Id)
+          console.log(!!para.gyItemId || !!para.h5Id)
+          if(para.gyItemId && para.h5Id){
+            this.$message({
+                message: '关联的公益项目和关联的资讯只能填写一个！',
+                type: "error"
+              });
+              return;
+            
+          }else if(!para.gyItemId && !para.h5Id){
+            this.$message({
+                message: '关联的公益项目和关联的资讯至少关联一个！',
+                type: "error"
+              });
+              return;
+          }
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.addLoading = true;
             //NProgress.start();
-            let para = Object.assign({}, this.addForm);
+            
             console.log(para);
             para.token = sessionStorage.getItem("token");
             addGyInfo(para).then(res => {

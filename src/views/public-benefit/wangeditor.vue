@@ -5,22 +5,28 @@
 </template>
 
 <script>
+    import {
+    detailH5
+    } from "../../api/api";
     import E from 'wangeditor'
     export default {
         props:['catchData','editDatas'],
         name: 'editorElem',
         data () {
+            
             return {
                 editorContent: this.editDatas,
+                content:''
             }
+        },
+        created() {
+            
         },
           //接收父组件的方法
         mounted() {
             var editor = new E(this.$refs.editorElem)        //创建富文本实例
             let token = sessionStorage.getItem("token")
             editor.customConfig.onchange = (html) => {
-                // console.log(html)
-                this.editorContent = html
                 this.catchData(html)  //把这个html通过catchData的方法传入父组件
             }
             editor.customConfig.uploadImgServer = 'http://api.50wlkj.com/api/upload_img'
@@ -93,8 +99,15 @@
                 }
             }
             editor.create()  
-            //   editor.txt.html(this.editorContent)
-            // editor.txt.html('<p><img src="http://static.50wlkj.com/wlwl/img/2019-02/155110522604942980.png" style="max-width:100%;">12312312<br></p>')
+            if(this.editDatas){
+                detailH5({
+                    token: sessionStorage.getItem("token"),
+                    h5Id:this.editDatas.id
+                }).then(res=>{
+                    editor.txt.html(res.data.content)
+                })
+            }
+            
         },
     }
  </script>

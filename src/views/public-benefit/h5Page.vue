@@ -52,7 +52,9 @@
       <addPage v-if="addFormVisible" :callback="callback"/>
       <editPage v-if="editFormVisible" :callback="callback" :editData="editData"/>
     </div>
-    
+    <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
+      <particulars :particulars="particulars"/>
+    </el-dialog>
   </section>
 </template>
 
@@ -87,14 +89,7 @@ export default {
     };
   },
   created() {
-    let that = this;
-    document.onkeypress = function(e) {
-      var keycode = document.all ? event.keyCode : e.which;
-      if (keycode == 13) {
-        that.queryListH5(); // 登录方法名
-        return false;
-      }
-    };
+
   },
   methods: {
     // 模糊查询
@@ -181,13 +176,20 @@ export default {
         })
         .catch(() => {});
     },
-//查询单条
+//查询单条htmlUrl
     handleDetails: function(index, row) {
-      console.log(Object.assign({}, row));
-      this.detailsVisible = true;
       this.particulars = {};
-      
-      this.particulars = Object.assign({}, row);
+      let data = {}
+     
+      detailH5({
+          token: sessionStorage.getItem("token"),
+          h5Id:row.id
+      }).then(res=>{
+          data.title = res.data.title;
+          data.htmlUrl = res.data.content;
+          this.detailsVisible = true;
+          this.particulars = data;
+      })
     },
     
     //分页
@@ -227,7 +229,8 @@ export default {
   },
   components: {
        addPage,
-       editPage
+       editPage,
+       particulars
   },
 };
 </script>

@@ -663,7 +663,7 @@ export default {
     listCategory({
       token: sessionStorage.getItem("token"),
       pageNum: this.page,
-      pageSize: 10,
+      pageSize: 100,
       cateName: ""
     }).then(res => {
       if (res.code == 1) {

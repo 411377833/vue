@@ -127,6 +127,12 @@
       <span class="name img">图片</span>
       <img :src="particular.image" class="avatar">
     </div>
+    <div v-if="particular.htmlUrl" style="display:flex">
+      <span class="name img">内容</span>
+      <div v-html="particular.htmlUrl">
+        {{particular.htmlUrl}}
+      </div>
+    </div>
   </div>
 </template>
 <style>
