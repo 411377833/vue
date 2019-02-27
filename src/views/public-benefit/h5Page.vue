@@ -17,19 +17,12 @@
       </el-col>
 
       <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
-        <!-- <el-table-column type="selection" width="55">
-        </el-table-column>-->
-        <!-- <el-table-column type="index" label="顺序" width="100" >
-        </el-table-column>-->
-        <!-- <el-table-column prop="id" label="id" width="200"></el-table-column> -->
+        
         <el-table-column prop="title" label="标题" width="300"></el-table-column>
-        <el-table-column prop="creatorId" label="创建人编号" width="200"></el-table-column>
-        <!-- <el-table-column prop="signature" label="说明	" min-width="180"></el-table-column> -->
+        
         <el-table-column prop="createTime" label="创建时间" min-width="150"></el-table-column>
         <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="150"></el-table-column>
-        <!-- <el-table-column prop="userType" label="类型" min-width="150"></el-table-column> -->
-        <!-- <el-table-column prop="title" label="标题" min-width="180" >
-        </el-table-column>-->
+        
         <el-table-column label="操作" width="220" fixed="right">
           <template slot-scope="scope">
             <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -65,12 +58,14 @@
 <script>
 import {
   listH5,
-  deleteCategory,
-  addCategory,
-  updateCategory
+  deleteH5,
+  detailH5
+  // addCategory,
+  // updateCategory
 } from "../../api/api";
 import addPage from './addH5Page'
 import editPage from './editPage'
+import particulars from "../component/particulars";
 export default {
   data() {
     return {
@@ -81,6 +76,9 @@ export default {
       nextPage:false,
       //   imageUrl: '',
       total: 0,
+      dialogVisible: false,
+      detailsVisible: false,
+      particulars: {},
       tableData: [],
       listLoading: false,
       addFormVisible: false, //新增界面是否显示
@@ -88,7 +86,18 @@ export default {
       editData:{}
     };
   },
+  created() {
+    let that = this;
+    document.onkeypress = function(e) {
+      var keycode = document.all ? event.keyCode : e.which;
+      if (keycode == 13) {
+        that.queryListH5(); // 登录方法名
+        return false;
+      }
+    };
+  },
   methods: {
+    // 模糊查询
     queryListH5() {
       let _this = this;
       if (_this.filters.id) {
@@ -140,6 +149,7 @@ export default {
 
     //删除
     handleDel: function(index, row) {
+      console.log(row)
       let _this = this;
       this.$confirm("确认删除该记录吗?", "提示", {
         type: "warning"
@@ -148,18 +158,15 @@ export default {
           this.listLoading = true;
           //NProgress.start();
           let para = { id: row.id };
-          // removeUser(para).then((res) => {
-          // 	this.listLoading = false;
-          // 	//NProgress.done();
+          
           this.$message({
             message: "删除成功",
             type: "success"
           });
-          // 	this.getUsers();
-          // });
-          deleteCategory({
+          
+          deleteH5({
             token: sessionStorage.getItem("token"),
-            id: row.id
+            id:27
           }).then(res => {
             console.log(res);
             if (res.code == 1) {
@@ -174,6 +181,8 @@ export default {
         })
         .catch(() => {});
     },
+
+    
     //分页
     handleCurrentChange(val) {
       this.page = val;

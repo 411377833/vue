@@ -19,7 +19,7 @@
             var editor = new E(this.$refs.editorElem)        //创建富文本实例
             let token = sessionStorage.getItem("token")
             editor.customConfig.onchange = (html) => {
-                console.log(html)
+                // console.log(html)
                 this.editorContent = html
                 this.catchData(html)  //把这个html通过catchData的方法传入父组件
             }

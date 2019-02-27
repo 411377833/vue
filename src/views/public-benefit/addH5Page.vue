@@ -33,8 +33,8 @@
     
     methods:{
       catchData(value){
-        console.log(this)
-        console.log(value)
+        // console.log(this)
+        // console.log(value)
         this.content=value      //在这里接受子组件传过来的参数，赋值给data里的参数
       },
       saves(){

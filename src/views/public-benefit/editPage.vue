@@ -18,7 +18,7 @@
     }
 </style>
 <script>
-  import wangeditor from '../nav3/wangeditor.vue'
+  import wangeditor from './wangeditor.vue'
   import {addH5} from "../../api/api";
   export default {
     props:['callback','editData'],
