@@ -76,7 +76,7 @@ export const getGyInfos= p => post(`${baseUrl}/api/get_gy_infos`, p);  //通
 export const delGyInfos= p => post(`${baseUrl}/api/del_gy_info`, p);  //通 
 export const getGyInfo= p => post(`${baseUrl}/api/get_gyinfo`, p);  //通 
 export const addGyInfo= p => post(`${baseUrl}/api/add_gy_info`, p);  //通 
-
+export const updateGyInfo= p => post(`${baseUrl}/api/update_gy_info`, p);  //通 
 // 上传图片
 export const upload_img = p => post(`${baseUrl}/api/upload_img`, p);//通
 

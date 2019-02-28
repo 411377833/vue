@@ -119,9 +119,10 @@
 
 
 <!--编辑界面-->
-    <!-- <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
         <el-form-item label="关联的公益项目">
+            <!-- <el-input v-model="addForm.gyItemId" ></el-input> -->
             <el-select
               v-model="editForm.gyItemId"
               filterable
@@ -138,18 +139,13 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="标题" prop="title">
-            <el-input v-model="editForm.title" placeholder="请填写标题"></el-input>
-          </el-form-item>
-          <el-form-item label="描述" prop="description">
-            <el-input v-model="editForm.description" placeholder="请填写描述" type="textarea" :rows="2"></el-input>
-          </el-form-item>
-          <el-form-item label="关联的h5页面" prop="h5Id">
+          <el-form-item label="关联的资讯" prop="h5Id">
+            <!-- <el-input v-model="addForm.h5Id"></el-input> -->
             <el-select
               v-model="editForm.h5Id"
               filterable
               remote
-              placeholder="请输入h5页面进行查询"
+              placeholder="请输入资讯进行查询"
               :remote-method="querySearchH5"
               clearable
             >
@@ -161,6 +157,13 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="标题" prop="title">
+            <el-input v-model="editForm.title" placeholder="请填写标题"></el-input>
+          </el-form-item>
+          <el-form-item label="描述" prop="description">
+            <el-input v-model="editForm.description" placeholder="请填写描述" type="textarea" :rows="2"></el-input>
+          </el-form-item>
+          
           <el-form-item label="图片" prop="image">
             <el-upload
               :data="abc"
@@ -170,16 +173,17 @@
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
             >
-              <img v-if="addImage" :src="addImage" class="avatar">
+              <img v-if="editImage" :src="editImage" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
         <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>
       <!-- 详情界面 -->
       <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
         <particulars :particulars="particulars"/>
@@ -202,6 +206,7 @@ import {
   getGyInfo,
   addGyInfo,
   getProjects,
+  updateGyInfo,
   listH5
   // addCategory,
   // updateCategory
@@ -530,24 +535,76 @@ export default {
       });
     },
 
-    //显示编辑界面
+    
+     //显示编辑界面
     handleEdit: function(index, row) {
-      this.nextPage = true;
-      this.addFormVisible = false;
+      console.log(row);
       this.editFormVisible = true;
-      this.editData = Object.assign({}, row);
+      this.editHeadImg = row.headImg;
+      this.editForm = Object.assign({}, row);
     },
-    goBack() {
-      this.editFormVisible = false;
-      this.addFormVisible = false;
-      this.nextPage = false;
+    //编辑
+    editSubmit: function() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          this.$confirm("确认提交吗？", "提示", {}).then(() => {
+            this.editLoading = true;
+            //NProgress.start();
+            console.log(valid);
+            console.dir(this.editForm);
+            let para = Object.assign({}, this.editForm);
+            console.log(para);
+            para.token = sessionStorage.getItem("token");
+            updateGyInfo(
+              {
+              token: sessionStorage.getItem("token"),
+              headImg: para.headImg,
+              displayName: para.displayName,
+              signature: para.signature,
+              idCard: para.idCard,
+              id: para.id
+            }
+            // para
+            )
+              .then(res => {
+                console.log(res);
+                if (res.code == 1) {
+                  //NProgress.done();
+                  this.$message({
+                    message: "提交成功",
+                    type: "success"
+                  });
+                  // this.$refs["editForm"].resetFields();
+                  this.editFormVisible = false;
+                  this.listLeader();
+                } else {
+                  this.$message({
+                    message: res.message,
+                    type: "error"
+                  });
+                }
+                this.editLoading = false;
+                
+              })
+              .catch(res => {
+                this.editFormVisible = false;
+                console.log(res);
+              });
+          });
+        }
+      });
     },
-    callback() {
-      this.editFormVisible = false;
-      this.addFormVisible = false;
-      this.nextPage = false;
-      this.getGyInfos();
-    }
+    // goBack() {
+    //   this.editFormVisible = false;
+    //   this.addFormVisible = false;
+    //   this.nextPage = false;
+    // },
+    // callback() {
+    //   this.editFormVisible = false;
+    //   this.addFormVisible = false;
+    //   this.nextPage = false;
+    //   this.getGyInfos();
+    // }
   },
   mounted() {
     this.getGyInfos();

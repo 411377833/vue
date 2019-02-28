@@ -25,17 +25,12 @@
       <span class="name">与受款人关系</span>
       {{particular.relation}}
     </div>
-    <!-- <div v-if="particular.createTime"><span class="name">创建时间</span>{{particular.createTime}}</div>
-    <div v-if="particular.lastUpdateTime"><span class="name">最后更新时间</span>{{particular.lastUpdateTime}}</div>-->
-    <!-- <div v-if="particular.deleteFlag"><span class="name">删除标记</span>{{particular.deleteFlag}}</div> -->
+    
     <div v-if="particular.displayName">
       <span class="name">名称</span>
       {{particular.displayName}}
     </div>
-    <!-- <div v-if="particular.orgId"><span class="name">发起机构ID</span>{{particular.orgId}}</div>
-    <div v-if="particular.initiatorId"><span class="name">发起人ID</span>{{particular.initiatorId}}</div>
-    <div v-if="particular.recipientId"><span class="name">善款接受方ID</span>{{particular.recipientId}}</div>
-    <div v-if="particular.mgrId"><span class="name">项目负责人ID</span>{{particular.mgrId}}</div>-->
+    
     <div v-if="particular.tags">
       <span class="name">标签</span>
       {{particular.tags}}
