@@ -543,6 +543,7 @@ export default {
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
+      this.editLoading = false;
       this.editHeadImg = row.headImg;
       this.editForm = Object.assign({}, row);
     },
@@ -560,10 +561,11 @@ export default {
             para.token = sessionStorage.getItem("token");
             updateGyInfo({
               token: sessionStorage.getItem("token"),
-              headImg: para.headImg,
-              displayName: para.displayName,
-              signature: para.signature,
-              idCard: para.idCard,
+              gyItemId: para.gyItemId,
+              h5Id:para.h5Id,
+              title: para.title,
+              description: para.description,
+              image: para.image,
               id: para.id
             })
               .then(res => {
@@ -574,9 +576,8 @@ export default {
                     message: "提交成功",
                     type: "success"
                   });
-                  // this.$refs["editForm"].resetFields();
                   this.editFormVisible = false;
-                  this.listLeader();
+                  this.getGyInfos();
                 } else {
                   this.$message({
                     message: res.message,
