@@ -102,23 +102,23 @@
       {{particular.itemTitle}}
     </div>
 
-    <div v-if="particular.headImg">
+    <div v-if="particular.headImg" style="display:flex">
       <span class="name img">头像</span>
       <img :src="particular.headImg" class="avatar">
     </div>
-    <div v-if="particular.bannerImg">
+    <div v-if="particular.bannerImg" style="display:flex">
       <span class="name img">轮播图</span>
       <img :src="particular.bannerImg" class="avatar">
     </div>
-    <div v-if="particular.imgs">
+    <div v-if="particular.imgs" style="display:flex">
       <span class="name img">头像</span>
       <img :src="particular.imgs" class="avatar">
     </div>
-    <div v-if="particular.url">
+    <div v-if="particular.url" style="display:flex">
       <span class="name img">内容</span>
       <img :src="particular.url" class="avatar">
     </div>
-    <div v-if="particular.image">
+    <div v-if="particular.image" style="display:flex">
       <span class="name img">图片</span>
       <img :src="particular.image" class="avatar">
     </div>

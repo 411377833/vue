@@ -41,22 +41,22 @@
 
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm">
+      <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm" label-padding="left:10px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="addForm.title"></el-input>
         </el-form-item>
         <el-form-item label="简介描述" prop="description">
           <el-input v-model="addForm.description" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="公益透明度提示" prop="description">
+        <el-form-item label="公益透明度提示" prop="tips">
           <el-input v-model="addForm.tips" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="公益机构">
+        <el-form-item label="公益机构" class="dian" >
           <el-select
             v-model="addForm.orgId"
             filterable
             remote
-            placeholder="请输入机构名称关键字进行查询"
+            placeholder="必选项"
             :remote-method="querySearchOrg"
             clearable
           >
@@ -68,7 +68,7 @@
             v-model="addForm.initiatorId"
             filterable
             remote
-            placeholder="请输入发起人姓名进行查询"
+            placeholder="必选项"
             :remote-method="querySearchInitiator"
             clearable
           >
@@ -86,7 +86,7 @@
             v-model="addForm.recipientsId"
             filterable
             remote
-            placeholder="请输入善款接受方名称进行查询"
+            placeholder="必选项"
             :remote-method="querySearchRecipients"
             clearable
           >
@@ -104,7 +104,7 @@
             v-model="addForm.leaderId"
             filterable
             remote
-            placeholder="请输入项目负责人姓名进行查询"
+            placeholder="必选项"
             :remote-method="querySearchLeader"
             clearable
           >
@@ -122,25 +122,20 @@
           </el-checkbox-group>
         </el-form-item>
 
-        <el-form-item label="图文详情" prop="imgs">
+        <el-form-item label="图文详情">
           <!-- <el-input v-model="addForm.h5Id"></el-input> -->
           <el-select
-            v-model="addForm.leaderId"
+            v-model="addForm.h5Id"
             filterable
             remote
-            placeholder="请输入图文标题进行查询"
-            :remote-method="querySearchLeader"
+            placeholder="必选项"
+            :remote-method="querySearchH5Id"
             clearable
           >
-            <el-option
-              v-for="item in leaderIds"
-              :key="item.id"
-              :label="item.value"
-              :value="item.id"
-            ></el-option>
+            <el-option v-for="item in H5Ids" :key="item.id" :label="item.value" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="公益项目分类">
+        <el-form-item label="公益项目分类" prop="cateIds">
           <!-- <el-input v-model="addForm.cateIds"></el-input> -->
           <el-checkbox-group v-model="addCheckboxData.checkedCities">
             <el-checkbox
@@ -157,11 +152,15 @@
             onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"
           ></el-input>
         </el-form-item>
-        <el-form-item label="轮播图">
+        <el-form-item label="轮播图" prop="bannerImgs">
           <bannner-Upload @returnImgList="getBannerList"></bannner-Upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <!-- <template slot-scope="scope">
+          <el-button @click.native="addFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="addSubmit(scope.$index,scope.res)" :loading="addLoading">提交</el-button>
+        </template> -->
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
       </div>
@@ -235,7 +234,8 @@ import {
   listInitiator,
   listCategory,
   listRecipients,
-  listLeader
+  listLeader,
+  listH5
 } from "../../api/api";
 import particulars from "../component/particulars";
 import bannerUpload from "../component/bannerUpload";
@@ -258,8 +258,9 @@ export default {
       },
       orgIds: [],
       initiatorIds: [],
-      recipientsIds:[],
-      leaderIds:[],
+      recipientsIds: [],
+      leaderIds: [],
+      H5Ids: [],
       //此处数据为新增的复选框数据
       addCheckboxData: {
         checkedCities: [],
@@ -279,7 +280,7 @@ export default {
       addForm: {
         // initiatorId: "",
         recipientId: "",
-        mgrId: "",
+        // mgrId: "",
         tags: "",
         h5Id: "",
         cateIds: "",
@@ -288,7 +289,8 @@ export default {
         description: "",
         title: "",
         targetMoney: "",
-        imgs: ""
+        imgs: "",
+        initiatorId:""
       },
       //编辑界面数据
       editForm: {
@@ -312,6 +314,23 @@ export default {
       editLoading: false,
       addFormRules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        description: [
+          { required: true, message: "请输入项目简介或描述", trigger: "blur" }
+        ],
+        tips: [
+          { required: true, message: "请填写公益透明度提示", trigger: "blur" }
+        ],
+        //  orgId: [{ required: true, message: "请选择公益机构", trigger: "blur" }],
+        //  initiatorId: [{ required: true, message: "请选择发起人", trigger: "blur" }],
+        //  recipientsId: [{ required: true, message: "请选择善款接受方", trigger: "blur" }],
+        //  leaderId: [{ required: true, message: "请选择项目负责人", trigger: "blur" }],
+        // tags: [{ required: true, message: "请选择标签", trigger: "blur" }],
+        //  h5Id: [{ required: true, message: "请选择图文详情", trigger: "blur" }],
+        // cateIds: [{ required: true, message: "请选择分类", trigger: "blur" }],
+        // bannerImgs: [
+        //   { required: true, message: "请上传轮播图", trigger: "blur" }
+        // ],
+
         targetMoney: [
           {
             required: true,
@@ -473,8 +492,24 @@ export default {
     },
     //新增
     addSubmit: function() {
+      
       this.$refs.addForm.validate(valid => {
+        
         if (valid) {
+          
+          // if(this.addForm.orgId =""){
+          //   console.log(1);
+          //   this.$message({
+          //         message: "请选择公益机构",
+          //         type: "warning"
+          //       });
+          // }else if(this.addForm.initiatorId =""){
+          //     this.$message({
+          //       message: "请选择发起人",
+          //       type: "warning"
+          //     });
+          // }
+          
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.addLoading = true;
             //NProgress.start();
@@ -548,7 +583,6 @@ export default {
                     type: "error"
                   });
                 }
-                
               })
               .catch(res => {
                 this.editFormVisible = false;
@@ -605,7 +639,7 @@ export default {
       });
     },
 
- //  此方法为善款接受方搜索方法
+    //  此方法为善款接受方搜索方法
 
     querySearchRecipients(queryString) {
       listRecipients({
@@ -628,8 +662,8 @@ export default {
       });
     },
 
-// 此方法为项目负责人搜索方法
- querySearchLeader(queryString) {
+    // 此方法为项目负责人搜索方法
+    querySearchLeader(queryString) {
       listLeader({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
@@ -646,6 +680,28 @@ export default {
             });
           }
           this.leaderIds = reLeader;
+        }
+      });
+    },
+
+    //此方法为h5Id搜索方法
+    querySearchH5Id(queryString) {
+      listH5({
+        token: sessionStorage.getItem("token"),
+        pageNum: this.page,
+        pageSize: 10,
+        title: queryString
+      }).then(res => {
+        if (res.code == 1) {
+          let reH5 = [];
+          for (let i = 0; i < res.data.data.length; i++) {
+            let item = res.data.data[i];
+            reH5.push({
+              value: item.title,
+              id: item.id
+            });
+          }
+          this.H5Ids = reH5;
         }
       });
     },
@@ -694,4 +750,15 @@ export default {
 .inline-input {
   width: 380px;
 }
+// .dian {
+//   position: relative;
+// }
+// .dian::before {
+//   content: "*";
+//   color: #ff4949;
+//   position: absolute;
+//   top: 14px;
+//   left: 0;
+// }
+
 </style>

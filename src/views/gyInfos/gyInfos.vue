@@ -239,6 +239,8 @@ export default {
       editData: {},
       projectIds: [],
       h5Ids:[],
+      editLoading:false,
+      addLoading:false,
       //新增界面数据
       addForm: {
         // idCard: "",
@@ -274,7 +276,8 @@ export default {
         ],
         image: [{ required: true, message: "请上传图片", trigger: "blur" }]
       },
-      addImage: ""
+      addImage: "",
+      
     };
   },
   created() {
@@ -555,17 +558,14 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateGyInfo(
-              {
+            updateGyInfo({
               token: sessionStorage.getItem("token"),
               headImg: para.headImg,
               displayName: para.displayName,
               signature: para.signature,
               idCard: para.idCard,
               id: para.id
-            }
-            // para
-            )
+            })
               .then(res => {
                 console.log(res);
                 if (res.code == 1) {
