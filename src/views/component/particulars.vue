@@ -43,6 +43,12 @@
       <span class="name">说明</span>
       {{particular.signature}}
     </div>
+    <div v-if="particular.cateList">
+      <span class="name">分类</span>
+      <span v-for="item in particular.cateList"> 
+        {{item.cateName}}
+      </span>
+    </div>
     <div v-if="particular.phone">
       <span class="name">联系方式</span>
       {{particular.phone}}
@@ -128,6 +134,11 @@
         {{particular.htmlUrl}}
       </div>
     </div>
+    <div v-if="particular.transCount">
+      <span class="name">转发次数</span>
+      {{particular.transCount}}
+    </div>
+    
   </div>
 </template>
 <style>
@@ -153,55 +164,26 @@
 }
 </style>
 <script>
-import { getProject } from "../../api/api";
+// import { getProject } from "../../api/api";
 
 export default {
-  props: ["particulars", "pages"],
+  props: ["particulars"],
   data() {
     return {
       particular: this.particulars,
-      page: this.pages
     };
   },
   methods: {
-    //   catchData(value){
-    //     console.log(value)
-    //     this.content=value      //在这里接受子组件传过来的参数，赋值给data里的参数
-    //   }
-    getProjects() {
-      getProject({
-        token: sessionStorage.getItem("token"),
-        id: this.particular.id
-      }).then(res => {
-        console.log(res);
-        if (res.code === 1) {
-        } else {
-          this.$message({
-            message: res.message,
-            type: "error"
-          });
-        }
-      });
-    },
     
   },
   mounted() {
-    // console.log(11111111);
-    console.log(this.particulars);
-    console.log(this.page);
-    if (this.page == 1) {
-      this.getProjects();
-    }
+    
   },
   watch: {
     particulars: {
       handler(newValue, oldValue) {
         this.particular = newValue;
-        // this.page = page;
-        if (this.page == 1) {
-          this.getProjects();
-          
-        }
+        console.log(newValue);
       },
       deep: true
     }

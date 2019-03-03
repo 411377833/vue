@@ -41,7 +41,14 @@
 
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm" label-padding="left:10px">
+      <el-form
+        size="mini"
+        :model="addForm"
+        label-width="120px"
+        :rules="addFormRules"
+        ref="addForm"
+        label-padding="left:10px"
+      >
         <el-form-item label="标题" prop="title">
           <el-input v-model="addForm.title"></el-input>
         </el-form-item>
@@ -51,7 +58,7 @@
         <el-form-item label="公益透明度提示" prop="tips">
           <el-input v-model="addForm.tips" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="公益机构" class="dian" >
+        <el-form-item label="公益机构" class="dian" prop="orgId">
           <el-select
             v-model="addForm.orgId"
             filterable
@@ -63,7 +70,8 @@
             <el-option v-for="item in orgIds" :key="item.id" :label="item.value" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="发起人">
+         
+        <el-form-item label="发起人" prop="initiatorId">
           <el-select
             v-model="addForm.initiatorId"
             filterable
@@ -80,10 +88,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="善款接受方">
+        <el-form-item label="善款接受方" prop="recipientId">
           <!-- <el-input v-model="addForm.recipientId"></el-input> -->
           <el-select
-            v-model="addForm.recipientsId"
+            v-model="addForm.recipientId"
             filterable
             remote
             placeholder="必选项"
@@ -98,10 +106,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="项目负责人">
+        <el-form-item label="项目负责人" prop="mgrId">
           <!-- <el-input v-model="addForm.mgrId"></el-input> -->
           <el-select
-            v-model="addForm.leaderId"
+            v-model="addForm.mgrId"
             filterable
             remote
             placeholder="必选项"
@@ -116,13 +124,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="标签" prop="tags">
-          <el-checkbox-group v-model="checkedLabels" :min="1" :max="3">
-            <el-checkbox v-for="label in labels" :label="label" :key="label">{{label}}</el-checkbox>
+        <el-form-item label="标签" prop="tag">
+          <el-checkbox-group v-model="addForm.tag" :min="1" :max="3">
+            <el-checkbox v-for="label in labels" :label="label" :key="label"></el-checkbox>
           </el-checkbox-group>
         </el-form-item>
 
-        <el-form-item label="图文详情">
+        <el-form-item label="图文详情" prop="h5Id">
           <!-- <el-input v-model="addForm.h5Id"></el-input> -->
           <el-select
             v-model="addForm.h5Id"
@@ -132,15 +140,15 @@
             :remote-method="querySearchH5Id"
             clearable
           >
-            <el-option v-for="item in H5Ids" :key="item.id" :label="item.value" :value="item.id"></el-option>
+            <el-option v-for="item in H5Ids" :key="item.id" :label="item.value" :value="item.id" :name="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="公益项目分类" prop="cateIds">
           <!-- <el-input v-model="addForm.cateIds"></el-input> -->
-          <el-checkbox-group v-model="addCheckboxData.checkedCities">
+          <el-checkbox-group v-model="addForm.checkedCities">
             <el-checkbox
               v-for="item in addCheckboxData.cities"
-              :label="item.id"
+              :label="item.name"
               :key="item.id"
             >{{item.name}}</el-checkbox>
           </el-checkbox-group>
@@ -152,15 +160,15 @@
             onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"
           ></el-input>
         </el-form-item>
-        <el-form-item label="轮播图" prop="bannerImgs">
-          <bannner-Upload @returnImgList="getBannerList"></bannner-Upload>
+        <el-form-item label="轮播图" prop="imgs">
+          <bannner-Upload @returnImgList="getBannerList" isAdd="true"></bannner-Upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <!-- <template slot-scope="scope">
           <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button type="primary" @click="addSubmit(scope.$index,scope.res)" :loading="addLoading">提交</el-button>
-        </template> -->
+        </template>-->
         <el-button @click.native="addFormVisible = false">取消</el-button>
         <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
       </div>
@@ -178,7 +186,7 @@
         <el-form-item label="公益透明度提示" prop="tips">
           <el-input v-model="editForm.tips" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="公益机构" class="dian" >
+        <el-form-item label="公益机构" class="dian">
           <el-select
             v-model="editForm.orgId"
             filterable
@@ -210,7 +218,7 @@
         <el-form-item label="善款接受方">
           <!-- <el-input v-model="addForm.recipientId"></el-input> -->
           <el-select
-            v-model="editForm.recipientsId"
+            v-model="editForm.recipientId"
             filterable
             remote
             placeholder="必选项"
@@ -228,7 +236,7 @@
         <el-form-item label="项目负责人">
           <!-- <el-input v-model="addForm.mgrId"></el-input> -->
           <el-select
-            v-model="editForm.leaderId"
+            v-model="editForm.mgrId"
             filterable
             remote
             placeholder="必选项"
@@ -243,7 +251,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="标签" prop="tags">
+        <el-form-item label="标签" prop="tag">
           <el-checkbox-group v-model="checkedLabels" :min="1" :max="3">
             <el-checkbox v-for="label in labels" :label="label" :key="label">{{label}}</el-checkbox>
           </el-checkbox-group>
@@ -276,7 +284,7 @@
           <el-input
             v-model="editForm.targetMoney"
             type="number"
-             onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )" 
+            onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"
           ></el-input>
         </el-form-item>
         <el-form-item label="轮播图" prop="bannerImgs">
@@ -291,7 +299,7 @@
 
     <!-- 详情页面 -->
     <el-dialog title="详情" v-model="detailsVisible" :close-on-click-modal="false">
-      <particulars :particulars="particulars" :page="1"/>
+      <particulars :particulars="particulars"/>
     </el-dialog>
   </section>
 </template>
@@ -300,7 +308,7 @@
 import {
   getProjects,
   delProject,
-  // getProject,
+  getProject,
   addProject,
   updateProject,
   listOrg,
@@ -351,35 +359,37 @@ export default {
       particulars: {},
       //新增界面数据
       addForm: {
-        // initiatorId: "",
+        initiatorId: "",
         recipientId: "",
-        // mgrId: "",
-        tags: "",
+        mgrId: "",
+        tag: [],
         h5Id: "",
-        cateIds: "",
-        // orgId: "",
+        cateIds:[],
+        orgId: "",
         tips: "",
         description: "",
         title: "",
         targetMoney: "",
         imgs: "",
-        initiatorId:""
+        initiatorId: "",
+        checkedCities:[]
       },
       //编辑界面数据
       editForm: {
-       // initiatorId: "",
+        initiatorId: "",
         recipientId: "",
-        // mgrId: "",
-        tags: "",
+        mgrId: "",
+        tag: [],
         h5Id: "",
-        cateIds: "",
-        // orgId: "",
+        cateIds: [],
+        orgId: "",
         tips: "",
         description: "",
         title: "",
         targetMoney: "",
         imgs: "",
-        initiatorId:""
+        initiatorId: "",
+        checkedCities:[]
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
@@ -393,16 +403,16 @@ export default {
         tips: [
           { required: true, message: "请填写公益透明度提示", trigger: "blur" }
         ],
-        //  orgId: [{ required: true, message: "请选择公益机构", trigger: "blur" }],
-        //  initiatorId: [{ required: true, message: "请选择发起人", trigger: "blur" }],
-        //  recipientsId: [{ required: true, message: "请选择善款接受方", trigger: "blur" }],
-        //  leaderId: [{ required: true, message: "请选择项目负责人", trigger: "blur" }],
-        // tags: [{ required: true, message: "请选择标签", trigger: "blur" }],
-        //  h5Id: [{ required: true, message: "请选择图文详情", trigger: "blur" }],
-        // cateIds: [{ required: true, message: "请选择分类", trigger: "blur" }],
-        // bannerImgs: [
-        //   { required: true, message: "请上传轮播图", trigger: "blur" }
-        // ],
+         orgId: [{type: 'number', required: true, message: "请选择公益机构", trigger: "blur" }],
+         initiatorId: [{ type: 'number',required: true, message: "请选择发起人", trigger: "blur" }],
+         recipientId: [{ type: 'number',required: true, message: "请选择善款接受方", trigger: "blur" }],
+         mgrId: [{ type: 'number',required: true, message: "请选择项目负责人", trigger: "blur" }],
+        tag: [{ type: 'array',required: true, message: "请选择标签", trigger: "blur" }],
+         h5Id: [{ type: 'number',required: true, message: "请选择图文详情", trigger: "blur" }],
+        checkedCities: [{ type: 'array',required: true, message: "请选择分类", trigger: "blur" }],
+        imgs: [
+          { required: true, message: "请上传轮播图", trigger: "blur" }
+        ],
 
         targetMoney: [
           {
@@ -528,12 +538,33 @@ export default {
         })
         .catch(() => {});
     },
+
+    getProject: function(id,cb) {
+      getProject({
+        token: sessionStorage.getItem("token"),
+        id: id
+      }).then(res => {
+        console.log(res);
+        if (res.code === 1) {
+          cb(res.data)
+          // this.particulars = res.data;
+        } else {
+          this.$message({
+            message: res.message,
+            type: "error"
+          });
+        }
+      });
+    },
+
     //查询单条
     handleDetails: function(index, row) {
-      this.detailsVisible = true;
-      this.particulars = {};
-      this.particulars = Object.assign({}, row);
-      console.log(this.particulars);
+      this.getProject(row.id,(res)=>{
+        this.detailsVisible = true;
+        this.particulars = {};
+        this.particulars = Object.assign({}, res);
+        console.log(this.particulars);
+      });
     },
 
     //分页
@@ -546,30 +577,22 @@ export default {
       // this.getProjects()
     },
 
-    //上传轮播图
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
     //显示新增界面
     handleAdd: function() {
       this.addFormVisible = true;
       this.addForm = {
-        // initiatorId: "",
+        initiatorId: "",
         recipientId: "",
         mgrId: "",
-        tags: "",
+        tag: [],
         h5Id: "",
-        cateIds: "",
-        // orgId: "",
+        orgId: "",
         tips: "",
         description: "",
         title: "",
         targetMoney: "",
-        imgs: ""
+        imgs: "",
+        checkedCities:[]
       };
       // this.$refs['addForm'].resetFields();
       this.$nextTick(() => {
@@ -578,30 +601,15 @@ export default {
     },
     //新增
     addSubmit: function() {
-      
       this.$refs.addForm.validate(valid => {
-        
+        console.log(this.addForm);
         if (valid) {
-          
-          // if(this.addForm.orgId =""){
-          //   console.log(1);
-          //   this.$message({
-          //         message: "请选择公益机构",
-          //         type: "warning"
-          //       });
-          // }else if(this.addForm.initiatorId =""){
-          //     this.$message({
-          //       message: "请选择发起人",
-          //       type: "warning"
-          //     });
-          // }
-          
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.addLoading = true;
             //NProgress.start();
-            this.addForm.cateIds = this.addCheckboxData.checkedCities.toString();
+            this.addForm.cateIds = this.addForm.checkedCities.toString();
 
-            this.addForm.tags = this.checkedLabels.toString();
+            this.addForm.tags = this.addForm.tag.toString();
             let para = Object.assign({}, this.addForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
@@ -632,13 +640,28 @@ export default {
     },
     //显示编辑界面
     handleEdit: function(index, row) {
-      console.log(row);
-      this.editFormVisible = true;
-      this.editLoading=false;
-      this.editForm = Object.assign({}, row);
-      this.$nextTick(() => {
-        this.$refs["editForm"].resetFields();
+      console.log(row)
+      this.getProject(row.id,(res)=>{
+        console.log(res);
+       
+        this.editForm = Object.assign({}, res);
+        let list = [];
+        res.cateList.forEach(element => {
+          list.push(element.id)
+        });
+        console.log(res.tags.split(','))
+        this.editForm.tag = res.tags.split(',')
+        this.editForm.checkedCities = list
+        console.log(this.editForm.checkedCities)
+        this.querySearchOrg(res.orgName)
+        this.querySearchInitiator(res.initiatorName)
+        this.querySearchRecipients(res.recipientName)
+        this.editFormVisible = true;
+        this.editLoading = false;
+        console.log(this.editForm)
+        // this.$refs.editForm.resetFields(this.editForm)
       });
+      
     },
     //编辑
     editSubmit: function() {
@@ -657,17 +680,18 @@ export default {
               description: para.description,
               title: para.title,
               targetMoney: para.targetMoney,
-              tips:para.tips,
-              orgId:para.orgId,
-              initiatorId:para.initiatorId,
-              recipientId:para.recipientId,
-              mgrId:para.mgrId,
-              h5Id:para.h5Id,
-              tags:para.tags,
-              cateIds:para.cateIds,
+              tips: para.tips,
+              orgId: para.orgId,
+              initiatorId: para.initiatorId,
+              recipientId: para.recipientId,
+              mgrId: para.mgrId,
+              h5Id: para.h5Id,
+              tag: para.tag,
+              cateIds: para.cateIds,
               imgs: para.imgs,
               id: para.id
-            }).then(res => {
+            })
+              .then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();
@@ -697,6 +721,7 @@ export default {
     // 关联接口数据
     //此方法为机构关键字搜索方法
     querySearchOrg(queryString) {
+      console.log(queryString);
       listOrg({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
@@ -861,5 +886,4 @@ export default {
 //   top: 14px;
 //   left: 0;
 // }
-
 </style>
