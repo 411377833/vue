@@ -168,46 +168,119 @@
 
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+      <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
         <el-form-item label="标题" prop="title">
           <el-input v-model="editForm.title"></el-input>
         </el-form-item>
-        <el-form-item label="简介描述">
-          <el-input v-model="editForm.description"></el-input>
+        <el-form-item label="简介描述" prop="description">
+          <el-input v-model="editForm.description" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="公益透明度提示">
-          <el-input v-model="editForm.tips"></el-input>
+        <el-form-item label="公益透明度提示" prop="tips">
+          <el-input v-model="editForm.tips" type="textarea" :rows="2"></el-input>
         </el-form-item>
-        <el-form-item label="发起机构ID">
-          <el-input v-model="editForm.orgId"></el-input>
+        <el-form-item label="公益机构" class="dian" >
+          <el-select
+            v-model="editForm.orgId"
+            filterable
+            remote
+            placeholder="必选项"
+            :remote-method="querySearchOrg"
+            clearable
+          >
+            <el-option v-for="item in orgIds" :key="item.id" :label="item.value" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="发起人ID">
-          <el-input v-model="editForm.initiatorId"></el-input>
+        <el-form-item label="发起人">
+          <el-select
+            v-model="editForm.initiatorId"
+            filterable
+            remote
+            placeholder="必选项"
+            :remote-method="querySearchInitiator"
+            clearable
+          >
+            <el-option
+              v-for="item in initiatorIds"
+              :key="item.id"
+              :label="item.value"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="善款接受方ID">
-          <el-input v-model="editForm.recipientId"></el-input>
+        <el-form-item label="善款接受方">
+          <!-- <el-input v-model="addForm.recipientId"></el-input> -->
+          <el-select
+            v-model="editForm.recipientsId"
+            filterable
+            remote
+            placeholder="必选项"
+            :remote-method="querySearchRecipients"
+            clearable
+          >
+            <el-option
+              v-for="item in recipientsIds"
+              :key="item.id"
+              :label="item.value"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="项目负责人ID">
-          <el-input v-model="editForm.mgrId"></el-input>
+        <el-form-item label="项目负责人">
+          <!-- <el-input v-model="addForm.mgrId"></el-input> -->
+          <el-select
+            v-model="editForm.leaderId"
+            filterable
+            remote
+            placeholder="必选项"
+            :remote-method="querySearchLeader"
+            clearable
+          >
+            <el-option
+              v-for="item in leaderIds"
+              :key="item.id"
+              :label="item.value"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="标签">
-          <el-input v-model="editForm.tags"></el-input>
+        <el-form-item label="标签" prop="tags">
+          <el-checkbox-group v-model="checkedLabels" :min="1" :max="3">
+            <el-checkbox v-for="label in labels" :label="label" :key="label">{{label}}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="图文详情" prop="imgs">
-          <el-input v-model="editForm.h5Id"></el-input>
+
+        <el-form-item label="图文详情">
+          <!-- <el-input v-model="addForm.h5Id"></el-input> -->
+          <el-select
+            v-model="editForm.h5Id"
+            filterable
+            remote
+            placeholder="必选项"
+            :remote-method="querySearchH5Id"
+            clearable
+          >
+            <el-option v-for="item in H5Ids" :key="item.id" :label="item.value" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="公益项目分类id">
-          <el-input v-model="editForm.cateIds"></el-input>
+        <el-form-item label="公益项目分类" prop="cateIds">
+          <!-- <el-input v-model="addForm.cateIds"></el-input> -->
+          <el-checkbox-group v-model="addCheckboxData.checkedCities">
+            <el-checkbox
+              v-for="item in addCheckboxData.cities"
+              :label="item.id"
+              :key="item.id"
+            >{{item.name}}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
-        <el-form-item
-          label="目标善款金额"
-          type="number"
-          onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )"
-        >
-          <el-input v-model="editForm.targetMoney"></el-input>
+        <el-form-item label="目标善款金额" prop="targetMoney">
+          <el-input
+            v-model="editForm.targetMoney"
+            type="number"
+             onkeypress="return( /[\d]/.test(String.fromCharCode(event.keyCode) ) )" 
+          ></el-input>
         </el-form-item>
-        <el-form-item label="详情页轮播图">
-          <el-input v-model="editForm.imgs"></el-input>
+        <el-form-item label="轮播图" prop="bannerImgs">
+          <bannner-Upload @returnImgList="getBannerList"></bannner-Upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -294,19 +367,19 @@ export default {
       },
       //编辑界面数据
       editForm: {
-        // initiatorId: "",
+       // initiatorId: "",
         recipientId: "",
-        mgrId: "",
-        // tags: "",
+        // mgrId: "",
+        tags: "",
         h5Id: "",
         cateIds: "",
         // orgId: "",
-        // initiatorIdL:"",
         tips: "",
         description: "",
         title: "",
         targetMoney: "",
-        imgs: ""
+        imgs: "",
+        initiatorId:""
       },
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
@@ -340,7 +413,20 @@ export default {
         ]
       },
       editFormRules: {
-        title: [{ required: true, message: "请输入标题", trigger: "blur" }]
+        title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        description: [
+          { required: true, message: "请输入项目简介或描述", trigger: "blur" }
+        ],
+        tips: [
+          { required: true, message: "请填写公益透明度提示", trigger: "blur" }
+        ],
+        targetMoney: [
+          {
+            required: true,
+            message: "请输入正确的金额数值",
+            trigger: "blur"
+          }
+        ]
         // imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
       },
       options: []
@@ -358,7 +444,7 @@ export default {
   },
 
   methods: {
-    // 搜索
+    // 搜索列表
     queryGetProjects() {
       let _this = this;
       if (_this.filters.id) {
@@ -548,6 +634,7 @@ export default {
     handleEdit: function(index, row) {
       console.log(row);
       this.editFormVisible = true;
+      this.editLoading=false;
       this.editForm = Object.assign({}, row);
       this.$nextTick(() => {
         this.$refs["editForm"].resetFields();
@@ -565,8 +652,22 @@ export default {
             let para = Object.assign({}, this.editForm);
             console.log(para);
             para.token = sessionStorage.getItem("token");
-            updateProject(para)
-              .then(res => {
+            updateProject({
+              token: sessionStorage.getItem("token"),
+              description: para.description,
+              title: para.title,
+              targetMoney: para.targetMoney,
+              tips:para.tips,
+              orgId:para.orgId,
+              initiatorId:para.initiatorId,
+              recipientId:para.recipientId,
+              mgrId:para.mgrId,
+              h5Id:para.h5Id,
+              tags:para.tags,
+              cateIds:para.cateIds,
+              imgs: para.imgs,
+              id: para.id
+            }).then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();

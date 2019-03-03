@@ -207,7 +207,8 @@ import {
   addGyInfo,
   getProjects,
   updateGyInfo,
-  listH5
+  listH5,
+  // listOrg
   // addCategory,
   // updateCategory
 } from "../../api/api";
@@ -292,7 +293,9 @@ export default {
   },
   methods: {
     // 关联接口数据
-    //此方法为机构关键字搜索方法
+    
+
+    //此方法为公益项目关键字搜索方法
     querySearchProject(queryString) {
       getProjects({
         token: sessionStorage.getItem("token"),
@@ -301,15 +304,15 @@ export default {
         title: queryString
       }).then(res => {
         if (res.code == 1) {
-          let reProject = [];
+          let reOrg = [];
           for (let i = 0; i < res.data.data.length; i++) {
             let item = res.data.data[i];
-            reProject.push({
+            reOrg.push({
               value: item.title,
               id: item.id
             });
           }
-          this.projectIds = reProject;
+          this.projectIds = reOrg;
         }
       });
     },
@@ -594,17 +597,17 @@ export default {
         }
       });
     },
-    // goBack() {
-    //   this.editFormVisible = false;
-    //   this.addFormVisible = false;
-    //   this.nextPage = false;
-    // },
-    // callback() {
-    //   this.editFormVisible = false;
-    //   this.addFormVisible = false;
-    //   this.nextPage = false;
-    //   this.getGyInfos();
-    // }
+    goBack() {
+      this.editFormVisible = false;
+      this.addFormVisible = false;
+      this.nextPage = false;
+    },
+    callback() {
+      this.editFormVisible = false;
+      this.addFormVisible = false;
+      this.nextPage = false;
+      this.getGyInfos();
+    }
   },
   mounted() {
     this.getGyInfos();
@@ -612,10 +615,7 @@ export default {
   components: {
     particulars
   }
-  // components: {
-  //      addPage,
-  //      editPage
-  // },
+  
 };
 </script>
 <style lang="scss" scoped>
