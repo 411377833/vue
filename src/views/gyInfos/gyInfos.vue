@@ -544,7 +544,7 @@ export default {
       console.log(row);
       this.editFormVisible = true;
       this.editLoading = false;
-      this.editHeadImg = row.headImg;
+      this.editImage = row.image;
       this.editForm = Object.assign({}, row);
     },
     //编辑
@@ -558,7 +558,7 @@ export default {
             console.dir(this.editForm);
             let para = Object.assign({}, this.editForm);
             console.log(para);
-            para.token = sessionStorage.getItem("token");
+            // para.token = sessionStorage.getItem("token");
             updateGyInfo({
               token: sessionStorage.getItem("token"),
               gyItemId: para.gyItemId,
@@ -567,8 +567,7 @@ export default {
               description: para.description,
               image: para.image,
               id: para.id
-            })
-              .then(res => {
+            }).then(res => {
                 console.log(res);
                 if (res.code == 1) {
                   //NProgress.done();
