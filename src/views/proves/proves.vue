@@ -1,7 +1,7 @@
 <template>
   <section class="benefit">
     <!--工具条-->
-    <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+    <!-- <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
           <el-input v-model="filters.id" placeholder="请输入公益项目编号"></el-input>
@@ -9,11 +9,9 @@
         <el-form-item>
           <el-button type="primary" v-on:click="queryGetProve">查询</el-button>
         </el-form-item>
-        <!-- <el-form-item>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
-        </el-form-item>-->
+        
       </el-form>
-    </el-col>
+    </el-col> -->
 
     <el-table :data="tableData" highlight-current-row v-loading="listLoading" style="width: 100%;">
       <!-- <el-table-column type="selection" width="55">
