@@ -40,7 +40,7 @@
     </el-col>
 
     <!--新增界面-->
-    <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+    <el-dialog title="新增" v-model="addFormVisible" :visible.sync="addFormVisible">
       <el-form
         size="mini"
         :model="addForm"
@@ -175,7 +175,7 @@
     </el-dialog>
 
     <!--编辑界面-->
-    <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑" v-model="editFormVisible" :visible.sync="editFormVisible">
       <el-form :model="editForm" label-width="120px" :rules="editFormRules" ref="editForm">
         <el-form-item label="标题" prop="title">
           <el-input v-model="editForm.title"></el-input>
@@ -439,7 +439,8 @@ export default {
         ]
         // imgs: [{ required: true, message: "请输入图片地址", trigger: "blur" }]
       },
-      options: []
+      options: [],
+      addFormVisible1:false
     };
   },
   created() {
@@ -579,6 +580,7 @@ export default {
 
     //显示新增界面
     handleAdd: function() {
+
       this.addFormVisible = true;
       this.addForm = {
         initiatorId: "",
