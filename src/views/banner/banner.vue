@@ -22,10 +22,10 @@
       </el-table-column>-->
       <!-- <el-table-column prop="id" label="ID" width="200"></el-table-column> -->
       <el-table-column prop="bannerType" label="类型	" width="180"></el-table-column>
-      <el-table-column prop="bannerDesc" label="标题或描述" width="300"></el-table-column>
+      <el-table-column prop="bannerDesc" label="标题或描述" min-width="300"></el-table-column>
 
-      <el-table-column prop="createTime" label="创建时间" width="250"></el-table-column>
-      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="250"></el-table-column>
+      <!-- <el-table-column prop="createTime" label="创建时间" width="250"></el-table-column>
+      <el-table-column prop="lastUpdateTime" label="最后修改时间" min-width="250"></el-table-column> -->
       <!-- <el-table-column prop="projectId" label="项目id" min-width="150"></el-table-column> -->
       <!-- <el-table-column prop="title" label="标题" min-width="180" >
       </el-table-column>-->

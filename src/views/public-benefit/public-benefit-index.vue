@@ -272,11 +272,12 @@
         </el-form-item>
         <el-form-item label="公益项目分类" prop="cateIds">
           <!-- <el-input v-model="addForm.cateIds"></el-input> -->
-          <el-checkbox-group v-model="addCheckboxData.checkedCities">
+          <el-checkbox-group v-model="editForm.checkedCities">
             <el-checkbox
-              v-for="item in addCheckboxData.cities"
+              v-for="item in editCheckboxData.cities"
               :label="item.id"
               :key="item.id"
+               
             >{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
@@ -344,6 +345,11 @@ export default {
       H5Ids: [],
       //此处数据为新增的复选框数据
       addCheckboxData: {
+        checkedCities: [],
+        cities: []
+      },
+      //此处数据为新增的复选框数据
+      editCheckboxData: {
         checkedCities: [],
         cities: []
       },
@@ -719,11 +725,15 @@ export default {
         }
       });
     },
+    // editCheck:function (checked,child,childIndex,item) { 
+    //   console.log(checked);
+    //  },
+    
 
     // 关联接口数据
     //此方法为机构关键字搜索方法
     querySearchOrg(queryString) {
-      console.log(queryString);
+      // console.log(queryString);
       listOrg({
         token: sessionStorage.getItem("token"),
         pageNum: this.page,
@@ -857,10 +867,16 @@ export default {
             name: item.cateName,
             id: item.id
           });
+          console.log(this.addCheckboxData);
+          // this.editCheckboxData.cities.push({
+          //   name: item.cateName,
+          //   id: item.id
+          // })
         }
       }
     });
   },
+
   components: {
     particulars,
     "bannner-Upload": bannerUpload

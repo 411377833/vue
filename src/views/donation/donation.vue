@@ -25,10 +25,10 @@
       <el-table-column prop="orderNum" label="捐款订单号" width="200"></el-table-column>
       
       
-      <el-table-column prop="itemTitle" label="公益项目" width="300"></el-table-column>
+      <el-table-column prop="itemTitle" label="公益项目" min-width="300"></el-table-column>
       <el-table-column prop="recUserName" label="善款接收人" width="200"></el-table-column>
-      <el-table-column prop="donationCash" label="捐款现金数" min-width="120"></el-table-column>
-      <el-table-column prop="donationFlower" label="捐款小红花数" min-width="120"></el-table-column>
+      <el-table-column prop="donationCash" label="捐款现金数" width="200"></el-table-column>
+      <el-table-column prop="donationFlower" label="捐款小红花数" width="200"></el-table-column>
 
       <el-table-column label="操作" width="220" fixed="right">
         <template slot-scope="scope">
@@ -131,21 +131,9 @@ export default {//editForm.headImg
         donationFlower: [
           { required: true, message: "请填写捐款的小红花数", trigger: "blur" }
         ]
-        // headImg:[
-        //     {required: true, message: "请上传机构头像", trigger: "blur"}
-        // ]
+       
       },
-      // editFormRules: {
-      //   idCard: [
-      //     { required: true, message: "请输入机构代码", trigger: "blur" }
-      //   ],
-      //   displayName: [
-      //     { required: true, message: "请输入机构名称", trigger: "blur" }
-      //   ],
-      //   signature: [
-      //     { required: true, message: "请填写机构说明", trigger: "blur" }
-      //   ]
-      // },
+      
       addHeadImg:"",
       editHeadImg:''
       
