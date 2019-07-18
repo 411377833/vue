@@ -603,9 +603,9 @@ export default {
         checkedCities:[]
       };
       // this.$refs['addForm'].resetFields();
-      this.$nextTick(() => {
-        this.$refs["addForm"].resetFields();
-      });
+      // this.$nextTick(() => {
+      //   this.$refs["addForm"].resetFields();
+      // });
     },
     //新增
     addSubmit: function() {

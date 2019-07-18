@@ -50,7 +50,7 @@
       ></el-pagination>
     </el-col>
 
-    <!--新增界面-->
+    <!--新增界面     -->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form size="mini" :model="addForm" label-width="120px" :rules="addFormRules" ref="addForm">
         <!-- <el-form-item label="类型" prop="bannerType" class=".el-form-item__label">
